@@ -1,0 +1,7 @@
+stages:         
+    - lint
+
+build-job:
+  stage: lint
+  script:
+    - npx expo lint
