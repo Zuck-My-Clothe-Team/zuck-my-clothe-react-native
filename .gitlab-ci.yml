@@ -1,6 +1,8 @@
 stages:         
     - lint
 
+image: node:20
+
 build-job:
   stage: lint
   script:
