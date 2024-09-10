@@ -6,4 +6,5 @@ image: node:20
 build-job:
   stage: lint
   script:
+    - npm i
     - npx expo lint
