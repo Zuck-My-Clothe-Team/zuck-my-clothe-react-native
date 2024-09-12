@@ -1,7 +1,9 @@
 import { Link, Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
+// eslint-disable-next-line import/no-unresolved
 import { ThemedText } from '@/components/ThemedText';
+// eslint-disable-next-line import/no-unresolved
 import { ThemedView } from '@/components/ThemedView';
 
 export default function NotFoundScreen() {
