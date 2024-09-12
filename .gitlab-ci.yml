@@ -1,10 +1,16 @@
 stages:         
-    - lint
+    - prepare
 
 image: node:20
 
-build-job:
-  stage: lint
+eslint:
+  stage: prepare
   script:
     - npm i
-    - npx expo lint
+    - npm run lint
+  
+unit-test:
+  stage: prepare
+  script:
+    - npm i
+    - npm run test:final
