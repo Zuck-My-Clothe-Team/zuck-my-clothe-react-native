@@ -14,11 +14,13 @@ import { router } from "expo-router";
 const Logo = require("../assets/images/icon.png");
 
 const App = () => {
-  const [form, setform] = useState({
+  const [form, setform] = useState<{
+    phone_number: string;
+  }>({
     phone_number: "",
   });
 
-  const [enableSubmit, setEnableSubmit] = useState(false);
+  const [enableSubmit, setEnableSubmit] = useState<boolean>(false);
 
   const formatPhoneNumberForDisplay = (text: string) => {
     // Format the phone number based on length
@@ -65,8 +67,6 @@ const App = () => {
     }
   };
 
-  console.log(form.phone_number);
-
   return (
     <SafeAreaView className="w-full min-h-screen bg-slate-200 justify-center items-center">
       <View className="flex w-full justify-center items-center px-12 gap-y-14">
@@ -98,6 +98,7 @@ const App = () => {
               value={formatPhoneNumberForDisplay(form.phone_number)} // Render formatted phone number
               onChangeText={handlePhoneNumberChange} // Handle phone number changes
               maxLength={12} // Allow for formatting spaces, but input is capped at 10 digits
+              placeholder="0xx xxx xxxx"
             />
           </View>
         </View>
@@ -107,11 +108,14 @@ const App = () => {
           </Text>
         </View>
         <TouchableOpacity
-          disabled={form.phone_number.length !== 10}
-          className={`w-full h-14 ${enableSubmit ? 'bg-blue-800' : 'bg-slate-400'} rounded-full flex justify-center items-center`}
+          disabled={!enableSubmit}
+          className={`w-full h-14 ${
+            enableSubmit ? "bg-blue-800" : "bg-slate-400"
+          } rounded-full flex justify-center items-center`}
           onPress={() => {
             router.push("/otp_submit");
           }}
+          testID="login-button"
         >
           <Text className="font-bold text-white text-xl">Continue</Text>
         </TouchableOpacity>
