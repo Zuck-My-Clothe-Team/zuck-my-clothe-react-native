@@ -14,8 +14,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 const Logo = require("../assets/images/icon.png");
 
 const OTPSubmit = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]); // State to hold each digit
-  const [errorMessage, setErrorMessage] = useState("");
+  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]); // State to hold each digit
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const inputRefs = useRef<any>([]); // Array of references to TextInput
   const navigation = useNavigation(); // Navigation hook to handle back action
 
@@ -109,6 +109,7 @@ const OTPSubmit = () => {
           <View className="flex flex-row justify-between w-full max-w-xs mb-3">
             {otp.map((digit, index) => (
               <TextInput
+                testID={`otp-input-box`} // Set testID for testing
                 key={index}
                 ref={(ref) => (inputRefs.current[index] = ref)} // Set reference to each TextInput
                 className="w-12 h-12 bg-white text-center text-3xl font-semibold text-blue-600 border border-slate-400 rounded-lg"
@@ -134,12 +135,13 @@ const OTPSubmit = () => {
           <TouchableOpacity
             className="w-full h-14 bg-blue-800 rounded-full flex justify-center items-center mt-6 mb-4"
             onPress={handleOTPSubmit}
+            testID="submit-button" // Set testID for testing
           >
             <Text className="text-white text-xl font-bold">Submit</Text>
           </TouchableOpacity>
 
           {/* Resend OTP Button */}
-          <TouchableOpacity onPress={handleResendOTP}>
+          <TouchableOpacity onPress={handleResendOTP} testID="resend-button">
             <Text className="text-blue-600 underline mt-4">Resend OTP</Text>
           </TouchableOpacity>
         </View>
