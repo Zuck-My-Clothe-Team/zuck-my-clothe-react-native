@@ -5,9 +5,10 @@ import {
   TextInput,
   Keyboard,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, ScrollView } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
 
@@ -68,60 +69,69 @@ const App = () => {
   };
 
   return (
-    <SafeAreaView className="w-full min-h-screen bg-slate-200 justify-center items-center">
-      <View className="flex w-full justify-center items-center px-12 gap-y-14">
-        <View className=" flex justify-center items-center gap-y-4">
-          <Image source={Logo} className="size-32" resizeMode="contain" />
-          <Text className="font-bold text-4xl text-blue-600">
-            Suck My Clothe
-          </Text>
-        </View>
-        <View className="flex w-full justify-center items-center gap-y-4">
-          <Text className="text-2xl font-bold text-slate-800 text-center">
-            Enter your phone number
-          </Text>
-          <View className="flex flex-row w-full pr-16 bg-white rounded-xl">
-            <View className="flex items-center justify-center border-r-2 border-slate-300">
-              <FontAwesome6
-                name="phone"
-                size={24}
-                color="#2563eb"
-                className="py-4 px-5"
-              />
+    <KeyboardAvoidingView className="flex-1">
+      <ScrollView
+        className=" flex-1"
+        keyboardDismissMode="interactive"
+        bounces={false}
+      >
+        <SafeAreaView className="w-full min-h-screen bg-slate-200 justify-center items-center">
+          <View className="flex w-full justify-center items-center px-12 gap-y-14">
+            <View className=" flex justify-center items-center gap-y-4">
+              <Image source={Logo} className="size-32" resizeMode="contain" />
+              <Text className="font-bold text-4xl text-blue-600">
+                Suck My Clothe
+              </Text>
             </View>
-            <TextInput
-              className="flex w-full h-16 pr-2 text-3xl font-semibold text-blue-600"
-              textAlign="center"
-              inputMode="numeric"
-              keyboardType="phone-pad"
-              autoComplete="tel"
-              value={formatPhoneNumberForDisplay(form.phone_number)} // Render formatted phone number
-              onChangeText={handlePhoneNumberChange} // Handle phone number changes
-              maxLength={12} // Allow for formatting spaces, but input is capped at 10 digits
-              placeholder="0xx xxx xxxx"
-            />
+            <View className="flex w-full justify-center items-center gap-y-4">
+              <Text className="text-2xl font-bold text-slate-800 text-center">
+                Enter your phone number
+              </Text>
+              <View className="flex flex-row w-full pr-16 bg-white rounded-xl">
+                <View className="flex items-center justify-center border-r-2 border-slate-300">
+                  <FontAwesome6
+                    name="phone"
+                    size={24}
+                    color="#2563eb"
+                    className="py-4 px-5"
+                  />
+                </View>
+                <TextInput
+                  className="flex w-full h-16 pr-2 text-3xl font-semibold text-blue-600"
+                  textAlign="center"
+                  inputMode="numeric"
+                  keyboardType="phone-pad"
+                  autoComplete="tel"
+                  value={formatPhoneNumberForDisplay(form.phone_number)} // Render formatted phone number
+                  onChangeText={handlePhoneNumberChange} // Handle phone number changes
+                  maxLength={12} // Allow for formatting spaces, but input is capped at 10 digits
+                  placeholder="0xx xxx xxxx"
+                />
+              </View>
+            </View>
+            <View className="flex justify-center items-center">
+              <Text className="text-slate-600 text-center">
+                We will send you a one time SMS message. Carrier charges may
+                apply.
+              </Text>
+            </View>
+            <TouchableOpacity
+              disabled={!enableSubmit}
+              className={`w-full h-14 ${
+                enableSubmit ? "bg-blue-800" : "bg-slate-400"
+              } rounded-full flex justify-center items-center`}
+              onPress={() => {
+                router.push("/otp_submit");
+              }}
+              testID="login-button"
+            >
+              <Text className="font-bold text-white text-xl">Continue</Text>
+            </TouchableOpacity>
+            <View className=" h-8"></View>
           </View>
-        </View>
-        <View className="flex justify-center items-center">
-          <Text className="text-slate-600 text-center">
-            We will send you a one time SMS message. Carrier charges may apply.
-          </Text>
-        </View>
-        <TouchableOpacity
-          disabled={!enableSubmit}
-          className={`w-full h-14 ${
-            enableSubmit ? "bg-blue-800" : "bg-slate-400"
-          } rounded-full flex justify-center items-center`}
-          onPress={() => {
-            router.push("/otp_submit");
-          }}
-          testID="login-button"
-        >
-          <Text className="font-bold text-white text-xl">Continue</Text>
-        </TouchableOpacity>
-        <View className=" h-8"></View>
-      </View>
-    </SafeAreaView>
+        </SafeAreaView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

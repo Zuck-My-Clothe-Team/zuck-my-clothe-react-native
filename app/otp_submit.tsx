@@ -6,6 +6,9 @@ import {
   Keyboard,
   Alert,
   Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native";
@@ -86,68 +89,76 @@ const OTPSubmit = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-200 justify-center items-center">
-      <View className="flex-1 w-full px-6 py-8">
-        {/* Back Button */}
-        <TouchableOpacity
-          className="absolute top-4 left-4"
-          onPress={() => navigation.goBack()} // Go back to the previous screen
-        >
-          <Ionicons name="chevron-back" size={30} color="#1e40af" />
-        </TouchableOpacity>
-
-        <View className="flex-1 justify-center items-center">
-          <Image source={Logo} className="size-32 mb-4" resizeMode="contain" />
-          <Text className="text-3xl font-bold text-blue-600 mb-2">
-            Enter OTP
-          </Text>
-          <Text className="text-lg text-gray-600 text-center mb-8">
-            Please enter the 6-digit OTP sent to your phone.
-          </Text>
-
-          {/* OTP Input Fields */}
-          <View className="flex flex-row justify-between w-full max-w-xs mb-3">
-            {otp.map((digit, index) => (
-              <TextInput
-                testID={`otp-input-box`} // Set testID for testing
-                key={index}
-                ref={(ref) => (inputRefs.current[index] = ref)} // Set reference to each TextInput
-                className="w-12 h-12 bg-white text-center text-3xl font-semibold text-blue-600 border border-slate-400 rounded-lg"
-                value={digit}
-                onChangeText={(text) => handleOTPChange(text, index)} // Handle input for each box
-                onKeyPress={(e) => handleKeyPress(e, index)} // Handle backspace key
-                keyboardType="number-pad"
-                maxLength={1}
-                autoFocus={index === 0} // Autofocus on the first box
-                autoComplete="one-time-code"
-              />
-            ))}
-          </View>
-
-          {/* Error Message */}
-          {errorMessage ? (
-            <Text className="text-red-500 text-center mt-2">
-              {errorMessage}
-            </Text>
-          ) : null}
-
-          {/* Submit Button */}
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <ScrollView className="min-h-screen bg-slate-200" keyboardDismissMode="interactive" bounces={false}>
+      <SafeAreaView className="min-h-screen bg-slate-200 justify-center items-center">
+        <View className="flex-1 w-full px-6 py-8">
+          {/* Back Button */}
           <TouchableOpacity
-            className="w-full h-14 bg-blue-800 rounded-full flex justify-center items-center mt-6 mb-4"
-            onPress={handleOTPSubmit}
-            testID="submit-button" // Set testID for testing
+            className="absolute z-50 py-2 px-4"
+            onPress={() => navigation.goBack()} // Go back to the previous screen
           >
-            <Text className="text-white text-xl font-bold">Submit</Text>
+            <Ionicons name="chevron-back" size={30} color="#1e40af" />
           </TouchableOpacity>
 
-          {/* Resend OTP Button */}
-          <TouchableOpacity onPress={handleResendOTP} testID="resend-button">
-            <Text className="text-blue-600 underline mt-4">Resend OTP</Text>
-          </TouchableOpacity>
+          <View className="flex-1 justify-center items-center">
+            <Image
+              source={Logo}
+              className="size-32 mb-4"
+              resizeMode="contain"
+            />
+            <Text className="text-3xl font-bold text-blue-600 mb-2">
+              Enter OTP
+            </Text>
+            <Text className="text-lg text-gray-600 text-center mb-8">
+              Please enter the 6-digit OTP sent to your phone.
+            </Text>
+
+            {/* OTP Input Fields */}
+            <View className="flex flex-row justify-between w-full max-w-xs mb-3">
+              {otp.map((digit, index) => (
+                <TextInput
+                  testID={`otp-input-box`} // Set testID for testing
+                  key={index}
+                  ref={(ref) => (inputRefs.current[index] = ref)} // Set reference to each TextInput
+                  className="w-12 h-12 bg-white text-center text-3xl font-semibold text-blue-600 border border-slate-400 rounded-lg"
+                  value={digit}
+                  onChangeText={(text) => handleOTPChange(text, index)} // Handle input for each box
+                  onKeyPress={(e) => handleKeyPress(e, index)} // Handle backspace key
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  autoFocus={index === 0} // Autofocus on the first box
+                  autoComplete="one-time-code"
+                />
+              ))}
+            </View>
+
+            {/* Error Message */}
+            {errorMessage ? (
+              <Text className="text-red-500 text-center mt-2">
+                {errorMessage}
+              </Text>
+            ) : null}
+
+            {/* Submit Button */}
+            <TouchableOpacity
+              className="w-full h-14 bg-blue-800 rounded-full flex justify-center items-center mt-6 mb-4"
+              onPress={handleOTPSubmit}
+              testID="submit-button" // Set testID for testing
+            >
+              <Text className="text-white text-xl font-bold">Submit</Text>
+            </TouchableOpacity>
+
+            {/* Resend OTP Button */}
+            <TouchableOpacity onPress={handleResendOTP} testID="resend-button">
+              <Text className="text-blue-600 underline mt-4">Resend OTP</Text>
+            </TouchableOpacity>
+          </View>
+          <View className=" h-16"></View>
         </View>
-        <View className=" h-16"></View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
