@@ -1,6 +1,8 @@
 import { SplashScreen, Stack } from "expo-router";
-import { useFonts } from "expo-font";
 import { useEffect } from "react";
+import { useFonts } from "expo-font";
+import { NotoSans_100Thin, NotoSans_400Regular, NotoSans_500Medium } from "@expo-google-fonts/noto-sans";
+import { Kanit_100Thin, Kanit_400Regular, Kanit_500Medium } from "@expo-google-fonts/kanit";
 import "../global.css";
 
 
@@ -9,7 +11,12 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    NotoSans_100Thin,
+    NotoSans_400Regular,
+    NotoSans_500Medium,
+    Kanit_100Thin,
+    Kanit_400Regular,
+    Kanit_500Medium,
   });
 
   useEffect(() => {
