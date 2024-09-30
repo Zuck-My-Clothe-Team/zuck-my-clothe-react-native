@@ -6,12 +6,19 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        "noto-thin": ["NotoSans_100Thin", "sans-serif"],
-        "noto-regular": ["NotoSans_400Regular", "sans-serif"],
-        "noto-medium": ["NotoSans_500Medium", "sans-serif"],
-        "kanit-thin": ["Kanit_100Thin", "sans-serif"],
-        "kanit-regular": ["Kanit_400Regular", "sans-serif"],
-        "kanit-medium": ["Kanit_500Medium", "sans-serif"],
+        noto: ["Noto Sans", "sanf-serif"],
+        kanit: ["Kanit", "sanf-serif"],
+      },
+      fontWeight: {
+        thin: 100,
+        extralight: 200,
+        light: 300,
+        normal: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700,
+        extrabold: 800,
+        black: 900,
       },
       colors: {
         primaryblue: {
@@ -24,32 +31,32 @@ module.exports = {
           200: "#9AD2FF",
           300: "#71BFFF",
         },
-        text:{
+        text: {
           1: "#373737",
           2: "#F9FAFF",
           3: "#0080D7",
           4: "#696969",
         },
-        background:{
+        background: {
           1: "#F9FAFF",
           2: "#236D9F",
-          3: "#000000",
+          3: "#FFFFFF",
         },
-        yellowaccent:{
-          100:"#FFEFBD",
-          200:"#FFEAA4",
-          300:"#FFE286",
-          400:"#FDDA69",
+        yellowaccent: {
+          100: "#FFEFBD",
+          200: "#FFEAA4",
+          300: "#FFE286",
+          400: "#FDDA69",
         },
-        customgray:{
-          100:"#F1F1F1",
-          200:"#E3E3E3",
-          300:"#D8D8D8",
-          400:"#C6C6C6",
+        customgray: {
+          100: "#F1F1F1",
+          200: "#E3E3E3",
+          300: "#D8D8D8",
+          400: "#C6C6C6",
         },
-        customred:{
-          1:"#F0507E",
-          2:"#FFA094",
+        customred: {
+          1: "#F0507E",
+          2: "#FFA094",
         },
       },
       boxShadow: {
@@ -60,10 +67,10 @@ module.exports = {
         "blue-hard": "0px 2px 14.8px rgba(5,90,156,0.25)",
       },
       borderRadius: {
-        "small": "4px",
-        "normal": "8px",
-        "medium": "16px",
-        "large": "24px",
+        small: "4px",
+        normal: "8px",
+        medium: "16px",
+        large: "24px",
       },
     },
   },
