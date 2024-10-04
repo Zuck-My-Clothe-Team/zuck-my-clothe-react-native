@@ -1,16 +1,29 @@
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  Keyboard,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-} from "react-native";
-import React, { useState } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { GoogleLogin } from "@/api/auth.api";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Google from "expo-auth-session/providers/google";
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+interface IGoogleUser {
+  id: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+}
 
 const Logo = require("../assets/images/icon.png");
 
@@ -22,6 +35,7 @@ const App = () => {
   });
 
   const [enableSubmit, setEnableSubmit] = useState<boolean>(false);
+  const [accessToken, setAccessToken] = useState<string>("");
 
   const formatPhoneNumberForDisplay = (text: string) => {
     // Format the phone number based on length
@@ -65,6 +79,56 @@ const App = () => {
     if (cleanText.length === 10) {
       Keyboard.dismiss();
       setEnableSubmit(true);
+    }
+  };
+
+  const [userInfo, setUserInfo] = useState<IGoogleUser>({
+    id: "",
+    email: "",
+    verified_email: false,
+    name: "",
+    given_name: "",
+    family_name: "",
+    picture: "",
+  });
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
+    androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
+    scopes: ["profile", "email"],
+  });
+
+  useEffect(() => {
+    handleSignInWithGoogle();
+  }, [response]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const accessToken = await AsyncStorage.getItem("accessToken");
+      if (accessToken !== null) {
+        setAccessToken(accessToken);
+      }
+    };
+
+    fetchData();
+  }, [accessToken]);
+
+  const logout = async () => {
+    setAccessToken("");
+    await AsyncStorage.removeItem("accessToken");
+  };
+
+  const handleSignInWithGoogle = async () => {
+    if (response?.type === "success") {
+      const { authentication } = response;
+      const userInfo: IGoogleUser = await GoogleLogin(
+        authentication!.accessToken
+      );
+      setUserInfo(userInfo);
+      await AsyncStorage.setItem("data", userInfo.email);
+      //For testing accessToken
+      setAccessToken(userInfo.id);
+      await AsyncStorage.setItem("accessToken", userInfo.id);
     }
   };
 
@@ -114,19 +178,35 @@ const App = () => {
                 We will send you a one time SMS message. Carrier charges may
                 apply.
               </Text>
+              <Text>{userInfo.name}</Text>
+              <Text>Storage : {accessToken}</Text>
             </View>
-            <TouchableOpacity
-              disabled={!enableSubmit}
-              className={`w-full h-14 ${
-                enableSubmit ? "bg-blue-800" : "bg-slate-400"
-              } rounded-full flex justify-center items-center`}
-              onPress={() => {
-                router.push("/otp_submit");
-              }}
-              testID="login-button"
-            >
-              <Text className="font-bold text-white text-xl">Continue</Text>
-            </TouchableOpacity>
+            {accessToken === "" ? (
+              <>
+                <TouchableOpacity
+                  className={`w-full h-14 ${
+                    enableSubmit ? "bg-blue-800" : "bg-slate-400"
+                  } rounded-full flex justify-center items-center`}
+                  onPress={() => {
+                    promptAsync();
+                  }}
+                  testID="login-button"
+                >
+                  <Text className="font-bold text-white text-xl">Login</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <TouchableOpacity
+                  className={`w-full h-14 ${
+                    enableSubmit ? "bg-blue-800" : "bg-slate-400"
+                  } rounded-full flex justify-center items-center`}
+                  onPress={logout}
+                >
+                  <Text className="font-bold text-white text-xl">Logout</Text>
+                </TouchableOpacity>
+              </>
+            )}
             <View className=" h-8"></View>
           </View>
         </SafeAreaView>
