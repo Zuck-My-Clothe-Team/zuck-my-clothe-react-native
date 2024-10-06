@@ -1,4 +1,5 @@
 import { GoogleLogin } from "@/api/auth.api";
+import { IUserDetail } from "@/interface/userdetail.interface";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
@@ -121,14 +122,12 @@ const App = () => {
   const handleSignInWithGoogle = async () => {
     if (response?.type === "success") {
       const { authentication } = response;
-      const userInfo: IGoogleUser = await GoogleLogin(
+      const userInfo: IUserDetail = await GoogleLogin(
         authentication!.accessToken
       );
-      setUserInfo(userInfo);
-      await AsyncStorage.setItem("data", userInfo.email);
-      //For testing accessToken
-      setAccessToken(userInfo.id);
-      await AsyncStorage.setItem("accessToken", userInfo.id);
+      const accessToken = userInfo.token;
+      await AsyncStorage.setItem("accessToken", accessToken);
+      setAccessToken(accessToken);
     }
   };
 
