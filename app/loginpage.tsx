@@ -2,6 +2,7 @@ import { GoogleLogin } from "@/api/auth.api";
 import { IUserDetail } from "@/interface/userdetail.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
+import * as AuthSession from 'expo-auth-session';
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -11,16 +12,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+import { makeRedirectUri } from 'expo-auth-session';
 const LoginPageImage = require("../assets/images/loginImage.png");
 
 export default function LoginPage() {
+
+const redirectUri = makeRedirectUri();
   const [disabledLogin, setDisableLogin] = useState<boolean>(false);
   const [accessToken, setAccessToken] = useState<string>("");
 
   const [, response, promptAsync] = Google.useAuthRequest({
+    webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
     androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
     scopes: ["profile", "email"],
+    redirectUri:redirectUri
   });
 
   useEffect(() => {

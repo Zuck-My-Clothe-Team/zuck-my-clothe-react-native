@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sokungz.work.zuck-my-clothe"
+      "bundleIdentifier": "com.sokungz.zuck_my_clothe"
     },
     "android": {
       "adaptiveIcon": {
