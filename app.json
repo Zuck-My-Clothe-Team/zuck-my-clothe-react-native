@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Zuck-my-cloth",
-    "slug": "Zuck-my-cloth",
+    "name": "Zuck My Clothe",
+    "slug": "zuck-my-clothe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,14 +15,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sokungz.work.zuck-my-cloth"
+      "bundleIdentifier": "com.sokungz.work.zuck-my-clothe"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#0285df"
       },
-      "package": "com.sokungz.zuck_my_cloth"
+      "package": "com.sokungz.zuck_my_clothe"
     },
     "web": {
       "bundler": "metro",
