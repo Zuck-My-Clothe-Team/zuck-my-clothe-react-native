@@ -3,14 +3,15 @@ stages:
 
 image: node:20
 
+before_script:
+  - npm i
+
 eslint:
   stage: prepare
   script:
-    - npm i
     - npm run lint
   
 unit-test:
   stage: prepare
   script:
-    - npm i
-    - npm run test:final
+    - npm run test
