@@ -1,7 +1,15 @@
-import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
-import { useFonts } from "expo-font";
-import{ 
+import {
+  Kanit_100Thin,
+  Kanit_200ExtraLight,
+  Kanit_300Light,
+  Kanit_400Regular,
+  Kanit_500Medium,
+  Kanit_600SemiBold,
+  Kanit_700Bold,
+  Kanit_800ExtraBold,
+  Kanit_900Black,
+} from "@expo-google-fonts/kanit";
+import {
   NotoSans_100Thin,
   NotoSans_200ExtraLight,
   NotoSans_300Light,
@@ -10,21 +18,12 @@ import{
   NotoSans_600SemiBold,
   NotoSans_700Bold,
   NotoSans_800ExtraBold,
-  NotoSans_900Black, 
+  NotoSans_900Black,
 } from "@expo-google-fonts/noto-sans";
-import { 
-  Kanit_100Thin,
-  Kanit_200ExtraLight,
-  Kanit_300Light,
-  Kanit_400Regular,
-  Kanit_500Medium, 
-  Kanit_600SemiBold,
-  Kanit_700Bold,
-  Kanit_800ExtraBold,
-  Kanit_900Black,
-} from "@expo-google-fonts/kanit";
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from "expo-router";
+import { useEffect } from "react";
 import "../global.css";
-
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -39,12 +38,12 @@ export default function RootLayout() {
     NotoSans_600SemiBold,
     NotoSans_700Bold,
     NotoSans_800ExtraBold,
-    NotoSans_900Black, 
+    NotoSans_900Black,
     Kanit_100Thin,
     Kanit_200ExtraLight,
     Kanit_300Light,
     Kanit_400Regular,
-    Kanit_500Medium, 
+    Kanit_500Medium,
     Kanit_600SemiBold,
     Kanit_700Bold,
     Kanit_800ExtraBold,
@@ -63,15 +62,18 @@ export default function RootLayout() {
 
   return (
     <Stack>
-      <Stack.Screen 
+      <Stack.Screen
+        name="loginpage"
+        options={{ title: "loginpage", headerShown: false }}
+      />
+      <Stack.Screen
+        name="homepage"
+        options={{ title: "homepage", headerShown: false }}
+      />
+      <Stack.Screen
         name="index"
-        options={{ title: "Home", headerShown: false }}
+        options={{ title: "home", headerShown: false }}
       />
-      <Stack.Screen 
-        name="otp_submit"
-        options={{ title: "otp_submit", headerShown: false }}
-      />
-
     </Stack>
   );
 }
