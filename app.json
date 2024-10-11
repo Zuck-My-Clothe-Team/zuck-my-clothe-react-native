@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "zuckmyclothe",
     "jsEngine": "hermes",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -14,15 +14,14 @@
       "backgroundColor": "#0285df"
     },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.sokungz.zuck-my-clothe"
+      "bundleIdentifier": "com.sokungz.zuckmyclothe"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#0285df"
       },
-      "package": "com.sokungz.zuck_my_clothe"
+      "package": "com.sokungz.zuckmyclothe"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +31,11 @@
     "plugins": ["expo-router", "expo-font"],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9c30521d-6156-4df5-a088-d634cdf53408"
+      }
     }
   }
 }
