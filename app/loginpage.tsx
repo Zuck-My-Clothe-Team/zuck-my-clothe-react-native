@@ -2,9 +2,10 @@ import { GoogleLogin } from "@/api/auth.api";
 import { IUserDetail } from "@/interface/userdetail.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Google from "expo-auth-session/providers/google";
-import * as AuthSession from "expo-auth-session";
 import { router } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import React, { useEffect, useState } from "react";
+import * as AuthSession from "expo-auth-session";
 import {
   Image,
   SafeAreaView,
@@ -13,7 +14,8 @@ import {
   View,
 } from "react-native";
 
-import { makeRedirectUri } from "expo-auth-session";
+WebBrowser.maybeCompleteAuthSession();
+
 const LoginPageImage = require("../assets/images/loginImage.png");
 
 export default function LoginPage() {
@@ -25,6 +27,9 @@ export default function LoginPage() {
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
     androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
     scopes: ["profile", "email"],
+    redirectUri: AuthSession.makeRedirectUri({
+      native: "com.sokungz.zuckmyclothe:/oauth2redirect",
+    }),
   });
 
   useEffect(() => {
@@ -32,18 +37,29 @@ export default function LoginPage() {
       if (response?.type === "success") {
         try {
           const { authentication } = response;
+          console.log("Authentication successful:", authentication);
+
           const userInfo: IUserDetail = await GoogleLogin(
             authentication!.accessToken
           );
           const accessToken = userInfo.token;
+
           await AsyncStorage.setItem("accessToken", accessToken);
           setAccessToken(accessToken);
+
+          console.log("User info and token stored successfully.");
         } catch (error) {
           console.log("Error during Google sign-in:", error);
         }
+      } else {
+        console.log(
+          "Google sign-in response error or not successful:",
+          response
+        );
       }
       setDisableLogin(false);
     };
+
     handleSignInWithGoogle();
   }, [response]);
 

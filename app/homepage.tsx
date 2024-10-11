@@ -1,7 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, SplashScreen } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, TouchableOpacity, Text, View, ActivityIndicator } from "react-native";
+import {
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+  View,
+  ActivityIndicator,
+} from "react-native";
 
 const Homepage = () => {
   SplashScreen.preventAutoHideAsync();
@@ -22,7 +28,7 @@ const Homepage = () => {
     const checkToken = async () => {
       try {
         const accessToken = await AsyncStorage.getItem("accessToken");
-        if (accessToken !== null) {
+        if (accessToken !== null && accessToken !== "") {
           setAccessToken(accessToken);
         } else {
           router.push("/loginpage");
@@ -48,7 +54,10 @@ const Homepage = () => {
     <SafeAreaView className="flex-1 h-full justify-around px-8 w-full">
       <View className=" w-full px-4 flex flex-col gap-y-4">
         <Text className="text-2xl font-bold text-center">This is homepage</Text>
-        <TouchableOpacity className="bg-blue-500 py-4 rounded-full w-full" onPress={logout}>
+        <TouchableOpacity
+          className="bg-blue-500 py-4 rounded-full w-full"
+          onPress={logout}
+        >
           <Text className="text-white text-center">Logout</Text>
         </TouchableOpacity>
       </View>
