@@ -64,15 +64,15 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen
         name="loginpage"
-        options={{ title: "loginpage", headerShown: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="homepage"
-        options={{ title: "homepage", headerShown: false }}
+        name="(tabs)"
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="index"
-        options={{ title: "home", headerShown: false }}
+        options={{ headerShown: false }}
       />
     </Stack>
   );
