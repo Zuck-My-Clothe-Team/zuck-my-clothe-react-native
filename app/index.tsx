@@ -1,14 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createStackNavigator } from "@react-navigation/stack";
-import { SplashScreen } from "expo-router";
+import { router, SplashScreen } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import Homepage from "./homepage";
-import LoginPage from "./loginpage";
 
 SplashScreen.preventAutoHideAsync();
-
-const Stack = createStackNavigator();
 
 const App = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -20,6 +15,10 @@ const App = () => {
         const accessToken = await AsyncStorage.getItem("accessToken");
         if (accessToken !== null) {
           setAccessToken(accessToken);
+          router.replace("/(tabs)/home")
+        }
+        else if (accessToken === "" || accessToken === null){
+          router.replace("/loginpage")
         }
       } catch (e) {
         console.log(e);
@@ -39,21 +38,7 @@ const App = () => {
   }
 
   return (
-    <Stack.Navigator>
-      {accessToken ? (
-        <Stack.Screen
-          name="Home"
-          component={Homepage}
-          options={{ headerShown: false }}
-        />
-      ) : (
-        <Stack.Screen
-          name="Login"
-          component={LoginPage}
-          options={{ headerShown: false }}
-        />
-      )}
-    </Stack.Navigator>
+    <></>
   );
 };
 

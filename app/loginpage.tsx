@@ -16,6 +16,7 @@ import {
 
 WebBrowser.maybeCompleteAuthSession();
 
+
 const LoginPageImage = require("../assets/images/loginImage.png");
 
 export default function LoginPage() {
@@ -78,8 +79,8 @@ export default function LoginPage() {
   }, []);
 
   useEffect(() => {
-    if (accessToken !== "") {
-      router.push("/homepage");
+    if (accessToken !== "") { // Auth context goes here
+      router.replace("/(tabs)/home");
     }
   }, [accessToken]);
 
