@@ -51,6 +51,7 @@ export default function LoginPage() {
             role: userInfo.data.role,
             surname: userInfo.data.surname,
             phone: userInfo.data.phone,
+            profile_image_url: userInfo.data.profile_image_url,
           });
           console.log("User info and token stored successfully.");
         } catch (error) {
