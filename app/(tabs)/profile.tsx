@@ -88,7 +88,11 @@ const ProfilePage = () => {
       <View className="rounded-t-[60px] h-full w-full bg-white relative flex items-center">
         <View className=" absolute -top-16 rounded-full size-32 border-[5px] border-secondaryblue-200 bg-secondaryblue-200 flex">
           <Image
-            source={profilePic}
+            source={
+              userData?.profile_image_url
+                ? { uri: userData?.profile_image_url }
+                : profilePic
+            }
             className="size-full rounded-full"
             resizeMode="cover"
           />

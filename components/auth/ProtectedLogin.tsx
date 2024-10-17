@@ -47,6 +47,7 @@ const ProtectedLogin: React.FC<Props> = ({ children }) => {
           role: result.role,
           surname: result.surname,
           phone: result.phone,
+          profile_image_url: result.profile_image_url,
         };
 
         auth?.setAuthContext(userData);
@@ -59,6 +60,7 @@ const ProtectedLogin: React.FC<Props> = ({ children }) => {
           role: "",
           surname: "",
           phone: "",
+          profile_image_url: "",
         });
       } finally {
         setAppIsReady(true);
