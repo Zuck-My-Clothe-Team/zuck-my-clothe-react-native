@@ -1,11 +1,11 @@
 import { GoogleLogin } from "@/api/auth.api";
-import { IUserDetail } from "@/interface/userdetail.interface";
+import { useAuth } from "@/context/auth.context";
+import { IUserTokenDetail } from "@/interface/userdetail.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as AuthSession from "expo-auth-session";
 import * as Google from "expo-auth-session/providers/google";
-import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useEffect, useState } from "react";
-import * as AuthSession from "expo-auth-session";
 import {
   Image,
   SafeAreaView,
@@ -16,12 +16,11 @@ import {
 
 WebBrowser.maybeCompleteAuthSession();
 
-
 const LoginPageImage = require("../assets/images/loginImage.png");
 
 export default function LoginPage() {
   const [disabledLogin, setDisableLogin] = useState<boolean>(false);
-  const [accessToken, setAccessToken] = useState<string>("");
+  const auth = useAuth();
 
   const [, response, promptAsync] = Google.useAuthRequest({
     webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
@@ -38,16 +37,21 @@ export default function LoginPage() {
       if (response?.type === "success") {
         try {
           const { authentication } = response;
-          console.log("Authentication successful:", authentication);
-
-          const userInfo: IUserDetail = await GoogleLogin(
+          console.log("Google sign-in response:");
+          const userInfo: IUserTokenDetail = await GoogleLogin(
             authentication!.accessToken
           );
           const accessToken = userInfo.token;
-
           await AsyncStorage.setItem("accessToken", accessToken);
-          setAccessToken(accessToken);
-
+          auth?.setAuthContext({
+            isAuth: true,
+            user_id: userInfo.data.user_id,
+            email: userInfo.data.email,
+            name: userInfo.data.name,
+            role: userInfo.data.role,
+            surname: userInfo.data.surname,
+            phone: userInfo.data.phone,
+          });
           console.log("User info and token stored successfully.");
         } catch (error) {
           console.log("Error during Google sign-in:", error);
@@ -63,26 +67,6 @@ export default function LoginPage() {
 
     handleSignInWithGoogle();
   }, [response]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accessToken = await AsyncStorage.getItem("accessToken");
-        if (accessToken !== null) {
-          setAccessToken(accessToken);
-        }
-      } catch (error) {
-        console.log("Error fetching access token:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (accessToken !== "") { // Auth context goes here
-      router.replace("/(tabs)/home");
-    }
-  }, [accessToken]);
 
   return (
     <SafeAreaView className="w-full h-full bg-primaryblue-300 items-center flex flex-col">

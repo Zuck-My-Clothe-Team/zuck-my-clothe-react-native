@@ -1,12 +1,12 @@
+import { useAuth } from "@/context/auth.context";
+import { IUserAuthContext } from "@/interface/userdetail.interface";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router, SplashScreen } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { SplashScreen } from "expo-router";
+import React from "react";
 import {
-  ActivityIndicator,
   Dimensions,
   Image,
   ScrollView,
@@ -44,53 +44,10 @@ const OptionCard: React.FC<OptionCardProps> = ({
 
 const ProfilePage = () => {
   SplashScreen.preventAutoHideAsync();
-
-  const [accessToken, setAccessToken] = useState<string>("");
-  const [isLoading, setIsloading] = useState<boolean>(true);
+  const auth = useAuth();
+  const userData: IUserAuthContext | undefined = auth?.authContext;
 
   const screenHeight = Dimensions.get("window").height;
-
-  const profiledata = {
-    name: "ParkLuvLaufey03",
-    email: "ParkLuvLaufey03@gmail.commmmmm",
-    phone_number: "091-119-1191",
-  };
-
-  const handleLogout = async () => {
-    console.log("User logged out");
-    try {
-      await AsyncStorage.removeItem("accessToken");
-      setAccessToken("");
-    } catch (error) {
-      console.log("Error during logout:", error);
-    }
-  };
-
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const accessToken = await AsyncStorage.getItem("accessToken");
-        if (accessToken !== null && accessToken !== "") {
-          setAccessToken(accessToken);
-        } else {
-          router.replace("/loginpage");
-        }
-      } catch (error) {
-        console.log("Error fetching access token:", error);
-      } finally {
-        setIsloading(false);
-      }
-    };
-    checkToken();
-  }, [accessToken]);
-
-  if (isLoading) {
-    return (
-      <View>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
 
   const cardOptionData = [
     {
@@ -116,7 +73,9 @@ const ProfilePage = () => {
     {
       title: "ออกจากระบบ",
       icon: <AntDesign name="poweroff" size={22} color="#F0507E" />,
-      onpress: handleLogout,
+      onpress: async () => {
+        await auth?.logout();
+      },
       isred: true,
     },
   ];
@@ -137,15 +96,15 @@ const ProfilePage = () => {
         <View className=" flex flex-col mt-20 w-full gap-y-8 max-h-screen pb-16">
           <View className=" flex flex-col gap-y-4 justify-center items-center">
             <Text className=" text-text-1 font-noto font-medium text-3xl">
-              {profiledata.name}
+              {userData!.name} {userData!.surname}
             </Text>
             <Text className=" text-text-1 font-noto font-light text-base">
-              {profiledata.email}
+              {userData!.email}
             </Text>
             <View className=" flex flex-row items-center">
               <FontAwesome6 name="phone" size={22} color="#71BFFF" />
               <Text className=" text-text-4 font-noto font-normal text-xl ml-[10px]">
-                {profiledata.phone_number}
+                {userData?.phone || "ไม่พบข้อมูล"}
               </Text>
             </View>
           </View>
@@ -170,7 +129,7 @@ const ProfilePage = () => {
                 />
               </View>
             ))}
-            {screenHeight < 700 && (<View className="h-4"></View>)}
+            {screenHeight < 700 && <View className="h-4"></View>}
           </ScrollView>
         </View>
       </View>
