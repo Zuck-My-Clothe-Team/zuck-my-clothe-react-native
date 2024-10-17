@@ -1,3 +1,5 @@
+import ProtectedLogin from "@/components/auth/ProtectedLogin";
+import { AuthProvider } from "@/context/auth.context";
 import {
   Kanit_100Thin,
   Kanit_200ExtraLight,
@@ -22,7 +24,7 @@ import {
 } from "@expo-google-fonts/noto-sans";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import "../global.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -59,21 +61,15 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
-
   return (
-    <Stack>
-      <Stack.Screen
-        name="loginpage"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="(tabs)"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="index"
-        options={{ headerShown: false }}
-      />
-    </Stack>
+    <AuthProvider>
+      <ProtectedLogin>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="loginpage" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
+      </ProtectedLogin>
+    </AuthProvider>
   );
 }
