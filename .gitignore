@@ -24,4 +24,3 @@ expo-env.d.ts
 
 .env
 package-lock.json
-yarn.lock
