@@ -1,101 +1,106 @@
-# Welcome to your Expo app 👋
+# Zuck-my-clothe
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Zuck-my-clothe is a mobile platform built using Expo that simplifies the process of washing and drying clothes. Users can scan QR codes for in-app payments, bring their clothes to one of our stores, and have them washed and dried seamlessly.
 
-## Get started
+# Features
 
-1. Install dependencies
+- **QR Code Scanning**: Quickly scan the provided QR codes for easy payments.
+- **In-App Payments**: Secure and efficient payment processing.
+- **Store Drop-off Service**: Users can bring their clothes to our stores for washing and drying services.
+- **Cross-Platform**: Available for Android and IOS.
 
-   ```bash
-   npm install
-   ```
+# Project Setup
 
-2. Start the app
+## Prerequisites
 
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+- Node.js and Yarn installed on your machine.
+- Expo CLI installed globally:
 
 ```bash
-npm run reset-project
+npm install -g expo-cli
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Installation
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Clone the repository:
 
 ```bash
-npm run reset-project
+git clone https://git.cpe.kmutt.ac.th/zuck-my-clothe-team/zuck-my-clothe.git
+cd zuck-my-clothe
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+##Install the dependencies using Yarn:
 
-## Learn more
+```bash
+yarn install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Scripts
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Start the project:
 
-## Join the community
+```bash
+yarn start
+```
 
-Join our community of developers creating universal apps.
+Reset the project:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+yarn reset-project
+```
+
+Run the project on Android:
+
+```bash
+yarn android
+```
+
+Run the project on iOS:
+
+```bash
+yarn ios
+```
+
+Run the project on Web:
+
+```bash
+yarn web
+```
+
+Run tests with Jest:
+
+```bash
+yarn test
+```
+
+Run tests with watch mode:
+
+```bash
+yarn test:watch
+```
+
+Run linting:
+
+```bash
+yarn lint
+```
+
+Prebuild the project:
+
+```bash
+yarn prebuild
+```
+
+Prebuild the project and clean up:
+
+```bash
+yarn prebuild:clean
+```
+
+# Technologies
+
+- **Expo**: A platform for building cross-platform mobile apps.
+- **React Native**: Framework for building native mobile apps.
+- **Yarn**: Dependency management.
+- **Jest**: Testing framework for JavaScript.
+- **NativeWind**: Styling solution.
