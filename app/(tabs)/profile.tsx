@@ -99,15 +99,15 @@ const ProfilePage = () => {
         </View>
         <View className=" flex flex-col mt-20 w-full gap-y-8 max-h-screen pb-16">
           <View className=" flex flex-col gap-y-4 justify-center items-center">
-            <Text className=" text-text-1 font-noto font-medium text-3xl">
+            <Text className=" text-text-1 font-notoMedium text-3xl">
               {userData!.name} {userData!.surname}
             </Text>
-            <Text className=" text-text-1 font-noto font-light text-base">
+            <Text className=" text-text-1 font-notoLight text-base">
               {userData!.email}
             </Text>
             <View className=" flex flex-row items-center">
               <FontAwesome6 name="phone" size={22} color="#71BFFF" />
-              <Text className=" text-text-4 font-noto font-normal text-xl ml-[10px]">
+              <Text className=" text-text-4 font-noto text-xl ml-[10px]">
                 {userData?.phone || "ไม่พบข้อมูล"}
               </Text>
             </View>
@@ -129,7 +129,7 @@ const ProfilePage = () => {
                     data.isred === true
                       ? "text-customred-1"
                       : "text-primaryblue-100"
-                  }  font-kanit font-normal text-lg`}
+                  }  font-kanit text-lg`}
                 />
               </View>
             ))}
