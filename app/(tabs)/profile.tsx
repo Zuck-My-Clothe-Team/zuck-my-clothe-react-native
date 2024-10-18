@@ -95,6 +95,7 @@ const ProfilePage = () => {
             }
             className="size-full rounded-full"
             resizeMode="cover"
+            testID="profile-image"
           />
         </View>
         <View className=" flex flex-col mt-20 w-full gap-y-8 max-h-screen pb-16">
