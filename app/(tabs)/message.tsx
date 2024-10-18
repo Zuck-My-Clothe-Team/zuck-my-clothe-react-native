@@ -5,7 +5,9 @@ const MessagePage = () => {
   return (
     <View className=" flex-1 h-full justify-around px-8 w-full">
       <View className=" w-full px-4 flex flex-col gap-y-4">
-        <Text className="text-2xl font-bold text-center">This is message page</Text>
+        <Text className="text-2xl font-notoBold text-center">
+          This is message page
+        </Text>
       </View>
     </View>
   );

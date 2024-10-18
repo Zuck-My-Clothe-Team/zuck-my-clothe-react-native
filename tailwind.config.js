@@ -6,19 +6,26 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        noto: ["Noto Sans", "sanf-serif"],
-        kanit: ["Kanit", "sanf-serif"],
-      },
-      fontWeight: {
-        thin: 100,
-        extralight: 200,
-        light: 300,
-        normal: 400,
-        medium: 500,
-        semibold: 600,
-        bold: 700,
-        extrabold: 800,
-        black: 900,
+        notoThin: ["NotoSans_100Thin", "sans-serif"],
+        notoExtraLight: ["NotoSans_200ExtraLight", "sans-serif"],
+        notoLight: ["NotoSans_300Light", "sans-serif"],
+        noto: ["NotoSans_400Regular", "sans-serif"],
+        notoMedium: ["NotoSans_500Medium", "sans-serif"],
+        notoSemiBold: ["NotoSans_600SemiBold", "sans-serif"],
+        notoBold: ["NotoSans_700Bold", "sans-serif"],
+        notoExtraBold: ["NotoSans_800ExtraBold", "sans-serif"],
+        notoBlack: ["NotoSans_900Black", "sans-serif"],
+
+        // Kanit weights
+        kanitThin: ["Kanit_100Thin", "sans-serif"],
+        kanitExtraLight: ["Kanit_200ExtraLight", "sans-serif"],
+        kanitLight: ["Kanit_300Light", "sans-serif"],
+        kanit: ["Kanit_400Regular", "sans-serif"],
+        kanitMedium: ["Kanit_500Medium", "sans-serif"],
+        kanitSemiBold: ["Kanit_600SemiBold", "sans-serif"],
+        kanitBold: ["Kanit_700Bold", "sans-serif"],
+        kanitExtraBold: ["Kanit_800ExtraBold", "sans-serif"],
+        kanitBlack: ["Kanit_900Black", "sans-serif"],
       },
       colors: {
         primaryblue: {
