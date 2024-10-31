@@ -11,8 +11,8 @@ describe("ProfilePage", () => {
   const mockLogout = jest.fn();
   const mockAuthContext = {
     authContext: {
-      name: "John",
-      surname: "Doe",
+      firstname: "John",
+      lastname: "Doe",
       email: "john.doe@example.com",
       phone: "1234567890",
       profile_image_url: "http://example.com/profile.jpg",

@@ -43,9 +43,9 @@ const ProtectedLogin: React.FC<Props> = ({ children }) => {
           isAuth: true,
           user_id: result.user_id,
           email: result.email,
-          name: result.name,
+          firstname: result.firstname,
           role: result.role,
-          surname: result.surname,
+          lastname: result.lastname,
           phone: result.phone,
           profile_image_url: result.profile_image_url,
         };
@@ -56,9 +56,9 @@ const ProtectedLogin: React.FC<Props> = ({ children }) => {
           isAuth: false,
           user_id: "",
           email: "",
-          name: "",
+          firstname: "",
           role: "",
-          surname: "",
+          lastname: "",
           phone: "",
           profile_image_url: "",
         });

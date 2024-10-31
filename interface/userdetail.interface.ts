@@ -10,9 +10,9 @@ export interface IUserTokenDetail {
 export interface IUserDetail {
   user_id: string;
   email: string;
-  name: string;
+  firstname: string;
   role: string;
-  surname: string;
+  lastname: string;
   phone: string;
   profile_image_url: string;
 }
