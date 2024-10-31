@@ -101,7 +101,7 @@ const ProfilePage = () => {
         <View className=" flex flex-col mt-20 w-full gap-y-8 max-h-screen pb-16">
           <View className=" flex flex-col gap-y-4 justify-center items-center">
             <Text className=" text-text-1 font-notoMedium text-3xl">
-              {userData!.name} {userData!.surname}
+              {userData!.firstname} {userData!.lastname}
             </Text>
             <Text className=" text-text-1 font-notoLight text-base">
               {userData!.email}
