@@ -81,9 +81,9 @@ const ProfilePage = () => {
   ];
 
   return (
-    <View className="flex-1 flex-col bg-secondaryblue-200">
-      <View className=" basis-1/4 relative">
-        <Image className="" source={profilePageBG} />
+    <View className="flex-1 flex-col bg-secondaryblue-200 w-full">
+      <View className=" basis-1/4 relative w-full">
+        <Image className="w-full" source={profilePageBG}/>
       </View>
       <View className="rounded-t-[60px] h-full w-full bg-white relative flex items-center">
         <View className=" absolute -top-16 rounded-full size-32 border-[5px] border-secondaryblue-200 bg-secondaryblue-200 flex">
