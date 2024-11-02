@@ -116,7 +116,7 @@ const ProfilePage = () => {
           <ScrollView
             className={`${
               screenHeight > 700 ? "" : "h-72"
-            } px-3 pb-3 mx-5 bg-background-1 rounded-xl flex flex-col gap-y-[9px]`}
+            } px-3 pb-3 mx-5 -my-2 bg-background-1 rounded-xl flex flex-col gap-y-[9px]`}
             scrollEnabled={screenHeight > 700 ? false : true}
           >
             {cardOptionData.map((data, index) => (
