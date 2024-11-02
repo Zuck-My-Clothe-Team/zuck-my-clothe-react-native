@@ -5,10 +5,12 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 export const initialAuth: IUserAuthContext = {
   user_id: "",
   email: "",
-  name: "",
+  firstname: "",
   role: "",
-  surname: "",
+  lastname: "",
   isAuth: false,
+  phone: "",
+  profile_image_url: ""
 };
 
 interface AuthContextType {

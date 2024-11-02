@@ -47,9 +47,9 @@ export default function LoginPage() {
             isAuth: true,
             user_id: userInfo.data.user_id,
             email: userInfo.data.email,
-            name: userInfo.data.name,
+            firstname: userInfo.data.firstname,
             role: userInfo.data.role,
-            surname: userInfo.data.surname,
+            lastname: userInfo.data.lastname,
             phone: userInfo.data.phone,
             profile_image_url: userInfo.data.profile_image_url,
           });
