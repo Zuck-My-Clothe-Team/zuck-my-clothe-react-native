@@ -68,6 +68,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="loginpage" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="searchbranch" options={{ headerShown: false }} />
         </Stack>
       </ProtectedLogin>
     </AuthProvider>

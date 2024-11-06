@@ -20,6 +20,7 @@ module.exports = {
       config: {
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
       },
+      locationAlwaysAndWhenInUsePermission: "Allow $(PRODUCT_NAME) to use your location.",
     },
     android: {
       adaptiveIcon: {
@@ -31,6 +32,7 @@ module.exports = {
           apiKey: process.env.GOOGLE_MAPS_API_KEY,
         },
       },
+      locationAlwaysAndWhenInUsePermission: "Allow $(PRODUCT_NAME) to use your location.",
       package: "com.sokungz.zuckmyclothe",
     },
     web: {
