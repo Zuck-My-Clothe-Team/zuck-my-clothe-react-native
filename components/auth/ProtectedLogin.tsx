@@ -71,16 +71,12 @@ const ProtectedLogin: React.FC<Props> = ({ children }) => {
   }, [auth?.authContext.isAuth, usePathname()]);
 
   useEffect(() => {
-    if (appIsReady && !auth?.authContext.isAuth) {
-      const timeoutId = setTimeout(() => {
+    if (appIsReady) {
+      if (!auth?.authContext.isAuth) {
         router.replace("/loginpage");
-      }, 500);
-      return () => clearTimeout(timeoutId);
-    } else {
-      const timeoutId = setTimeout(() => {
+      } else {
         router.replace("/(tabs)/home");
-      }, 500);
-      return () => clearTimeout(timeoutId);
+      }
     }
   }, [appIsReady, auth?.authContext.isAuth, router]);
 
