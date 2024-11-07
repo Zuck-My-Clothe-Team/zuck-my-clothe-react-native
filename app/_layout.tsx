@@ -23,7 +23,7 @@ import {
   NotoSans_900Black,
 } from "@expo-google-fonts/noto-sans";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen, Stack } from "expo-router";
 import React, { useEffect } from "react";
 import "../global.css";
 
@@ -59,7 +59,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <Slot />;
   }
   return (
     <AuthProvider>

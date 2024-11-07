@@ -67,7 +67,7 @@ export default function LoginPage() {
     };
 
     handleSignInWithGoogle();
-  }, [response]);
+  }, [auth, response]);
 
   return (
     <SafeAreaView className="w-full h-full bg-primaryblue-300 items-center flex flex-col">

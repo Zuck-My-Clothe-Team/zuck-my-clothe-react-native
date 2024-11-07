@@ -169,7 +169,10 @@ export default function SearchBranchPage() {
         {/* Search and Map */}
         <Pressable
           className="w-full h-full bg-white relative"
-          onPressIn={Keyboard.dismiss}
+          onPressIn={() => {
+            Keyboard.dismiss();
+            setIsSearchTabVisible(false);
+          }}
         >
           {/* Search Input */}
           <View className="flex flex-row justify-center w-full absolute top-8 gap-x-4">
@@ -182,8 +185,9 @@ export default function SearchBranchPage() {
                 clearButtonMode="always"
                 keyboardType="default"
                 returnKeyType="search"
+                onPress={() => setIsSearchTabVisible(true)}
               />
-              {searchKeyword && (
+              {isSearchTabVisible && (
                 <View className="h-fit max-h-[20rem]">
                   <ScrollView className="bg-background-1 w-full px-4 rounded-lg border border-customgray-300 overflow-hidden">
                     {searchResult.map((branch, index) => (
@@ -191,22 +195,9 @@ export default function SearchBranchPage() {
                         key={index}
                         onPress={() => {
                           goToBranchRegion(branch);
+                          setIsSearchTabVisible(false);
                         }}
                         className="flex flex-row items-center justify-between py-3 border-b border-[#d9d9d9] overflow-hidden"
-                      >
-                        <Text className="text-black font-kanit text-lg">
-                          {branch.branch_name}
-                        </Text>
-                        <Feather name="chevron-right" size={24} color="black" />
-                      </TouchableOpacity>
-                    ))}
-                    {searchResult.map((branch, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => {
-                          goToBranchRegion(branch);
-                        }}
-                        className="flex flex-row items-center justify-between py-2 border-b border-[#d9d9d9] overflow-hidden"
                       >
                         <Text className="text-black font-kanit text-lg">
                           {branch.branch_name}
