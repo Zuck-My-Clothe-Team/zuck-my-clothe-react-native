@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Image,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -68,9 +69,9 @@ const BranchBottomSheet = ({
         }}
         handleIndicatorStyle={{ backgroundColor: "#E3E3E3", width: 76 }}
       >
-        <View style={styles.headerContainer}>
+        <Pressable style={styles.headerContainer} onPress={() => bottomSheetRef.current?.snapToIndex(2)}>
           <Text style={styles.headerText}>สาขาใกล้คุณ</Text>
-        </View>
+        </Pressable>
         <BottomSheetFlatList
           data={data}
           renderItem={({ item }: { item: IBranch }) => (

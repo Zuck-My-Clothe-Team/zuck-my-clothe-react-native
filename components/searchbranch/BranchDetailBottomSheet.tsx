@@ -3,10 +3,13 @@ import { IMachineInBranch } from "@/interface/machinebranch.interface";
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import Location from "expo-location";
+import { getDistance } from 'geolib';
 
 const BranchDetailBottomSheet = ({
   branchData,
   machineData,
+  userLocation,
   // userReviewData,
   className,
   isVisible,
@@ -15,11 +18,28 @@ const BranchDetailBottomSheet = ({
   branchData: IBranch;
   machineData: IMachineInBranch[];
   // userReviewData: any;
+  userLocation: Location.LocationObject | null;
   className?: string;
   isVisible?: boolean;
   setIsVisible?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const distance = useMemo(() => {
+    if (userLocation) {
+      return getDistance(
+        { latitude: userLocation.coords.latitude, longitude: userLocation.coords.longitude },
+        { latitude: branchData.branch_lat, longitude: branchData.branch_long }
+      );
+    }
+    return 0;
+  }, [userLocation, branchData]);
+
+  useEffect(() => {
+    console.log("distance", distance);
+    console.log("userLocation", userLocation);
+    console.log("branchData", branchData);
+  }, [branchData, distance, userLocation]);
 
   const snapPoints = useMemo(() => {
     return ["50%", "70%"];
@@ -35,11 +55,12 @@ const BranchDetailBottomSheet = ({
     [setIsVisible]
   );
 
-  // useEffect(() => {
-  //   if (!isVisible) {
-  //     bottomSheetRef.current?.close();
-  //   }
-  // }, [isVisible]);
+  useEffect(() => {
+    if (!isVisible) {
+      bottomSheetRef.current?.close();
+    }
+    console.log("isVisible", isVisible);
+  }, [isVisible]);
 
   // const SnapBottomSheetToIndex = useCallback((snapIndex: number) => {
   //   bottomSheetRef.current?.snapToIndex(snapIndex);
@@ -84,9 +105,9 @@ const BranchDetailBottomSheet = ({
               </Text>
               <Text style={styles.branchDistance}>
                 ระยะทาง{" "}
-                {branchData.distance >= 0.5
-                  ? `${branchData.distance.toFixed(1)} กิโลเมตร`
-                  : `${(branchData.distance * 1000).toFixed(1)} เมตร`}
+                {distance <= 500
+                  ? `${(distance).toFixed(1)} เมตร`
+                  : `${(distance / 1000).toFixed(1)} กิโลเมตร`}
               </Text>
             </View>
           </View>

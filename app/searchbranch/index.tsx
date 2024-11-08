@@ -8,7 +8,7 @@ import { Feather } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Location from "expo-location";
 import { router } from "expo-router";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -23,6 +23,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getDistance } from 'geolib';
 
 interface IRegion {
   latitude: number;
@@ -50,24 +51,25 @@ export default function SearchBranchPage() {
   const mapRef = useRef<MapView>(null);
 
   // Fetch nearby branches
-  useEffect(() => {
-    const fetchBranches = async () => {
-      if (location?.coords) {
-        try {
-          const data = await getClosestBranch({
-            user_lat: location.coords.latitude,
-            user_lon: location.coords.longitude,
-          });
-          setBranchData(data);
-        } catch (error) {
-          console.error("Failed to fetch branches:", error);
-        } finally {
-          setLoading(false);
-        }
+  const fetchBranches = useCallback(async () => {
+    if (location?.coords) {
+      try {
+        const data = await getClosestBranch({
+          user_lat: location.coords.latitude,
+          user_lon: location.coords.longitude,
+        });
+        setBranchData(data);
+      } catch (error) {
+        console.error("Failed to fetch branches:", error);
+      } finally {
+        setLoading(false);
       }
-    };
+    }
+  }, [location]);
+
+  useEffect(() => {
     fetchBranches();
-  }, [location, region]);
+  }, [location, region, fetchBranches, isSearchTabVisible]);
 
   const fetchMachineByBranchID = async (branch_id: string) => {
     try {
@@ -159,11 +161,14 @@ export default function SearchBranchPage() {
   }, []);
 
   const handleBranchPress = (branch: IBranch) => {
+    fetchBranches();
     goToBranchRegion(branch);
-    setSelectedBranch(branch);
     fetchMachineByBranchID(branch.branch_id);
+    setSelectedBranch(branch);
     setIsSearchTabVisible(false);
-    setIsBottomSheetVisible(false);
+    setIsBottomSheetVisible(true);
+    Keyboard.dismiss();
+    console.log("Branch Pressed:", branch);
   };
 
   if (loading) {
@@ -193,9 +198,9 @@ export default function SearchBranchPage() {
         <Pressable
           className="w-full h-full bg-white relative"
           onPressIn={() => {
-            Keyboard.dismiss();
             setIsSearchTabVisible(false);
             setIsBottomSheetVisible(false);
+            Keyboard.dismiss();
           }}
         >
           {/* Search Input */}
@@ -209,16 +214,23 @@ export default function SearchBranchPage() {
                 clearButtonMode="always"
                 keyboardType="default"
                 returnKeyType="search"
-                onPress={() => setIsSearchTabVisible(true)}
+                onPress={() => {
+                  setIsSearchTabVisible(true);
+                  setIsBottomSheetVisible(false);
+                }}
               />
               {isSearchTabVisible && (
                 <View className="h-fit max-h-[20rem]">
-                  <ScrollView className="bg-background-1 w-full px-4 rounded-lg border border-customgray-300 overflow-hidden">
+                  <ScrollView
+                    keyboardShouldPersistTaps="always"
+                    className="bg-background-1 w-full px-4 rounded-lg border border-customgray-300 overflow-hidden"
+                  >
                     {searchResult.map((branch, index) => (
                       <TouchableOpacity
                         key={index}
                         onPress={() => {
                           handleBranchPress(branch);
+                          console.log("Branch Pressed:", branch);
                         }}
                         className="flex flex-row items-center justify-between py-3 border-b border-[#d9d9d9] overflow-hidden"
                       >
@@ -272,6 +284,7 @@ export default function SearchBranchPage() {
                   }}
                   onPress={() => {
                     handleBranchPress(branch);
+                    console.log("Branch Pressed:", branch);
                   }}
                 />
               ))}
@@ -290,9 +303,12 @@ export default function SearchBranchPage() {
         />
         {selectedBranch !== undefined && (
           <BranchDetailBottomSheet
+            userLocation={location}
             branchData={selectedBranch ?? ({} as IBranch)}
             machineData={machineData}
             className=" absolute"
+            isVisible={isBottomSheetVisible}
+            setIsVisible={setIsBottomSheetVisible}
           />
         )}
       </SafeAreaView>
