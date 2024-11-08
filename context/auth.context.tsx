@@ -10,7 +10,7 @@ export const initialAuth: IUserAuthContext = {
   lastname: "",
   isAuth: false,
   phone: "",
-  profile_image_url: ""
+  profile_image_url: "",
 };
 
 interface AuthContextType {
@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     console.log("Logout initiated");
     try {
       await AsyncStorage.removeItem("accessToken");
-      setAuthContext(initialAuth);
+      setAuthContext({ ...authContext, isAuth: false });
       console.log("Logout success");
     } catch (error) {
       console.error("Error during logout:", error);

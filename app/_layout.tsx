@@ -23,10 +23,9 @@ import {
   NotoSans_900Black,
 } from "@expo-google-fonts/noto-sans";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen, Stack } from "expo-router";
 import React, { useEffect } from "react";
 import "../global.css";
-import '../utils/reanimatedConfig';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -60,7 +59,7 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <Slot />;
   }
   return (
     <AuthProvider>
@@ -69,6 +68,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="loginpage" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="searchbranch" options={{ headerShown: false }} />
         </Stack>
       </ProtectedLogin>
     </AuthProvider>
