@@ -1,24 +1,30 @@
+import { IBranch } from "@/interface/branch.interface";
+import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
-  Text,
-  TouchableOpacity,
-  View,
   Image,
   Platform,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useCallback, useMemo, useRef } from "react";
-import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { IBranch } from "@/interface/branch.interface";
 
 const BranchBottomSheet = ({
   data,
   className,
   onPressBranch,
+  onpressMachineInBranch,
+  isVisible,
+  setIsVisible,
 }: {
   data: IBranch[];
   className?: string;
   onPressBranch?: (branch: IBranch) => void;
+  onpressMachineInBranch?: (branch_id: string) => void;
   onpressUserLocation?: () => void;
+  isVisible?: boolean;
+  setIsVisible?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -30,8 +36,16 @@ const BranchBottomSheet = ({
   }, []);
 
   const handleSheetChange = useCallback((index: any) => {
-    // console.log("handleSheetChange", index);
-  }, []);
+    if (setIsVisible && index && index !== 0) {
+      setIsVisible(true);
+    }
+  }, [setIsVisible]);
+
+  useEffect(() => {
+    if (!isVisible) {
+      bottomSheetRef.current?.snapToIndex(0);
+    }
+  }, [isVisible]);
 
   const SnapBottomSheetToIndex = useCallback((snapIndex: number) => {
     bottomSheetRef.current?.snapToIndex(snapIndex);
@@ -67,6 +81,9 @@ const BranchBottomSheet = ({
                   if (onPressBranch) {
                     onPressBranch(item);
                     SnapBottomSheetToIndex(0);
+                    if (onpressMachineInBranch) {
+                      onpressMachineInBranch(item.branch_id);
+                    }
                   }
                 }}
               >
@@ -77,12 +94,14 @@ const BranchBottomSheet = ({
                   />
                 </View>
                 <View>
-                  <Text style={styles.branchTitle}>สาขา {item.branch_name}</Text>
+                  <Text style={styles.branchTitle}>
+                    สาขา {item.branch_name}
+                  </Text>
                   <Text style={styles.branchDistance}>
                     ระยะทาง{" "}
                     {item.distance >= 0.5
-                      ? `${item.distance.toFixed(1)} กม.`
-                      : `${(item.distance * 1000).toFixed(1)} ม.`}
+                      ? `${item.distance.toFixed(1)} กิโลเมตร`
+                      : `${(item.distance * 1000).toFixed(1)} เมตร`}
                   </Text>
                   <Text style={styles.branchDetail}>{item.branch_detail}</Text>
                 </View>
@@ -108,15 +127,14 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: "center",
-    fontFamily: "Kanit",
+    fontFamily: "kanit",
     fontSize: 20,
     color: "#ffffff",
   },
   locationButton: {
     position: "absolute",
     right: 20,
-    bottom: "20%", // Adjust this percentage to place it relative to BottomSheet's starting position
-    zIndex: 10,
+    bottom: "20%",
   },
   flatListContainer: {
     display: "flex",

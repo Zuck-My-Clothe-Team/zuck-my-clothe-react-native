@@ -1,6 +1,9 @@
 import { GetAllBranch, getClosestBranch } from "@/api/branch.api";
+import { getMachineByBranchID } from "@/api/machine.api";
 import BranchBottomSheet from "@/components/searchbranch/BranchBottomSheet";
+import BranchDetailBottomSheet from "@/components/searchbranch/BranchDetailBottomSheet";
 import { IBranch } from "@/interface/branch.interface";
+import { IMachineInBranch } from "@/interface/machinebranch.interface";
 import { Feather } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Location from "expo-location";
@@ -8,7 +11,6 @@ import { router } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   Image,
   Keyboard,
   Pressable,
@@ -37,9 +39,12 @@ export default function SearchBranchPage() {
   const [searchResult, setSearchResult] = useState<IBranch[]>([]);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [branchData, setBranchData] = useState<IBranch[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<IBranch>();
+  const [machineData, setMachineData] = useState<IMachineInBranch[]>([]);
   const [loading, setLoading] = useState(true);
   const [region, setRegion] = useState<IRegion>();
   const [isSearchTabVisible, setIsSearchTabVisible] = useState(false);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(true);
 
   // MapView ref for programmatically controlling the map
   const mapRef = useRef<MapView>(null);
@@ -63,6 +68,16 @@ export default function SearchBranchPage() {
     };
     fetchBranches();
   }, [location, region]);
+
+  const fetchMachineByBranchID = async (branch_id: string) => {
+    try {
+      const data = await getMachineByBranchID(branch_id);
+      setMachineData(data);
+      console.log("Machine data:", data);
+    } catch (error) {
+      console.error("Failed to fetch machines:", error);
+    }
+  };
 
   // Request location permission and get user's location
   useEffect(() => {
@@ -121,7 +136,7 @@ export default function SearchBranchPage() {
   const goToBranchRegion = (branch: IBranch) => {
     if (mapRef.current) {
       mapRef.current.animateToRegion({
-        latitude: branch.branch_lat,
+        latitude: branch.branch_lat - 0.0015,
         longitude: branch.branch_long,
         latitudeDelta: 0.01,
         longitudeDelta: 0.005,
@@ -142,6 +157,14 @@ export default function SearchBranchPage() {
   useMemo(async () => {
     await getAllDataBranch();
   }, []);
+
+  const handleBranchPress = (branch: IBranch) => {
+    goToBranchRegion(branch);
+    setSelectedBranch(branch);
+    fetchMachineByBranchID(branch.branch_id);
+    setIsSearchTabVisible(false);
+    setIsBottomSheetVisible(false);
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#000" className=" h-full" />;
@@ -172,6 +195,7 @@ export default function SearchBranchPage() {
           onPressIn={() => {
             Keyboard.dismiss();
             setIsSearchTabVisible(false);
+            setIsBottomSheetVisible(false);
           }}
         >
           {/* Search Input */}
@@ -194,8 +218,7 @@ export default function SearchBranchPage() {
                       <TouchableOpacity
                         key={index}
                         onPress={() => {
-                          goToBranchRegion(branch);
-                          setIsSearchTabVisible(false);
+                          handleBranchPress(branch);
                         }}
                         className="flex flex-row items-center justify-between py-3 border-b border-[#d9d9d9] overflow-hidden"
                       >
@@ -229,7 +252,12 @@ export default function SearchBranchPage() {
               style={{ height: "100%", zIndex: -1 }}
               provider={PROVIDER_GOOGLE}
               initialRegion={region}
+              onPress={() => {
+                setIsSearchTabVisible(false);
+                setIsBottomSheetVisible(false);
+              }}
               showsUserLocation={true}
+              showsMyLocationButton={false}
               toolbarEnabled={false} // Disable toolbar as we use custom button
               mapPadding={{ top: 0, right: 0, bottom: 55, left: 0 }}
               onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
@@ -242,16 +270,31 @@ export default function SearchBranchPage() {
                     latitude: branch.branch_lat,
                     longitude: branch.branch_long,
                   }}
-                  onPress={() => goToBranchRegion(branch)}
+                  onPress={() => {
+                    handleBranchPress(branch);
+                  }}
                 />
               ))}
             </MapView>
           )}
         </Pressable>
 
-        {/* Custom "My Location" Button */}
         {/* Bottom Sheet */}
-        <BranchBottomSheet data={branchData} onPressBranch={goToBranchRegion} />
+        <BranchBottomSheet
+          data={branchData}
+          onPressBranch={handleBranchPress}
+          onpressMachineInBranch={fetchMachineByBranchID}
+          className=" absolute"
+          isVisible={isBottomSheetVisible}
+          setIsVisible={setIsBottomSheetVisible}
+        />
+        {selectedBranch !== undefined && (
+          <BranchDetailBottomSheet
+            branchData={selectedBranch ?? ({} as IBranch)}
+            machineData={machineData}
+            className=" absolute"
+          />
+        )}
       </SafeAreaView>
     </GestureHandlerRootView>
   );
