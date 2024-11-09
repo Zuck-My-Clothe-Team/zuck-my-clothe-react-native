@@ -9,7 +9,7 @@ module.exports = {
     icon: "./assets/images/icon.png",
     scheme: "zuckmyclothe",
     jsEngine: "hermes",
-    userInterfaceStyle: "automatic",
+    userInterfaceStyle: "light",
     splash: {
       image: "./assets/images/splash.png",
       resizeMode: "contain",

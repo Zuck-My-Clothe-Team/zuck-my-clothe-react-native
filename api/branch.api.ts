@@ -29,3 +29,15 @@ export async function GetAllBranch() {
     throw error;
   }
 }
+
+export async function getBranchByID(branch_id: string) {
+  try {
+    const axios = await axiosInstance();
+    const result = await axios.get(`/branch/${branch_id}`);
+    const data: IBranch = result.data;
+    return data;
+  } catch (error) {
+    console.error("Error during fetch branch by id:", error);
+    throw error;
+  }
+}

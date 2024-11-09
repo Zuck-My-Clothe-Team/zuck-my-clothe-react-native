@@ -213,7 +213,7 @@ export default function SearchBranchPage() {
         >
           {/* Search Input */}
           <View className="flex flex-row justify-center w-full absolute top-8 gap-x-4">
-            <View className="w-[75%]">
+            <View className="w-[75%] ">
               <TextInput
                 className="bg-background-1 rounded-lg px-4 py-2 text-lg font-kanit border border-[#d9d9d9]"
                 placeholder="ค้นหาสาขา"
