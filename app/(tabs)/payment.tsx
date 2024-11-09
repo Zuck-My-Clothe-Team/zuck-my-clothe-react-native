@@ -38,7 +38,7 @@ const PaymentPage = () => {
         }}
         onBarcodeScanned={(event) => {
           router.push({
-            pathname: "/activity",
+            pathname: "/order_summary",
             params: { data: event.data },
           });
         }}
