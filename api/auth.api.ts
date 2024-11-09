@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/hooks/axiosInstance";
+import { IAuth } from "@/interface/auth.interface";
 import { IUserDetail } from "@/interface/userdetail.interface";
 
 export async function GoogleLogin(accessToken: string) {
@@ -26,5 +27,16 @@ export async function CheckToken(accessToken: string) {
     return data;
   } catch {
     return null;
+  }
+}
+
+export async function SignIn(data: IAuth) {
+  try {
+    const axios = await axiosInstance();
+    const result = await axios.post(`/auth/signin`, data);
+    return result;
+  } catch (error) {
+    console.error("Error during login:", error);
+    throw error;
   }
 }

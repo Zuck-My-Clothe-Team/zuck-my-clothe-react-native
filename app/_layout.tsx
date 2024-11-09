@@ -26,7 +26,7 @@ import { useFonts } from "expo-font";
 import { Slot, SplashScreen, Stack } from "expo-router";
 import React, { useEffect } from "react";
 import "../global.css";
-
+import "../utils/reanimatedConfig";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -66,7 +66,12 @@ export default function RootLayout() {
       <ProtectedLogin>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(employee)" options={{ headerShown: false }} />
           <Stack.Screen name="loginpage" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="login_employee"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="searchbranch" options={{ headerShown: false }} />
         </Stack>
