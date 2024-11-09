@@ -75,10 +75,18 @@ const ProtectedLogin: React.FC<Props> = ({ children }) => {
       if (!auth?.authContext.isAuth) {
         router.replace("/loginpage");
       } else {
-        router.replace("/(tabs)/home");
+        if (
+          auth?.authContext.role === "Employee" ||
+          auth?.authContext.role === "SuperAdmin" ||
+          auth?.authContext.role === "Manager"
+        ) {
+          router.replace("/(employee)/home");
+        } else if (auth.authContext.role === "Client") {
+          router.replace("/(tabs)/home");
+        }
       }
     }
-  }, [appIsReady, auth?.authContext.isAuth, router]);
+  }, [appIsReady, auth?.authContext.role]);
 
   if (!appIsReady) {
     return <LoadingBubble />;
