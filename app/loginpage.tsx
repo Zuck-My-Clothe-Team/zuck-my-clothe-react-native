@@ -32,7 +32,7 @@ export default function LoginPage() {
     androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
     scopes: ["profile", "email"],
     redirectUri: AuthSession.makeRedirectUri({
-      native: "com.sokungz.zuckmyclothe:/oauth2redirect",
+      native: "com.sokungz.zuckmyclothes:/oauth2redirect",
     }),
   });
 

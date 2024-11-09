@@ -8,7 +8,13 @@ import { Feather } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Location from "expo-location";
 import { router } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   Image,
@@ -23,7 +29,6 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getDistance } from 'geolib';
 
 interface IRegion {
   latitude: number;
@@ -39,6 +44,7 @@ export default function SearchBranchPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<IBranch[]>([]);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [allBranchData, setAllBranchData] = useState<IBranch[]>([]);
   const [branchData, setBranchData] = useState<IBranch[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<IBranch>();
   const [machineData, setMachineData] = useState<IMachineInBranch[]>([]);
@@ -52,12 +58,13 @@ export default function SearchBranchPage() {
 
   // Fetch nearby branches
   const fetchBranches = useCallback(async () => {
-    if (location?.coords) {
+    if (region?.latitude && region?.longitude) {
       try {
-        const data = await getClosestBranch({
-          user_lat: location.coords.latitude,
-          user_lon: location.coords.longitude,
+        const data: IBranch[] = await getClosestBranch({
+          user_lat: region.latitude,
+          user_lon: region.longitude,
         });
+
         setBranchData(data);
       } catch (error) {
         console.error("Failed to fetch branches:", error);
@@ -65,7 +72,7 @@ export default function SearchBranchPage() {
         setLoading(false);
       }
     }
-  }, [location]);
+  }, [region]);
 
   useEffect(() => {
     fetchBranches();
@@ -75,7 +82,6 @@ export default function SearchBranchPage() {
     try {
       const data = await getMachineByBranchID(branch_id);
       setMachineData(data);
-      console.log("Machine data:", data);
     } catch (error) {
       console.error("Failed to fetch machines:", error);
     }
@@ -109,18 +115,16 @@ export default function SearchBranchPage() {
   }, [location]);
 
   // Handle search functionality
-  const handleSearch = (searchWord: string) => {
-    setSearchKeyword(searchWord);
-    if (searchWord === "") {
-      setSearchResult(branchData);
-    } else {
-      setSearchResult(
-        branchData.filter((branch) =>
-          branch.branch_name.toLowerCase().includes(searchWord.toLowerCase())
-        )
-      );
+  const handleSearch = useCallback(() => {
+    if (searchKeyword === "") {
+      setSearchResult(allBranchData);
     }
-  };
+    setSearchResult(
+      allBranchData.filter((branch) =>
+        branch.branch_name.toLowerCase().includes(searchKeyword.toLowerCase())
+      )
+    );
+  }, [allBranchData, searchKeyword]);
 
   // Center the map to the user's current location
   const goToUserLocation = () => {
@@ -150,6 +154,7 @@ export default function SearchBranchPage() {
     try {
       const result = await GetAllBranch();
       setBranchData(result);
+      setAllBranchData(result);
       setSearchResult(result);
     } catch (error) {
       console.error("Error during fetch data (All Branch):", error);
@@ -160,6 +165,10 @@ export default function SearchBranchPage() {
     await getAllDataBranch();
   }, []);
 
+  useEffect(() => {
+    handleSearch();
+  }, [searchKeyword, handleSearch]);
+
   const handleBranchPress = (branch: IBranch) => {
     fetchBranches();
     goToBranchRegion(branch);
@@ -168,7 +177,6 @@ export default function SearchBranchPage() {
     setIsSearchTabVisible(false);
     setIsBottomSheetVisible(true);
     Keyboard.dismiss();
-    console.log("Branch Pressed:", branch);
   };
 
   if (loading) {
@@ -209,7 +217,9 @@ export default function SearchBranchPage() {
               <TextInput
                 className="bg-background-1 rounded-lg px-4 py-2 text-lg font-kanit border border-[#d9d9d9]"
                 placeholder="ค้นหาสาขา"
-                onChangeText={handleSearch}
+                onChangeText={(value) => {
+                  setSearchKeyword(value);
+                }}
                 value={searchKeyword}
                 clearButtonMode="always"
                 keyboardType="default"
@@ -230,14 +240,13 @@ export default function SearchBranchPage() {
                         key={index}
                         onPress={() => {
                           handleBranchPress(branch);
-                          console.log("Branch Pressed:", branch);
                         }}
-                        className="flex flex-row items-center justify-between py-3 border-b border-[#d9d9d9] overflow-hidden"
+                        className="flex flex-row items-center justify-between py-3 pr-5 border-b border-[#d9d9d9]"
                       >
-                        <Text className="text-black font-kanit text-lg">
+                        <Text className="text-text-1 font-kanit text-lg" ellipsizeMode="tail" numberOfLines={1}>
                           {branch.branch_name}
                         </Text>
-                        <Feather name="chevron-right" size={24} color="black" />
+                        <Feather name="chevron-right" size={24} color="#373737" />
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
@@ -268,15 +277,16 @@ export default function SearchBranchPage() {
                 setIsSearchTabVisible(false);
                 setIsBottomSheetVisible(false);
               }}
+              minZoomLevel={14}
               showsUserLocation={true}
               showsMyLocationButton={false}
               toolbarEnabled={false} // Disable toolbar as we use custom button
               mapPadding={{ top: 0, right: 0, bottom: 55, left: 0 }}
               onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
             >
-              {branchData.map((branch, index) => (
+              {branchData.map((branch) => (
                 <Marker
-                  key={index}
+                  key={branch.branch_id}
                   icon={require("../../assets/images/mapPin.png")}
                   coordinate={{
                     latitude: branch.branch_lat,
@@ -284,7 +294,6 @@ export default function SearchBranchPage() {
                   }}
                   onPress={() => {
                     handleBranchPress(branch);
-                    console.log("Branch Pressed:", branch);
                   }}
                 />
               ))}
@@ -294,7 +303,8 @@ export default function SearchBranchPage() {
 
         {/* Bottom Sheet */}
         <BranchBottomSheet
-          data={branchData}
+          branchData={branchData}
+          userLocation={location}
           onPressBranch={handleBranchPress}
           onpressMachineInBranch={fetchMachineByBranchID}
           className=" absolute"

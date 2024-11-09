@@ -16,11 +16,13 @@ module.exports = {
       backgroundColor: "#0285df",
     },
     ios: {
-      bundleIdentifier: "com.sokungz.zuckmyclothe",
+      bundleIdentifier: "com.sokungz.zuckmyclothes",
       config: {
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
       },
-      locationAlwaysAndWhenInUsePermission: "Allow $(PRODUCT_NAME) to use your location.",
+      locationAlwaysAndWhenInUsePermission:
+        "Allow $(PRODUCT_NAME) to use your location.",
+      cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
     },
     android: {
       adaptiveIcon: {
@@ -32,8 +34,10 @@ module.exports = {
           apiKey: process.env.GOOGLE_MAPS_API_KEY,
         },
       },
-      locationAlwaysAndWhenInUsePermission: "Allow $(PRODUCT_NAME) to use your location.",
-      package: "com.sokungz.zuckmyclothe",
+      locationAlwaysAndWhenInUsePermission:
+        "Allow $(PRODUCT_NAME) to use your location.",
+      cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
+      package: "com.sokungz.zuckmyclothes",
     },
     web: {
       bundler: "metro",

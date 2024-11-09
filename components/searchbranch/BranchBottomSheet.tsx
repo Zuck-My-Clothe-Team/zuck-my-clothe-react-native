@@ -10,22 +10,25 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Location from "expo-location";
+import { getDistance } from "geolib";
 
 const BranchBottomSheet = ({
-  data,
+  branchData,
   className,
   onPressBranch,
   onpressMachineInBranch,
   isVisible,
   setIsVisible,
+  userLocation,
 }: {
-  data: IBranch[];
+  branchData: IBranch[];
   className?: string;
   onPressBranch?: (branch: IBranch) => void;
   onpressMachineInBranch?: (branch_id: string) => void;
-  onpressUserLocation?: () => void;
   isVisible?: boolean;
   setIsVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  userLocation: Location.LocationObject | null;
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -36,11 +39,14 @@ const BranchBottomSheet = ({
     return ["8.25%", "20%", "50%", "70%"];
   }, []);
 
-  const handleSheetChange = useCallback((index: any) => {
-    if (setIsVisible && index && index !== 0) {
-      setIsVisible(true);
-    }
-  }, [setIsVisible]);
+  const handleSheetChange = useCallback(
+    (index: any) => {
+      if (setIsVisible && index && index !== 0) {
+        setIsVisible(true);
+      }
+    },
+    [setIsVisible]
+  );
 
   useEffect(() => {
     if (!isVisible) {
@@ -69,48 +75,69 @@ const BranchBottomSheet = ({
         }}
         handleIndicatorStyle={{ backgroundColor: "#E3E3E3", width: 76 }}
       >
-        <Pressable style={styles.headerContainer} onPress={() => bottomSheetRef.current?.snapToIndex(2)}>
+        <Pressable
+          style={styles.headerContainer}
+          onPress={() => bottomSheetRef.current?.snapToIndex(2)}
+        >
           <Text style={styles.headerText}>สาขาใกล้คุณ</Text>
         </Pressable>
         <BottomSheetFlatList
-          data={data}
-          renderItem={({ item }: { item: IBranch }) => (
-            <View>
-              <TouchableOpacity
-                style={styles.flatListContainer}
-                onPress={() => {
-                  if (onPressBranch) {
-                    onPressBranch(item);
-                    SnapBottomSheetToIndex(0);
-                    if (onpressMachineInBranch) {
-                      onpressMachineInBranch(item.branch_id);
+          data={branchData}
+          renderItem={({ item }: { item: IBranch }) => {
+            let distance = 0;
+            if (userLocation) {
+              distance = getDistance(
+                {
+                  latitude: userLocation.coords.latitude,
+                  longitude: userLocation.coords.longitude,
+                },
+                {
+                  latitude: item.branch_lat,
+                  longitude: item.branch_long,
+                }
+              );
+            }
+            return (
+              <View>
+                <TouchableOpacity
+                  style={styles.flatListContainer}
+                  onPress={() => {
+                    if (onPressBranch) {
+                      onPressBranch(item);
+                      SnapBottomSheetToIndex(0);
+                      if (onpressMachineInBranch) {
+                        onpressMachineInBranch(item.branch_id);
+                      }
                     }
-                  }
-                }}
-              >
-                <View>
-                  <Image
-                    source={require("@/assets/images/icon.png")}
-                    style={{ width: 58, height: 58 }}
-                  />
-                </View>
-                <View>
-                  <Text style={styles.branchTitle}>
-                    สาขา {item.branch_name}
-                  </Text>
-                  <Text style={styles.branchDistance}>
-                    ระยะทาง{" "}
-                    {item.distance >= 0.5
-                      ? `${item.distance.toFixed(1)} กิโลเมตร`
-                      : `${(item.distance * 1000).toFixed(1)} เมตร`}
-                  </Text>
-                  <Text style={styles.branchDetail}>{item.branch_detail}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
+                  }}
+                >
+                  <View>
+                    <Image
+                      source={require("@/assets/images/icon.png")}
+                      style={{ width: 58, height: 58 }}
+                    />
+                  </View>
+                  <View>
+                    <Text style={styles.branchTitle}>
+                      สาขา {item.branch_name}
+                    </Text>
+                    <Text style={styles.branchDistance}>
+                      ระยะทาง{" "}
+                      {distance <= 500
+                        ? `${distance} เมตร`
+                        : `${(distance / 1000).toFixed(1)} กิโลเมตร`}
+                    </Text>
+                    <Text style={styles.branchDetail}>
+                      {item.branch_detail}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
           className="bg-white"
         />
+        <View className=" h-4 bg-background-1"></View>
       </BottomSheet>
     </>
   );

@@ -15,7 +15,7 @@ import {
   View,
 } from "react-native";
 
-const profilePic = require("../../assets/images/profilepage/profilepic.jpg");
+const profilePic = require("../../assets/images/profilepage/user.png");
 const profilePageBG = require("../../assets/images/profilepage/Bubble Bung Bung.png");
 
 interface OptionCardProps {
@@ -101,7 +101,7 @@ const ProfilePage = () => {
         <View className=" flex flex-col mt-20 w-full gap-y-8 max-h-screen pb-16">
           <View className=" flex flex-col gap-y-4 justify-center items-center">
             <Text className=" text-text-1 font-notoMedium text-3xl">
-              {userData!.firstname} {userData!.lastname}
+              {userData!.firstname}
             </Text>
             <Text className=" text-text-1 font-notoLight text-base">
               {userData!.email}
