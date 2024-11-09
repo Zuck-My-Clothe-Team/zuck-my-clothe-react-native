@@ -4,11 +4,18 @@ import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 
 const PaymentPage = () => {
-  const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false); // Add scanned state
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Reset scanned state when the screen is focused
+      setScanned(false);
+    }, [])
+  );
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -32,15 +39,19 @@ const PaymentPage = () => {
     <View style={styles.container}>
       <CameraView
         style={styles.camera}
-        facing={facing}
         barcodeScannerSettings={{
           barcodeTypes: ["qr"],
         }}
+        
         onBarcodeScanned={(event) => {
-          router.push({
-            pathname: "/order_summary",
-            params: { data: event.data },
-          });
+          console.log(event.data)
+          if (!scanned) {
+            setScanned(true); // Set scanned to true to prevent further scans
+            router.push({
+              pathname: "/order_summary",
+              params: { data: event.data },
+            });
+          }
         }}
       >
         <SafeAreaView className=" h-full">
