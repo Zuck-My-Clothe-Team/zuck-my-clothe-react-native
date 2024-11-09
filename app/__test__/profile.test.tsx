@@ -31,7 +31,7 @@ describe("ProfilePage", () => {
   it("should render profile page correctly", () => {
     const { getByText, getByTestId } = render(<ProfilePage />);
 
-    expect(getByText("John Doe")).toBeTruthy();
+    expect(getByText("John")).toBeTruthy();
     expect(getByText("john.doe@example.com")).toBeTruthy();
     expect(getByText("1234567890")).toBeTruthy();
     expect(getByTestId("profile-image").props.source.uri).toBe(

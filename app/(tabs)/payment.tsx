@@ -1,5 +1,5 @@
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +17,16 @@ const PaymentPage = () => {
     }, [])
   );
 
+  useEffect(() => {
+    if (permission?.granted) {
+      // Camera permissions are granted.
+      return;
+    }
+
+    // Request camera permissions when the component mounts.
+    requestPermission();
+  }, [permission?.granted, requestPermission]);
+
   if (!permission) {
     // Camera permissions are still loading.
 
@@ -26,12 +36,13 @@ const PaymentPage = () => {
   if (!permission.granted) {
     // Camera permissions are not granted yet.
     return (
-      <View style={styles.container}>
-        <Text style={styles.message}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
+      // <View style={styles.container}>
+      //   <Text style={styles.message}>
+      //     We need your permission to show the camera
+      //   </Text>
+      //   <Button onPress={requestPermission} title="grant permission" />
+      // </View>
+      <>{requestPermission}</>
     );
   }
 
@@ -42,9 +53,8 @@ const PaymentPage = () => {
         barcodeScannerSettings={{
           barcodeTypes: ["qr"],
         }}
-        
         onBarcodeScanned={(event) => {
-          console.log(event.data)
+          console.log(event.data);
           if (!scanned) {
             setScanned(true); // Set scanned to true to prevent further scans
             router.push({

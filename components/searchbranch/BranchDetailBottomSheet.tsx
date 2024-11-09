@@ -35,12 +35,6 @@ const BranchDetailBottomSheet = ({
     return 0;
   }, [userLocation, branchData]);
 
-  useEffect(() => {
-    console.log("distance", distance);
-    console.log("userLocation", userLocation);
-    console.log("branchData", branchData);
-  }, [branchData, distance, userLocation]);
-
   const snapPoints = useMemo(() => {
     return ["50%", "70%"];
   }, []);
@@ -59,7 +53,6 @@ const BranchDetailBottomSheet = ({
     if (!isVisible) {
       bottomSheetRef.current?.close();
     }
-    console.log("isVisible", isVisible);
   }, [isVisible]);
 
   // const SnapBottomSheetToIndex = useCallback((snapIndex: number) => {

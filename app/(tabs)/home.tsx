@@ -59,7 +59,7 @@ const OptionCard: React.FC<OptionCardProps> = ({ zuckNumber, zuckRemain }) => {
 const Homepage = () => {
   const auth = useAuth();
   const userData: IUserAuthContext | undefined = auth?.authContext;
-  const profilePic = require("../../assets/images/profilepage/profilepic.jpg");
+  const profilePic = require("../../assets/images/profilepage/user.png");
 
   const itemstyle = "w-20 h-28 flex flex-col";
   const upperitemstyle = "h-[70%] items-center justify-center";
@@ -70,12 +70,6 @@ const Homepage = () => {
 
   const [isWashing, setIsWashing] = useState(true);
   const [isSnap, setIsSnap] = useState(0);
-
-  const item = useLocalSearchParams();
-  const router = useRouter();
-  // function handleIsWashing() {
-  //   setIsWashing(!isWashing);
-  // }
 
   const mockUpPromotionData = [
     { number: 1, text: "Yestood 1" },
@@ -104,7 +98,7 @@ const Homepage = () => {
     {
       name: "ค้นหาร้าน",
       img_url: require("../../assets/images/mainpage/location.png"),
-      path: "/activity",
+      path: "/searchbranch",
       width: 37,
     },
     {
