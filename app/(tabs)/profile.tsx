@@ -4,7 +4,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { SplashScreen } from "expo-router";
+import { router, SplashScreen } from "expo-router";
 import React from "react";
 import {
   Dimensions,
@@ -57,6 +57,9 @@ const ProfilePage = () => {
     {
       title: "ที่อยู่",
       icon: <AntDesign name="rightcircleo" size={22} color="#71BFFF" />,
+      onpress: () => {
+        router.push("/(profile)/(address)/address");
+      },
     },
     {
       title: "ข้อกำหนดเงื่อนไขและนโยบายอื่น ๆ",
@@ -83,7 +86,7 @@ const ProfilePage = () => {
   return (
     <View className="flex-1 flex-col bg-secondaryblue-200 w-full">
       <View className=" basis-1/4 relative w-full">
-        <Image className="w-full" source={profilePageBG}/>
+        <Image className="w-full" source={profilePageBG} />
       </View>
       <View className="rounded-t-[60px] h-full w-full bg-white relative flex items-center">
         <View className=" absolute -top-16 rounded-full size-32 border-[5px] border-secondaryblue-200 bg-secondaryblue-200 flex">
