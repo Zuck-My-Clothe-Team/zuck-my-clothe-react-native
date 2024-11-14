@@ -12,3 +12,15 @@ export async function getMachineByBranchID(branch_id: string) {
     throw error;
   }
 }
+
+export async function getMachineDetailBySerial(serial_id: string) {
+  try {
+    const axios = await axiosInstance();
+    const result = await axios.get(`/machine/detail/${serial_id}`);
+    const data: IMachineInBranch = result.data;
+    return data;
+  } catch (error) {
+    console.error("Error during fetch machine by branch id:", error);
+    throw error;
+  }
+}

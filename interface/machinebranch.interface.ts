@@ -11,5 +11,12 @@ export interface IMachineInBranch {
   machine_type: string;
   updated_at: string;
   updated_by: string;
-  weight: number;
+  weight: 0 | 7 | 14 | 21;
 }
+
+export const MachinePrice = {
+  0: 0,
+  7: 50,
+  14: 100,
+  21: 150,
+};
