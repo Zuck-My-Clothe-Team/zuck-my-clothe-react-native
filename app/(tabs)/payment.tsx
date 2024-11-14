@@ -1,10 +1,11 @@
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router, useFocusEffect } from "expo-router";
+import { getMachineDetailBySerial } from "@/api/machine.api";
 
 const PaymentPage = () => {
   const [permission, requestPermission] = useCameraPermissions();
@@ -64,10 +65,12 @@ const PaymentPage = () => {
           onBarcodeScanned={(event) => {
             if (!scanned) {
               setScanned(true); // Set scanned to true to prevent further scans
+              // await handleScanner(event.data);
               router.push({
                 pathname: "/order_summary",
                 params: { data: event.data },
               });
+
             }
           }}
         >

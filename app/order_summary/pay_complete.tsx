@@ -31,20 +31,20 @@ const pay_complete = () => {
         </View>
 
         <View className="justify-evenly absolute inset-x-0 bottom-0 h-48">
-          <View className="border border-white items-center px-7 py-3 w-full rounded">
-            <TouchableOpacity onPress={() => router.push("/(tabs)/payment")}>
+          <TouchableOpacity onPress={() => router.push("/(tabs)/payment")}>
+            <View className="border border-white items-center px-7 py-3 w-full rounded">
               <Text className="text-text-2 font-kanit text-xl">
                 ใช้งานเครื่องซักผ้าต่อไป
               </Text>
-            </TouchableOpacity>
-          </View>
-          <View className="bg-text-2 items-center px-7 py-3 bottom-0 w-full rounded">
-            <TouchableOpacity onPress={() => router.push("/(tabs)/home")}>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/(tabs)/home")}>
+            <View className="bg-text-2 items-center px-7 py-3 bottom-0 w-full rounded">
               <Text className="text-xl font-kanit text-primaryblue-200">
                 กลับสู่หน้าหลัก
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </View>
