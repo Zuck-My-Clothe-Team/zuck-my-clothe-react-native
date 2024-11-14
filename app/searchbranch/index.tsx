@@ -4,6 +4,7 @@ import BranchBottomSheet from "@/components/searchbranch/BranchBottomSheet";
 import BranchDetailBottomSheet from "@/components/searchbranch/BranchDetailBottomSheet";
 import { IBranch } from "@/interface/branch.interface";
 import { IMachineInBranch } from "@/interface/machinebranch.interface";
+import { IRegion } from "@/interface/region.interface";
 import { Feather } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Location from "expo-location";
@@ -29,13 +30,6 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-interface IRegion {
-  latitude: number;
-  longitude: number;
-  latitudeDelta: number;
-  longitudeDelta: number;
-}
 
 export default function SearchBranchPage() {
   const [location, setLocation] = useState<Location.LocationObject | null>(
@@ -243,10 +237,18 @@ export default function SearchBranchPage() {
                         }}
                         className="flex flex-row items-center justify-between py-3 pr-5 border-b border-[#d9d9d9]"
                       >
-                        <Text className="text-text-1 font-kanit text-lg" ellipsizeMode="tail" numberOfLines={1}>
+                        <Text
+                          className="text-text-1 font-kanit text-lg"
+                          ellipsizeMode="tail"
+                          numberOfLines={1}
+                        >
                           {branch.branch_name}
                         </Text>
-                        <Feather name="chevron-right" size={24} color="#373737" />
+                        <Feather
+                          name="chevron-right"
+                          size={24}
+                          color="#373737"
+                        />
                       </TouchableOpacity>
                     ))}
                   </ScrollView>

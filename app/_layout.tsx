@@ -66,6 +66,7 @@ export default function RootLayout() {
       <ProtectedLogin>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(profile)" options={{ headerShown: false }} />
           <Stack.Screen name="(employee)" options={{ headerShown: false }} />
           <Stack.Screen name="loginpage" options={{ headerShown: false }} />
           <Stack.Screen
