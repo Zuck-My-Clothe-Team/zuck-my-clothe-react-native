@@ -18,14 +18,16 @@ import React, {
 } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Keyboard,
+  Linking,
   Pressable,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
@@ -82,19 +84,37 @@ export default function SearchBranchPage() {
   };
 
   // Request location permission and get user's location
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        console.log(errorMsg);
-        return;
-      }
+  useMemo(async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      console.log(errorMsg);
+      Alert.alert(
+        "Permission denied",
+        "Please allow to use your location to use branch search feature.",
+        [
+          {
+            text: "Cancel",
+            onPress: () => {
+              router.navigate("/(tabs)/home");
+            },
+          },
+          {
+            text: "Go to Settings",
+            onPress: async () => {
+              await Linking.openSettings();
+              router.replace("/(tabs)/home");
+            },
+          },
+        ]
+      );
+      return;
+    }
 
-      const loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc);
-    })();
-  }, [errorMsg]);
+    const loc = await Location.getCurrentPositionAsync({});
+    setLocation(loc);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Set initial region based on location
   useEffect(() => {
