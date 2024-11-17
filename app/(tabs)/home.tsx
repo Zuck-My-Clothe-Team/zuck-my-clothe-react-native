@@ -72,13 +72,18 @@ const Homepage = () => {
   const [isSnap, setIsSnap] = useState(0);
 
   const mockUpPromotionData = [
-    { number: 1, text: "Yestood 1" },
-    { number: 2, text: "Yestood 2" },
-    { number: 3, text: "Yestood 3" },
-    { number: 4, text: "Yestood 4" },
-    { number: 5, text: "Yestood 5" },
+    { number: 1, text: "Test 1" },
+    { number: 2, text: "Test 2" },
+    { number: 3, text: "Test 3" },
+    { number: 4, text: "Test 4" },
+    { number: 5, text: "Test 5" },
     // { number: 6, text: "Yestood 6" },
   ];
+
+  const carouselPic = [
+    { number: 1, image: require("@/assets/images/heropic1.png") },
+    { number: 2, image: require("@/assets/images/heropic2.png") },
+  ]
 
   const mockUpZuckMachineData = [
     { number: 1, minute: 24 },
@@ -104,7 +109,7 @@ const Homepage = () => {
     {
       name: "รับ-ส่งผ้า",
       img_url: require("../../assets/images/mainpage/wash-send.png"),
-      path: "/activity",
+      path: "/delivery",
       width: 44,
     },
     {
@@ -160,14 +165,15 @@ const Homepage = () => {
         className="w-full h-full bg-white flex flex-col"
         showsVerticalScrollIndicator={false}
       >
-        <View className="mt-3 h-72 bg-customgray-400 relative">
+        <View className="mt-3 relative">
           <Carousel
             loop
             width={Dimensions.get("window").width}
-            height={252}
+            height={170}
             autoPlay={true}
-            data={mockUpPromotionData}
-            scrollAnimationDuration={1000}
+            data={carouselPic}
+            autoPlayInterval={4000}
+            scrollAnimationDuration={2000}
             onSnapToItem={(item) => {
               setIsSnap(item);
             }}
@@ -175,27 +181,28 @@ const Homepage = () => {
               <View
                 style={{
                   flex: 1,
-                  borderWidth: 1,
                   justifyContent: "center",
                 }}
               >
-                <Text style={{ textAlign: "center", fontSize: 30 }}>
+                <Image
+                  source={item.image}
+                  style={{ width: "100%", height: "100%" }}
+                  resizeMode="contain"
+                />
+                {/* <Text style={{ textAlign: "center", fontSize: 30 }}>
                   {item.number}
-                </Text>
-                <Text style={{ textAlign: "center", fontSize: 30 }}>
-                  {item.text}
-                </Text>
+                </Text> */}
               </View>
             )}
           />
 
           {/* carousel dot */}
-          <View className=" w-full justify-center gap-2 flex flex-row py-4">
-            {mockUpPromotionData.map((index, item) => (
+          <View className=" w-full justify-center gap-2 flex flex-row py-4 absolute bottom-0">
+            {carouselPic.map((index, item) => (
               <View
                 key={item}
-                className={` size-3 rounded-full ${
-                  isSnap === item ? `bg-secondaryblue-200` : `bg-customgray-100`
+                className={` size-3 rounded-full border border-customgray-400 ${
+                  isSnap === item ? `bg-secondaryblue-200` : `bg-customgray-200`
                 } justify-center items-center`}
               ></View>
             ))}

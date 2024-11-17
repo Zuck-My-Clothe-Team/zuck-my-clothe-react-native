@@ -19,7 +19,7 @@ const TabsLayout = () => {
         />
         <Tabs.Screen
           name="message"
-          options={{ headerShown: false, title: "ข้อความ" }}
+          options={{ headerShown: false, title: "แจ้งเตือน" }}
         />
         <Tabs.Screen
           name="profile"

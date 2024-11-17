@@ -44,15 +44,14 @@ const AddressPage = () => {
   return (
     <SafeAreaView style={{ backgroundColor: "#0285DF" }}>
       <View style={styles.headerBg}>
-        <AntDesign
-          name="arrowleft"
-          size={24}
+        <TouchableOpacity
           style={{ position: "absolute", left: 10, zIndex: 10 }}
-          color="#71BFFF"
           onPress={() => {
             router.back();
           }}
-        />
+        >
+          <AntDesign name="arrowleft" size={24} color="#71BFFF" />
+        </TouchableOpacity>
         <View style={styles.header}>
           <Text style={styles.textHeader}>ที่อยู่</Text>
         </View>

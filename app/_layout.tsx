@@ -76,6 +76,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="searchbranch" options={{ headerShown: false }} />
           <Stack.Screen name="order_summary" options={{ headerShown: false }} />
+          <Stack.Screen name="(delivery)" options={{ headerShown: false }} />
         </Stack>
       </ProtectedLogin>
     </AuthProvider>
