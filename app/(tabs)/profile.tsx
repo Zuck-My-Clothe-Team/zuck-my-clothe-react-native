@@ -72,6 +72,9 @@ const ProfilePage = () => {
     {
       title: "ติดต่อ Support",
       icon: <Feather name="phone" size={22} color="#71BFFF" />,
+      onpress: () => {
+        router.push("/(profile)/contact")
+      }
     },
     {
       title: "ออกจากระบบ",

@@ -34,6 +34,7 @@ const OrderSummary = () => {
       setLoading(false);
 
       if (!machine.is_active) {
+        setLoading(false);
         setModalVisible(true);
       }
     } catch (error) {

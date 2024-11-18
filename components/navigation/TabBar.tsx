@@ -24,7 +24,7 @@ const TabBar = ({ state, descriptors, navigation }: TabbarProps) => {
   const screenHeight = Dimensions.get("window").height;
   const tabIcons = {
     home: <Ionicons name="home" size={28} />,
-    activity: <FontAwesome5 name="shopping-basket" size={28} />,
+    history: <FontAwesome5 name="shopping-basket" size={28} />,
     payment: (
       <View style={styles.paymentContainer}>
         <TouchableOpacity

@@ -1,7 +1,13 @@
 import { useAuth } from "@/context/auth.context";
 import { IUserAuthContext } from "@/interface/userdetail.interface";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Href, router, SplashScreen, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  Href,
+  router,
+  SplashScreen,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -98,8 +104,7 @@ const Homepage = () => {
     width: number;
   }
 
-
-  const actionbutton : actionButtonProps[] = [
+  const actionbutton: actionButtonProps[] = [
     {
       name: "ค้นหาร้าน",
       img_url: require("../../assets/images/mainpage/location.png"),
@@ -115,13 +120,13 @@ const Homepage = () => {
     {
       name: "รายงาน",
       img_url: require("../../assets/images/mainpage/report.png"),
-      path: "/activity",
+      path: "/history",
       width: 44,
     },
     {
       name: "รีวิว",
       img_url: require("../../assets/images/mainpage/review.png"),
-      path: "/activity",
+      path: "/history",
       width: 55,
     },
   ];
