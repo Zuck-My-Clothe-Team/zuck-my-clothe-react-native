@@ -94,7 +94,5 @@ export interface IOrderReview {
   review_comment: string,
   star_rating: number,
   userID: string,
-  user_detail: IUserDetail
-  zuck_onsite: true;
 }
 
