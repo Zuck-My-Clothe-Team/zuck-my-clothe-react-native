@@ -10,8 +10,8 @@ const TabsLayout = () => {
           options={{ headerShown: false, title: "หน้าหลัก" }}
         />
         <Tabs.Screen
-          name="activity"
-          options={{ headerShown: false, title: "กิจกรรม" }}
+          name="history"
+          options={{ headerShown: false, title: "ประวัติ" }}
         />
         <Tabs.Screen
           name="payment"

@@ -1,25 +1,82 @@
-export interface INewOrder {
-  branch_id: string;
-  delivery_address: string;
-  delivery_lat: number;
-  delivery_long: number;
-  order_detail: IOrderDetail[];
-  order_note: string;
-  userID: string;
-  zuck_onsite: boolean;
+import { IUserDetail } from "./userdetail.interface";
+
+export enum WorkingStatus {
+  Waiting = "Waiting",
+  Pickup = "Pickup",
+  BackToStore = "BackToStore",
+  Processing = "Processing",
+  OutOfDelivery = "OutOfDelivery",
+  Completed = "Completed",
+  Canceled = "Canceled",
 }
 
-export interface ICreatedOrder {
-  data: any;
+export enum WorkingStatusTH {
+  Waiting = "มาใหม่",
+  Pickup = "กำลังรับผ้า",
+  BackToStore = "ผ้าถึงร้าน",
+  Processing = "กำลังทำงาน",
+  OutOfDelivery = "กำลังส่งผ้า",
+  Completed = "เสร็จสิ้น",
+  Canceled = "ยกเลิก",
+}
+
+export enum OrderStatus {
+  Waiting = "Waiting",
+  Processing = "Processing",
+  Completed = "Completed",
+  Canceled = "Canceled",
+}
+
+export enum ServiceType {
+  Washing = "Washing",
+  Drying = "Drying",
+  Pickup = "Pickup",
+  Delivery = "Delivery",
+  Agents = "Agents",
+}
+
+export enum ServiceTypeTH {
+  Washing = "เครื่องซัก",
+  Drying = "เครื่องอบ",
+  Pickup = "รับผ้า",
+  Delivery = "ส่งผ้า",
+  Agents = "ค่าน้ำยาซัก-ปรับผ้านุ่ม",
+  DeliveryOrPickup = "รับ-ส่งผ้า",
+}
+
+export interface IOrderUpdateDTO {
+  finished_at: string;
+  machine_serial: string | null;
+  order_basket_id: string;
+  order_status: OrderStatus;
+}
+
+export interface IOrderDetail {
+  created_at: string;
+  created_by: string;
+  deleted_at: string;
+  deleted_by: string;
+  finished_at: string;
+  machine_serial: string;
+  order_basket_id: string;
+  order_header_id: string;
+  order_status: OrderStatus;
+  service_type: ServiceType;
+  updated_at: string;
+  updated_by: string;
+  weight: 0 | 7 | 14 | 21;
+}
+
+export interface IOrder {
   branch_id: string;
   created_at: string;
   created_by: string;
-  deleted_at: null;
+  deleted_at: string;
   deleted_by: string;
   delivery_address: string;
   delivery_lat: number;
   delivery_long: number;
-  order_details: ICreatedOrderDetail[];
+  order_details: IOrderDetail[];
   order_header_id: string;
   order_note: string;
   payment_id: string;
@@ -27,37 +84,17 @@ export interface ICreatedOrder {
   star_rating: number;
   updated_at: string;
   updated_by: string;
-  user_detail: {
-    email: string;
-    firstname: string;
-    google_id: string;
-    lastname: string;
-    phone: string;
-    profile_image_url: string;
-    role: string;
-    user_id: string;
-  };
   user_id: string;
+  user_detail: IUserDetail;
+  zuck_onsite: boolean;
+}
+
+export interface IOrderReview {
+  order_header_id: string,
+  review_comment: string,
+  star_rating: number,
+  userID: string,
+  user_detail: IUserDetail
   zuck_onsite: true;
 }
 
-interface IOrderDetail {
-  service_type: string;
-  weight: 0 | 7 | 14 | 21;
-}
-
-interface ICreatedOrderDetail {
-  created_at: string;
-  created_by: string;
-  deleted_at: null;
-  deleted_by: string;
-  finished_at: string;
-  machine_serial: string;
-  order_basket_id: string;
-  order_header_id: string;
-  order_status: string;
-  service_type: string;
-  updated_at: string;
-  updated_by: string;
-  weight: number;
-}
