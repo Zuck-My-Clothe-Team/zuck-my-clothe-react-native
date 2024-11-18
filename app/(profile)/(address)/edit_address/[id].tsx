@@ -15,7 +15,6 @@ import React, {
   useState,
 } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -26,6 +25,7 @@ import {
 import { IRegion } from "@/interface/region.interface";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { useLocationContext } from "@/context/location.context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const EditAddressPage: React.FC = () => {
   const { id } = useLocalSearchParams<{

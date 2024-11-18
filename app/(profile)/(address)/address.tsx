@@ -6,13 +6,13 @@ import { useFocusEffect } from "expo-router";
 import { router } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AddressPage = () => {
   const [addressData, setAddressData] = useState<IAddress[]>([]);

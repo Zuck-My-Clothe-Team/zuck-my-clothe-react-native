@@ -65,15 +65,16 @@ export default function RootLayout() {
     <AuthProvider>
       <ProtectedLogin>
         <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="loginpage" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(profile)" options={{ headerShown: false }} />
           <Stack.Screen name="(employee)" options={{ headerShown: false }} />
-          <Stack.Screen name="loginpage" options={{ headerShown: false }} />
+          <Stack.Screen name="(order)" options={{ headerShown: false }} />
           <Stack.Screen
             name="login_employee"
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="searchbranch" options={{ headerShown: false }} />
           <Stack.Screen name="order_summary" options={{ headerShown: false }} />
           <Stack.Screen name="(delivery)" options={{ headerShown: false }} />
