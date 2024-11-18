@@ -7,6 +7,10 @@ const TabsLayout = () => {
     <Tabs tabBar={(props) => <TabBar {...props} />}>
       <Tabs.Screen
         name="home"
+        options={{ headerShown: false, title: "ออเดอร์" }}
+      />
+      <Tabs.Screen
+        name="profile"
         options={{ headerShown: false, title: "หน้าหลัก" }}
       />
     </Tabs>
