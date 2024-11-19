@@ -69,7 +69,7 @@ describe("ProfilePage", () => {
   it("should render all option cards", () => {
     const { getByText } = render(<ProfilePage />);
 
-    expect(getByText("ข้อมูลส่วนตัว")).toBeTruthy();
+    expect(getByText("แก้ไขข้อมูลส่วนตัว")).toBeTruthy();
     expect(getByText("ที่อยู่")).toBeTruthy();
     expect(getByText("ข้อกำหนดเงื่อนไขและนโยบายอื่น ๆ")).toBeTruthy();
     expect(getByText("ตั้งค่า")).toBeTruthy();

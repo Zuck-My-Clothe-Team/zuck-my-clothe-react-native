@@ -51,8 +51,11 @@ const ProfilePage = () => {
 
   const cardOptionData = [
     {
-      title: "ข้อมูลส่วนตัว",
+      title: "แก้ไขข้อมูลส่วนตัว",
       icon: <AntDesign name="rightcircleo" size={22} color="#71BFFF" />,
+      onpress:() => {
+        router.push("/(profile)/edit_profile")
+      }
     },
     {
       title: "ที่อยู่",
