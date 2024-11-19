@@ -1,3 +1,20 @@
+export interface IUsers
+  {
+    created_at: string;
+    deleteAt: null;
+    email: string;
+    firstname: string;
+    google_id: string;
+    lastname: string;
+    password: string;
+    phone: string;
+    profile_image_url: string;
+    role: IRoles;
+    updated_at: string;
+    user_id: string
+  }
+
+
 export interface IUserAuthContext extends IUserDetail {
   isAuth: boolean;
 }
@@ -28,3 +45,18 @@ export interface IUserAddress {
   user_id: string;
   zipcode: string;
 }
+
+export enum IRoles {
+  SuperAdmin = "SuperAdmin",
+  BranchManager = "BranchManager",
+  Employee = "Employee",
+  Client = "Client"
+}
+
+export interface IUserUpdate{
+    firstname: string;
+    lastname: string;
+    phone: string;
+    role: IRoles;
+  }
+
