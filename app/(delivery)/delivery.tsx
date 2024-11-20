@@ -648,7 +648,7 @@ const DeliveryPage = () => {
                               containerStyle={{ borderRadius: 10 }}
                               inputSearchStyle={{
                                 borderRadius: 10,
-                                fontFamily: "Kanit",
+                                fontFamily: "Kanit_300Light",
                                 fontWeight: 300,
                                 fontSize: 14,
                               }}
@@ -838,7 +838,7 @@ export default DeliveryPage;
 const styles = StyleSheet.create({
   dropdown: {
     color: "#696969",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     fontWeight: 300,
     fontSize: 14,
   },
@@ -858,7 +858,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonText: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: "400",
     color: "#0080D7",

@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   textHeader: {
     fontSize: 28,
     color: "#F9FAFF",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_500Medium",
     fontWeight: "500",
   },
   bodyBg: {
@@ -298,14 +298,14 @@ const styles = StyleSheet.create({
   },
   bodyText: {
     fontSize: 20,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     fontWeight: 400,
     color: "#0080D7",
   },
   labelInputText: {
     fontSize: 16,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     fontWeight: 400,
     color: "#0080D7",
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   },
   mapHeaderText: {
     fontSize: 20,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     fontWeight: 400,
     color: "#F9FAFF",
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
   },
   deleteButtonText: {
     fontSize: 16,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     fontWeight: 400,
     color: "#F0507E",
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontSize: 16,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     fontWeight: 400,
     color: "#F9FAFF",

@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: "center",
-    fontFamily: "kanit",
+    fontFamily: "Kanit_500Medium",
     fontSize: 20,
     color: "#ffffff",
   },
@@ -179,19 +179,19 @@ const styles = StyleSheet.create({
     columnGap: 20,
   },
   branchTitle: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontWeight: "400",
     fontSize: 18,
     color: "#373737",
   },
   branchDistance: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     fontWeight: "300",
     fontSize: 15,
     color: "#696969",
   },
   branchDetail: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     fontWeight: "300",
     fontSize: 13,
     color: "#0080d7",

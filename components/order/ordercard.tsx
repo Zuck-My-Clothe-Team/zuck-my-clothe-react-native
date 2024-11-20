@@ -1,16 +1,14 @@
 import {
   IOrder,
-  OrderStatus,
-  ServiceType,
   WorkingStatus,
   WorkingStatusTH,
 } from "@/interface/order.interface";
 import { DateFormatter } from "@/utils/datetime";
+import { GetStatusOrderFromOrderDetails } from "@/utils/utils";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import React, { useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { IOrderDetail } from "../../interface/order.interface";
-import { GetStatusOrderFromOrderDetails } from "@/utils/utils";
 
 type props = {
   order: IOrder;
@@ -139,32 +137,32 @@ const styles = StyleSheet.create({
   cardFooterContent: { flexDirection: "row", alignItems: "center", gap: 5 },
   orderNumber: {
     fontSize: 20,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontWeight: "400",
     color: "#2594E1",
   },
   clientText: {
     color: "#373737",
     fontSize: 16,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontWeight: 400,
   },
   deliveryText: {
     color: "#696969",
     fontSize: 16,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontWeight: 400,
   },
   dateTimeText: {
     fontSize: 14,
     fontWeight: 300,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     color: "#373737",
   },
   timeAgoText: {
     fontSize: 14,
     fontWeight: 300,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     color: "#696969",
   },
   pendingStatus: {
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
   },
   pendingStatusText: {
     textAlign: "center",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     color: "#0080D7",
@@ -188,7 +186,7 @@ const styles = StyleSheet.create({
   },
   processingStatusText: {
     textAlign: "center",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     color: "#696969",
@@ -201,7 +199,7 @@ const styles = StyleSheet.create({
   },
   completedStatusText: {
     textAlign: "center",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     color: "#F9FAFF",
@@ -214,7 +212,7 @@ const styles = StyleSheet.create({
   },
   canceledStatusText: {
     textAlign: "center",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     color: "#F9FAFF",

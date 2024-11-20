@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   textFilter: {
     textAlign: "center",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     color: "#FFFFFF",
@@ -213,8 +213,8 @@ const styles = StyleSheet.create({
   textHeader: {
     fontSize: 28,
     color: "#F9FAFF",
-    fontFamily: "Kanit",
-    fontWeight: "500",
+    fontFamily: "Kanit_500Medium",
+    fontWeight: 500,
   },
   orderSection: {
     flex: 1,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     paddingBottom: 300,
   },
   text: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: "400",
     color: "#000",
