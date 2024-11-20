@@ -1,5 +1,6 @@
 import { IUserAuthContext } from "@/interface/userdetail.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export const initialAuth: IUserAuthContext = {
@@ -31,7 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [authContext, setAuthContext] = useState<IUserAuthContext>(initialAuth);
 
   const logout = async () => {
-    console.log("Logout initiated");
+    await GoogleSignin.signOut();
     try {
       await AsyncStorage.removeItem("accessToken");
       setAuthContext({ ...authContext, isAuth: false });

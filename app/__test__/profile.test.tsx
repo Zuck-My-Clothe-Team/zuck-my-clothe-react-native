@@ -3,9 +3,16 @@ import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { useAuth } from "@/context/auth.context";
 import { SplashScreen } from "expo-router";
 import ProfilePage from "../(tabs)/profile";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 jest.mock("@/context/auth.context");
 jest.mock("expo-router");
+
+jest.mock("@react-native-google-signin/google-signin", () => ({
+  GoogleSignin: {
+    signOut: jest.fn().mockResolvedValue(undefined), // mock the signOut method
+  },
+}));
 
 describe("ProfilePage", () => {
   const mockLogout = jest.fn();

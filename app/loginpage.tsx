@@ -2,11 +2,16 @@ import { GoogleLogin } from "@/api/auth.api";
 import { useAuth } from "@/context/auth.context";
 import { IUserTokenDetail } from "@/interface/userdetail.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as AuthSession from "expo-auth-session";
-import * as Google from "expo-auth-session/providers/google";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+
+import {
+  GoogleSignin,
+  isErrorWithCode,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
+
 import {
   Dimensions,
   Image,
@@ -26,52 +31,47 @@ export default function LoginPage() {
   const [disabledLogin, setDisableLogin] = useState<boolean>(false);
   const auth = useAuth();
 
-  const [, response, promptAsync] = Google.useAuthRequest({
+  GoogleSignin.configure({
     webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
-    androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
     scopes: ["profile", "email"],
-    redirectUri: AuthSession.makeRedirectUri({
-      native: "com.sokungz.zuckmyclothes:/oauth2redirect",
-    }),
   });
 
-  useEffect(() => {
-    const handleSignInWithGoogle = async () => {
-      if (response?.type === "success") {
-        try {
-          const { authentication } = response;
-          console.log("Google sign-in response:");
-          const userInfo: IUserTokenDetail = await GoogleLogin(
-            authentication!.accessToken
-          );
-          const accessToken = userInfo.token;
-          await AsyncStorage.setItem("accessToken", accessToken);
-          auth?.setAuthContext({
-            isAuth: true,
-            user_id: userInfo.data.user_id,
-            email: userInfo.data.email,
-            firstname: userInfo.data.firstname,
-            role: userInfo.data.role,
-            lastname: userInfo.data.lastname,
-            phone: userInfo.data.phone,
-            profile_image_url: userInfo.data.profile_image_url,
-          });
-          console.log("User info and token stored successfully.");
-        } catch (error) {
-          console.log("Error during Google sign-in:", error);
-        }
-      } else {
-        console.log(
-          "Google sign-in response error or not successful:",
-          response
-        );
+  const SignIn = async () => {
+    try {
+      setDisableLogin(true);
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signIn();
+      const tokens = await GoogleSignin.getTokens();
+      const accessToken = tokens.accessToken;
+      if (!accessToken) {
+        throw new Error("No idToken found");
       }
+      const userInfo: IUserTokenDetail = await GoogleLogin(accessToken);
+      const { data, token } = userInfo;
+      await AsyncStorage.setItem("accessToken", token);
+      auth?.setAuthContext({ ...data, isAuth: true });
+      console.log("User info and token stored successfully.");
+    } catch (error) {
+      if (isErrorWithCode(error)) {
+        switch (error.code) {
+          case statusCodes.SIGN_IN_CANCELLED:
+            console.log("User cancelled the sign in flow");
+            break;
+          case statusCodes.IN_PROGRESS:
+            console.log("Sign in is in progress already");
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            console.log("Play services not available or outdated");
+            break;
+          default:
+            console.log("Something went wrong:", error);
+        }
+      }
+    } finally {
       setDisableLogin(false);
-    };
-
-    handleSignInWithGoogle();
-  }, [response]);
+    }
+  };
 
   return (
     <SafeAreaView className="w-full h-full bg-primaryblue-300 items-center flex flex-col">
@@ -94,9 +94,8 @@ export default function LoginPage() {
         <View className={`flex ${isSmallScreen ? "gap-y-6" : "gap-y-8"} mt-8`}>
           <TouchableOpacity
             className={`py-3 bg-white border border-primaryblue-300 rounded-3xl flex justify-center items-center w-full`}
-            onPress={() => {
-              promptAsync();
-              setDisableLogin(true);
+            onPress={async () => {
+              await SignIn();
             }}
             testID="login-button"
             disabled={disabledLogin}

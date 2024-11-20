@@ -2,8 +2,9 @@ require("dotenv").config();
 
 module.exports = {
   expo: {
-    name: "Zuck My Clothe",
-    slug: "zuck-my-clothe",
+    name: "Zuck My Clothes",
+    slug: "zuck-my-clothes",
+    owner: "zuck-my-clothes",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
@@ -44,13 +45,22 @@ module.exports = {
       output: "static",
       favicon: "./assets/images/favicon.png",
     },
-    plugins: ["expo-router", "expo-font"],
+    plugins: [
+      "expo-router",
+      "expo-font",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          iosUrlScheme: `${process.env.EXPO_PUBLIC_IOS_URL_SCHEME}`,
+        },
+      ],
+    ],
     experiments: {
       typedRoutes: true,
     },
     extra: {
       eas: {
-        projectId: "9c30521d-6156-4df5-a088-d634cdf53408",
+        projectId: "523cea7a-5a6a-4207-aacb-71ad3031b17d",
       },
     },
   },
