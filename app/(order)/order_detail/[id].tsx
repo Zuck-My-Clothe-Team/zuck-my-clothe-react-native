@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     color: "#2594E1",
     fontSize: 28,
     fontWeight: 500,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_500Medium",
     fontStyle: "normal",
   },
   container: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
   deleteButtonText: {
     fontSize: 16,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     fontWeight: 400,
     color: "#F0507E",
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontSize: 16,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     fontWeight: 400,
     color: "#F9FAFF",

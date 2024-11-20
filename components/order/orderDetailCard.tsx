@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   cardHeaderText: {
     fontSize: 20,
     fontWeight: 400,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     color: "#2594E1",
   },
@@ -111,21 +111,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headingText: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     fontStyle: "normal",
     color: "#373737",
   },
   headingText_Blue: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     fontStyle: "normal",
     color: "#2594E1",
   },
   contentText: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     fontSize: 14,
     fontWeight: 300,
     fontStyle: "normal",
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   priceText: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 20,
     fontWeight: 400,
     fontStyle: "normal",

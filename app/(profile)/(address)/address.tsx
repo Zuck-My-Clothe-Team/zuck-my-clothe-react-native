@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   textHeader: {
     fontSize: 28,
     color: "#F9FAFF",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_500Medium",
     fontWeight: "500",
   },
   scrollViewContent: {
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonText: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: "400",
     color: "#0080D7",
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     color: "#000",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontWeight: "400",
     flex: 2,
   },

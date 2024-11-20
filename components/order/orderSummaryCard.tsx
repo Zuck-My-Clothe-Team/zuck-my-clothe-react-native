@@ -112,7 +112,9 @@ const OrderSummaryCard: React.FC<OrderSummaryCardProps> = (props) => {
             source={require("../../assets/images/mapMarker.png")}
             style={{ width: 18.78, height: 26 }}
           />
-          <Text style={styles.contentText}>{props.order.delivery_address}</Text>
+          <Text style={{ ...styles.contentText, flex: 2 }}>
+            {props.order.delivery_address}
+          </Text>
         </TouchableOpacity>
         <View style={styles.rowSection}>
           <Text style={styles.headingText}>โน้ต :</Text>
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
   cardHeaderText: {
     fontSize: 20,
     fontWeight: 400,
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontStyle: "normal",
     color: "#2594E1",
   },
@@ -180,21 +182,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headingText: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     fontStyle: "normal",
     color: "#373737",
   },
   headingText_Blue: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontSize: 16,
     fontWeight: 400,
     fontStyle: "normal",
     color: "#2594E1",
   },
   contentText: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     fontSize: 14,
     fontWeight: 300,
     fontStyle: "normal",
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
   },
   contactButtonText: {
     textAlign: "center",
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     fontSize: 14,
     fontWeight: 300,
     fontStyle: "normal",
@@ -221,6 +223,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9FAFF",
     padding: 5,
     borderRadius: 30,
+    flex: 3,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,

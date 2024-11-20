@@ -259,7 +259,11 @@ const BranchDetailBottomSheet = ({
             </ScrollView>
           ) : (
             <Text
-              style={{ fontFamily: "Kanit", fontSize: 18, color: "#F0507E" }}
+              style={{
+                fontFamily: "Kanit_400Regular",
+                fontSize: 18,
+                color: "#F0507E",
+              }}
             >
               สาขานี้ยังไม่มีเครื่องซัก/อบผ้า!
             </Text>
@@ -269,7 +273,7 @@ const BranchDetailBottomSheet = ({
           <Text
             style={{
               color: "#0285DF",
-              fontFamily: "Kanit",
+              fontFamily: "Kanit_400Regular",
               fontSize: 19,
               fontWeight: 400,
             }}
@@ -314,7 +318,7 @@ const BranchDetailBottomSheet = ({
                       />
                       <Text
                         style={{
-                          fontFamily: "Kanit",
+                          fontFamily: "Kanit_400Regular",
                           fontSize: 16,
                           fontWeight: "400",
                         }}
@@ -332,7 +336,7 @@ const BranchDetailBottomSheet = ({
                       <FontAwesome name="star" size={22} color="#FFE286" />
                       <Text
                         style={{
-                          fontFamily: "Kanit",
+                          fontFamily: "Kanit_400Regular",
                           fontSize: 16,
                           fontWeight: "400",
                           marginLeft: 4,
@@ -343,7 +347,7 @@ const BranchDetailBottomSheet = ({
                       </Text>
                       <Text
                         style={{
-                          fontFamily: "Kanit",
+                          fontFamily: "Kanit_300Light",
                           fontSize: 14,
                           fontWeight: "300",
                           marginLeft: 3,
@@ -362,7 +366,7 @@ const BranchDetailBottomSheet = ({
                   >
                     <Text
                       style={{
-                        fontFamily: "Kanit",
+                        fontFamily: "Kanit_300Light",
                         fontSize: 14,
                         fontWeight: "300",
                         color: "#696969",
@@ -395,7 +399,7 @@ const styles = StyleSheet.create({
     columnGap: 20,
   },
   headerText: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_500Medium",
     fontSize: 20,
     color: "#373737",
     // backgroundColor: "#fe0000",
@@ -410,25 +414,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9faff",
   },
   branchTitle: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontWeight: "400",
     fontSize: 20,
     color: "#373737",
   },
   branchDistance: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_300Light",
     fontWeight: "300",
     fontSize: 15,
     color: "#696969",
   },
   branchDetail: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontWeight: "400",
     fontSize: 16,
     color: "#0080d7",
   },
   machineDetail: {
-    fontFamily: "Kanit",
+    fontFamily: "Kanit_400Regular",
     fontWeight: "400",
     fontSize: 16,
     color: "#71BFFF",
