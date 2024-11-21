@@ -12,7 +12,8 @@
     "test": "jest",
     "lint": "expo lint",
     "prebuild": "expo prebuild",
-    "prebuild:clean": "expo prebuild --clean"
+    "prebuild:clean": "expo prebuild --clean",
+    "build:android": "npx eas-cli build -p android --profile preview --local"
   },
   "jest": {
     "preset": "jest-expo",
