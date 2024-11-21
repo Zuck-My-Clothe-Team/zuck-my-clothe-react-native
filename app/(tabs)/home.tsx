@@ -1,13 +1,7 @@
 import { useAuth } from "@/context/auth.context";
 import { IUserAuthContext } from "@/interface/userdetail.interface";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {
-  Href,
-  router,
-  SplashScreen,
-  useLocalSearchParams,
-  useRouter,
-} from "expo-router";
+import { Href, router, SplashScreen, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -77,19 +71,18 @@ const Homepage = () => {
   const [isWashing, setIsWashing] = useState(true);
   const [isSnap, setIsSnap] = useState(0);
 
-  const mockUpPromotionData = [
-    { number: 1, text: "Test 1" },
-    { number: 2, text: "Test 2" },
-    { number: 3, text: "Test 3" },
-    { number: 4, text: "Test 4" },
-    { number: 5, text: "Test 5" },
-    // { number: 6, text: "Yestood 6" },
+  const promotionPic = [
+    {
+      number: 1,
+      Image: require("../../assets/images/mainpage/promotion1.png"),
+    },
   ];
 
   const carouselPic = [
-    { number: 1, image: require("@/assets/images/heropic1.png") },
-    { number: 2, image: require("@/assets/images/heropic2.png") },
-  ]
+    { number: 1, image: require("@/assets/images/mainpage/heropic3.png") },
+    { number: 2, image: require("@/assets/images/mainpage/heropic2.png") },
+    { number: 3, image: require("@/assets/images/mainpage/heropic1.png") },
+  ];
 
   const mockUpZuckMachineData = [
     { number: 1, minute: 24 },
@@ -120,7 +113,7 @@ const Homepage = () => {
     {
       name: "รายงาน",
       img_url: require("../../assets/images/mainpage/report.png"),
-      path: "/history",
+      path: "/(report)/scanner",
       width: 44,
     },
     {
@@ -135,7 +128,7 @@ const Homepage = () => {
     <SafeAreaView className="h-full w-full flex flex-col bg-primaryblue-300">
       <View className="w-full flex flex-row bg-primaryblue-300 px-6 py-2">
         <View className="flex flex-col py-5">
-          <Text className="font-kanitMedium text-white text-4xl py-1">
+          <Text className="font-kanitMedium text-white text-3xl py-1">
             สวัสดี คุณ {userData?.firstname}
           </Text>
           <View className="flex flex-row">
@@ -170,10 +163,10 @@ const Homepage = () => {
         className="w-full h-full bg-white flex flex-col"
         showsVerticalScrollIndicator={false}
       >
-        <View className="mt-3 relative">
+        <View className="mt-3 justify-center items-center relative ">
           <Carousel
             loop
-            width={Dimensions.get("window").width}
+            width={Dimensions.get("window").width - 30}
             height={170}
             autoPlay={true}
             data={carouselPic}
@@ -259,11 +252,17 @@ const Homepage = () => {
           </View>
         )}
 
-        <View className="px-6">
-          <Text className="font-kanitMedium text-text-3 text-4xl py-4">
+        <View className="flex flex-col">
+          <Text className=" px-6 font-kanitMedium text-text-3 text-4xl py-4">
             โปรโมชั่นและสิทธิพิเศษ
           </Text>
-          <View className="h-72 bg-customgray-400 mb-[8.5rem]"></View>
+          <View className=" mb-[8.5rem]">
+            <Image
+              source={promotionPic[0].Image}
+              style={{ width: Dimensions.get("window").width, height: 200 }}
+              resizeMode="contain"
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

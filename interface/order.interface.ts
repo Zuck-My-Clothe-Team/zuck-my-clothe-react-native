@@ -1,3 +1,4 @@
+import { TWeight } from "./machinebranch.interface";
 import { IUserDetail } from "./userdetail.interface";
 
 export enum WorkingStatus {
@@ -64,7 +65,7 @@ export interface IOrderDetail {
   service_type: ServiceType;
   updated_at: string;
   updated_by: string;
-  weight: 0 | 7 | 14 | 21;
+  weight: TWeight;
 }
 
 export interface IOrder {
@@ -90,9 +91,24 @@ export interface IOrder {
 }
 
 export interface IOrderReview {
-  order_header_id: string,
-  review_comment: string,
-  star_rating: number,
-  userID: string,
+  order_header_id: string;
+  review_comment: string;
+  star_rating: number;
+  userID: string;
 }
 
+export interface INewOrder {
+  branch_id: string;
+  delivery_address: string;
+  delivery_lat: number;
+  delivery_long: number;
+  order_details: INewOrderDetail[];
+  order_note: string;
+  user_id: string;
+  zuck_onsite: boolean;
+}
+
+export interface INewOrderDetail {
+  service_type: ServiceType;
+  weight: TWeight;
+}

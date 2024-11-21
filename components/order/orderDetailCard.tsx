@@ -12,19 +12,29 @@ type OrderDetailListProps = {
   product: keyof typeof ServiceTypeTH;
   size: string;
   price: number;
+  isLast?: boolean;
 };
 
 const OrderDetailList: React.FC<OrderDetailListProps> = (props) => {
   return (
-    <View style={styles.rowSection}>
-      <View style={{ flexDirection: "row", gap: 10 }}>
+    <View
+      style={[
+        { ...styles.rowSection },
+        props.isLast
+          ? null
+          : { borderBottomColor: "#f1f1f1", borderBottomWidth: 1 },
+      ]}
+    >
+      <View style={{ flexDirection: "row", gap: 20 }}>
         <View style={{ ...styles.bubbleBox }}>
           <Text style={styles.contentText}>{props.quantity}</Text>
         </View>
         <View>
           <Text style={styles.headingText}>{ServiceTypeTH[props.product]}</Text>
-          {props.size !== "0" && (
+          {props.product !== "Agents" ? (
             <Text style={styles.contentText}>ขนาด {props.size} kg.</Text>
+          ) : (
+            <Text style={styles.contentText}>{props.size}</Text>
           )}
         </View>
       </View>
@@ -37,33 +47,45 @@ const OrderDetailCard: React.FC<OrderDetailProps> = (props) => {
   if (!props.orderDetail) return <></>;
 
   const orderDetailList: OrderDetailListProps[] = Object.values(
-    props.orderDetail.reduce((acc, orderDetail) => {
-      const normalizedServiceType =
-        orderDetail.service_type === "Delivery" ||
-        orderDetail.service_type === "Pickup"
-          ? "DeliveryOrPickup" // normalize Delivery and Pickup to DeliveryOrPickup
-          : orderDetail.service_type;
+    props.orderDetail
+      .filter(
+        (orderDetail) =>
+          orderDetail.service_type !== "Delivery" &&
+          orderDetail.service_type !== "Pickup"
+      )
+      .reduce((acc, orderDetail) => {
+        // const normalizedServiceType =
+        //   orderDetail.service_type === "Delivery" ||
+        //   orderDetail.service_type === "Pickup"
+        //     ? "DeliveryOrPickup" // normalize Delivery and Pickup to DeliveryOrPickup
+        //     : orderDetail.service_type;
 
-      const key = `${orderDetail.order_header_id}-${normalizedServiceType}-${orderDetail.weight}`;
-      if (!acc[key]) {
-        acc[key] = {
-          quantity: 0,
-          product: normalizedServiceType,
-          size: String(orderDetail.weight),
-          price: 0,
-        };
-      }
-      if (key.includes("DeliveryOrPickup")) {
-        acc[key].quantity = 1;
-      } else {
-        acc[key].quantity++;
-      }
-      acc[key].price +=
-        MachinePrice[orderDetail.weight] === 0
-          ? 20
-          : MachinePrice[orderDetail.weight];
-      return acc;
-    }, {} as { [key: string]: OrderDetailListProps })
+        const normalizedServiceType = orderDetail.service_type;
+
+        const key = `${orderDetail.order_header_id}-${normalizedServiceType}-${orderDetail.weight}`;
+        if (!acc[key]) {
+          acc[key] = {
+            quantity: 0,
+            product: normalizedServiceType,
+            size: String(orderDetail.weight),
+            price: 0,
+          };
+        }
+        if (key.includes("DeliveryOrPickup")) {
+          acc[key].quantity = 1;
+        } else {
+          acc[key].quantity++;
+        }
+        acc[key].price +=
+          MachinePrice[orderDetail.weight] === 0
+            ? 20
+            : MachinePrice[orderDetail.weight];
+
+        if (acc[key].product === "Agents") {
+          acc[key].size = "น้ำยาเกรดพรีเมี่ยม หอมยาวนาน";
+        }
+        return acc;
+      }, {} as { [key: string]: OrderDetailListProps })
   );
 
   return (
@@ -72,9 +94,15 @@ const OrderDetailCard: React.FC<OrderDetailProps> = (props) => {
         <Text style={styles.cardHeaderText}>รายการทั้งหมด</Text>
       </View>
       <View style={styles.cardBody}>
-        {orderDetailList.map((item, index) => (
-          <OrderDetailList key={index} {...item} />
-        ))}
+        {orderDetailList
+          .sort((a, b) => b.product.localeCompare(a.product))
+          .map((item, index) => (
+            <OrderDetailList
+              key={index}
+              {...item}
+              isLast={index === orderDetailList.length - 1}
+            />
+          ))}
       </View>
     </View>
   );
@@ -106,6 +134,7 @@ const styles = StyleSheet.create({
   },
   rowSection: {
     paddingHorizontal: 10,
+    paddingVertical: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

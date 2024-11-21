@@ -12,7 +12,7 @@ export interface IMachineInBranch {
   machine_type: string;
   updated_at: string;
   updated_by: string;
-  weight: 0 | 7 | 14 | 21;
+  weight: TWeight;
 }
 
 export interface IAvailableMachine {
@@ -22,7 +22,7 @@ export interface IAvailableMachine {
   machine_type: string;
   finished_at: string;
   is_available: boolean;
-  weight: 0 | 7 | 14 | 21;
+  weight: TWeight;
 }
 
 export const MachinePrice = {
@@ -31,3 +31,5 @@ export const MachinePrice = {
   14: 100,
   21: 150,
 };
+
+export type TWeight = 0 | 7 | 14 | 21;

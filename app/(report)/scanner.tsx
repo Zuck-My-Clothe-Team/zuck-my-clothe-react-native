@@ -1,26 +1,27 @@
+import { getMachineDetailBySerial } from "@/api/machine.api";
+import CustomModal from "@/components/modal/CustomModal";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { router, useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const PaymentPage = () => {
+const ScanToReportPage = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const router = useRouter();
+
   useFocusEffect(
     React.useCallback(() => {
-      // Enable camera when the screen is focused
       setIsCameraActive(true);
-
-      // Reset scanned state when the screen is focused
       setScanned(false);
-
       return () => {
-        // Disable camera when the screen is unfocused
         setIsCameraActive(false);
       };
     }, [])
@@ -36,13 +37,30 @@ const PaymentPage = () => {
     requestPermission();
   }, [permission?.granted, requestPermission]);
 
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <View />;
-  }
+  const handleBarcodeScanned = async (event: { data: string }) => {
+    if (scanned) return;
+    setScanned(true);
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
+    try {
+      const machine = await getMachineDetailBySerial(event.data);
+      if (machine) {
+        router.replace({
+          pathname: "/(report)/[machine_serial]",
+          params: { machine_serial: machine.machine_serial },
+        });
+      } else {
+        setIsModalVisible(true);
+      }
+    } catch {
+      setIsModalVisible(true);
+    } finally {
+      setTimeout(() => setScanned(false), 2000);
+      setIsCameraActive(true);
+    }
+  };
+
+
+  if (!permission?.granted) {
     return (
       <View style={styles.container}>
         <Text style={styles.message}>
@@ -55,23 +73,17 @@ const PaymentPage = () => {
 
   return (
     <View style={styles.container}>
+      <CustomModal
+        visible={isModalVisible}
+        setVisible={setIsModalVisible}
+        icon={<Feather name="info" size={52} color="#71bfff" />}
+        text={["QR Code ไม่ถูกต้อง", "กรุณาตรวจสอบอีกครั้ง"]}
+      />
       {isCameraActive && (
         <CameraView
           style={styles.camera}
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr"],
-          }}
-          onBarcodeScanned={(event) => {
-            if (!scanned) {
-              setScanned(true); // Set scanned to true to prevent further scans
-              // await handleScanner(event.data);
-              router.push({
-                pathname: "/order_summary",
-                params: { data: event.data },
-              });
-
-            }
-          }}
+          barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
+          onBarcodeScanned={handleBarcodeScanned}
         >
           <SafeAreaView className="h-full">
             <View className="px-5">
@@ -85,13 +97,12 @@ const PaymentPage = () => {
                   <AntDesign name="arrowleft" size={48} color="white" />
                 </TouchableOpacity>
               </View>
-
               <View>
                 <Text className="font-kanitMedium text-4xl text-text-2">
                   สแกน Qr Code
                 </Text>
                 <Text className="font-kanit text-2xl text-secondaryblue-100">
-                  สแกนหน้าเครื่องที่ท่านต้องการใช้งาน
+                  สแกนหน้าเครื่องที่ต้องการรายงาน
                 </Text>
               </View>
             </View>
@@ -114,33 +125,9 @@ const PaymentPage = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  message: {
-    textAlign: "center",
-    paddingBottom: 10,
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "transparent",
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: "flex-end",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
+  container: { flex: 1, justifyContent: "center" },
+  message: { textAlign: "center", paddingBottom: 10 },
+  camera: { flex: 1 },
 });
 
-export default PaymentPage;
+export default ScanToReportPage;
