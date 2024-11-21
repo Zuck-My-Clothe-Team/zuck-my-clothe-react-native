@@ -1,3 +1,5 @@
+import { TWeight } from "./machinebranch.interface";
+
 export enum MachineType {
   Washer = "Washer",
   Dryer = "Dryer",
@@ -72,5 +74,5 @@ interface IMachine {
   machine_label: string;
   machine_serial: string;
   machine_type: string;
-  weight: 0 | 7 | 14 | 21;
+  weight: TWeight;
 }
