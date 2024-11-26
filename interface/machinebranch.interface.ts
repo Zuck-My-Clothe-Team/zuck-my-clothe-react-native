@@ -1,3 +1,5 @@
+import { MachineType } from "./branch.interface";
+
 export interface IMachineInBranch {
   sort(arg0: (a: any, b: any) => number): unknown;
   branch_id: string;
@@ -23,6 +25,21 @@ export interface IAvailableMachine {
   finished_at: string;
   is_available: boolean;
   weight: 0 | 7 | 14 | 21;
+}
+
+export interface IMachineUpdateStatus {
+  branch_id: string,
+  created_at: string,
+  created_by: string,
+  deleted_at: null,
+  deleted_by: string,
+  is_active: true,
+  machine_label: string,
+  machine_serial: string,
+  machine_type: MachineType,
+  updated_at: string,
+  updated_by: string,
+  weight: 0
 }
 
 export const MachinePrice = {
