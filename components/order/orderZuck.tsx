@@ -36,6 +36,8 @@ const OrderZuck: React.FC<OrderZuckProps> = ({ zuckData }) => {
     const zuckWithMachineLabels = await Promise.all(
       zuckOrderOnly.map(async (detail) => {
         try {
+          if(detail.machine_serial === null)
+            return { ...detail, machine_label: null }; 
           const machine: IMachineInBranch = await getMachineDetailBySerial(detail.machine_serial);
           return { ...detail, machine_label: extractNumbers(machine.machine_label) };
         } catch (error) {

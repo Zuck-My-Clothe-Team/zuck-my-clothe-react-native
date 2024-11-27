@@ -97,20 +97,19 @@ const OrderQRScan = () => {
         }
   
         const date = new Date();
-        // date.setMinutes(date.getMinutes() + 25); // Add 25 minutes
+        date.setMinutes(date.getMinutes() + 25); // Add 25 minutes
         const finished_at = date.toISOString();
   
         const order_update_dto: IOrderUpdateDTO = {
           finished_at: finished_at,
           machine_serial: serial,
           order_basket_id: basket_id,
-          order_status: OrderStatus.Completed,
+          order_status: OrderStatus.Processing,
         };
   
         try {
           console.log("Updating order status...", order_update_dto);
           const order = await updateStatusOrder(order_update_dto);
-          // await updateMachineActiveStatus(serial, false);
           router.back(); // Navigate back on success
         } catch (error) {
           console.error("Error updating order status or machine status:", error);
