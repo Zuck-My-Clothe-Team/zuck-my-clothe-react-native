@@ -97,7 +97,7 @@ const OrderQRScan = () => {
         }
   
         const date = new Date();
-        date.setMinutes(date.getMinutes() + 25); // Add 25 minutes
+        // date.setMinutes(date.getMinutes() + 25); // Add 25 minutes
         const finished_at = date.toISOString();
   
         const order_update_dto: IOrderUpdateDTO = {
