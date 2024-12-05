@@ -25,7 +25,6 @@ import {
   MachinePrice,
 } from "@/interface/machinebranch.interface";
 import {
-  IOrder,
   IOrderDetail,
   IOrderReview,
   ServiceTypeTH,
@@ -50,7 +49,6 @@ interface HistoryCard {
 }
 
 const HistoryPage = () => {
-  const [orders, setOrders] = useState<IOrder[]>([]);
   const [history, setHistory] = useState<HistoryCard[]>([]);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -108,9 +106,11 @@ const HistoryPage = () => {
                 order.order_details[0].machine_serial
               );
             const match = machinedetail.machine_label.match(/(\d+)/);
-            match === null
-              ? (retval.machinenumber = "")
-              : (retval.machinenumber = match[0]);
+            if (match === null) {
+              retval.machinenumber = "";
+            } else {
+              retval.machinenumber = match[0];
+            }
           } else {
             retval.CardType = "Delivery";
           }
@@ -134,7 +134,6 @@ const HistoryPage = () => {
   }, [offset]);
 
   const resetparam = useCallback(() => {
-    setOrders([]);
     setHistory([]);
     setOffset(0);
     setLoading(false);
@@ -145,7 +144,7 @@ const HistoryPage = () => {
     setReview(undefined);
     setComment("");
     loadHistory();
-  }, []);
+  }, [loadHistory]);
 
   useFocusEffect(resetparam);
 
@@ -241,7 +240,7 @@ const HistoryPage = () => {
                       comment
                     );
                     setModal(false);
-                    resetparam;
+                    resetparam();
                   }}
                   disabled={confirmed}
                   className="bg-primaryblue-200 rounded-md mt-5"

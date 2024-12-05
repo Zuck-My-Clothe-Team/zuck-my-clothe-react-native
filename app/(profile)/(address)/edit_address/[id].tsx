@@ -4,8 +4,10 @@ import {
   updateAddress,
 } from "@/api/address.api";
 import LoadingBubble from "@/components/auth/Loading";
+import { useLocationContext } from "@/context/location.context";
 import { IAddress } from "@/interface/address.interface";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { IRegion } from "@/interface/region.interface";
+import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import React, {
   useCallback,
@@ -22,9 +24,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { IRegion } from "@/interface/region.interface";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { useLocationContext } from "@/context/location.context";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const EditAddressPage: React.FC = () => {
