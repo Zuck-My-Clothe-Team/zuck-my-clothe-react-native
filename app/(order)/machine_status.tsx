@@ -25,8 +25,12 @@ const MachineStatus = () => {
 
   const loadDataFromDb = async (headerId: string | string[]) => {
     try {
-      const fullOrderData = await getOrderByOrderHeaderId(headerId as string);
-      setFullOrder(fullOrderData.data);
+      const fullOrderData = await getOrderByOrderHeaderId(
+        headerId as string,
+        "full"
+      );
+      if (!fullOrderData) return;
+      setFullOrder(fullOrderData);
     } catch (error) {
       console.log("Error fetching order by order_header_id", error);
     }
@@ -57,7 +61,10 @@ const MachineStatus = () => {
           const machine: IMachineInBranch = await getMachineDetailBySerial(
             detail.machine_serial
           );
-          return { ...detail, machine_label: extractNumbers(machine.machine_label) };
+          return {
+            ...detail,
+            machine_label: extractNumbers(machine.machine_label),
+          };
         } catch (error) {
           console.error("Error fetching machine detail:", error);
           return { ...detail, machine_label: null };
@@ -122,7 +129,8 @@ const MachineStatus = () => {
                   <View className="justify-center w-[69%] items-center">
                     <Text className="text-text-4 font-kanit text-xl align-middle mr-12">
                       {detail.finished_at
-                        ? new Date(detail.finished_at) - Date.now() > 0
+                        ? new Date(detail.finished_at).getTime() - Date.now() >
+                          0
                           ? `เสร็จในอีก ${DateFormatter.getTimeDifferenceStatus(
                               new Date(detail.finished_at)
                             )}`

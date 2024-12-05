@@ -9,12 +9,11 @@ import {
   IMachineInBranch,
   MachinePrice,
 } from "@/interface/machinebranch.interface";
-import { INewOrder, ServiceType } from "@/interface/order.interface";
+import { INewOrder } from "@/interface/order.interface";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import Modal from "react-native-modal";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrderSummary = () => {
@@ -45,7 +44,7 @@ const OrderSummary = () => {
         return;
       }
 
-      if (!machine.is_available) {
+      if (machine.finished_at) {
         setLoading(false);
         setModalInUseVisible(true);
         return;

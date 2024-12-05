@@ -11,7 +11,7 @@ import {
   ServiceType,
 } from "@/interface/order.interface";
 import { GetStatusOrderFromOrderDetails } from "@/utils/utils";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Octicons } from "@expo/vector-icons";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import {
@@ -38,7 +38,7 @@ const OrderDetail = () => {
     try {
       setLoading(true);
       if (!orderHeaderId) throw new Error("No order id");
-      const result = await getOrderByOrderHeaderId(orderHeaderId);
+      const result = await getOrderByOrderHeaderId(orderHeaderId, "full");
       if (!result) throw new Error("Cannot fetch order");
       setOrderData(result);
     } catch (error) {
@@ -124,6 +124,15 @@ const OrderDetail = () => {
         </View>
       </View>
 
+      {WorkingStatus[status] === WorkingStatus.Completed && (
+        <View>
+          <Text className="font-kanit text-text-3 text-2xl text-center align-middle">
+            <Octicons name="check-circle-fill" size={21} color="#45d66b" />{" "}
+            จัดส่งเรียบร้อยแล้ว
+          </Text>
+        </View>
+      )}
+
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollViewContent}
@@ -154,7 +163,7 @@ const OrderDetail = () => {
               <Text style={styles.deleteButtonText}>ยกเลิกรายการ</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.saveButton}
+              style={[styles.saveButton, !isRider && { opacity: 0.5 }]}
               disabled={!isRider}
               onPress={async () => {
                 if (!orderData) return;
@@ -181,7 +190,7 @@ const OrderDetail = () => {
 
         {WorkingStatus[status] === WorkingStatus.Pickup && (
           <TouchableOpacity
-            style={styles.saveButton}
+            style={[styles.saveButton, !isRider && { opacity: 0.5 }]}
             disabled={!isRider}
             onPress={async () => {
               if (!orderData) return;
@@ -266,7 +275,7 @@ const OrderDetail = () => {
         )}
         {WorkingStatus[status] === WorkingStatus.OutOfDelivery && (
           <TouchableOpacity
-            style={styles.saveButton}
+            style={[styles.saveButton, !isRider && { opacity: 0.5 }]}
             disabled={!isRider}
             onPress={async () => {
               if (!orderData) return;
@@ -289,12 +298,6 @@ const OrderDetail = () => {
           >
             <Text style={styles.saveButtonText}>ส่งผ้าสำเร็จ</Text>
           </TouchableOpacity>
-        )}
-        {WorkingStatus[status] === WorkingStatus.Completed && (
-          <Text className="font-kanit text-text-3 text-2xl text-center align-middle">
-            {" "}
-            ส่งถึงที่ละจ้า{" "}
-          </Text>
         )}
       </ScrollView>
     </SafeAreaView>

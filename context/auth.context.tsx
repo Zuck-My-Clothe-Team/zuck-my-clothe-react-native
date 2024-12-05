@@ -32,9 +32,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [authContext, setAuthContext] = useState<IUserAuthContext>(initialAuth);
 
   const logout = async () => {
-    await GoogleSignin.signOut();
     try {
+      const loginMethod = await AsyncStorage.getItem("loginMethod");
+
+      if (loginMethod === "google") {
+        await GoogleSignin.signOut();
+      }
+
       await AsyncStorage.removeItem("accessToken");
+      await AsyncStorage.removeItem("loginMethod");
       setAuthContext({ ...authContext, isAuth: false });
       console.log("Logout success");
     } catch (error) {

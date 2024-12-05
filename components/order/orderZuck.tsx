@@ -16,7 +16,9 @@ interface OrderZuckProps {
 
 const OrderZuck: React.FC<OrderZuckProps> = ({ zuckData }) => {
   const [buttonPressed, setButtonPressed] = useState<boolean>(false);
-  const [zuckOrderOnly, setZuckOrderOnly] = useState<IOrderDetailWithLabel[]>([]);
+  const [zuckOrderOnly, setZuckOrderOnly] = useState<IOrderDetailWithLabel[]>(
+    []
+  );
   const [dryOrderOnly, setDryOrderOnly] = useState<IOrderDetailWithLabel[]>([]);
 
   const handleLanding = async () => {
@@ -26,45 +28,54 @@ const OrderZuck: React.FC<OrderZuckProps> = ({ zuckData }) => {
     const dryOrderOnly = zuckData.order_details.filter(
       (detail) => detail.service_type === "Drying"
     );
-  
+
     const extractNumbers = (label: string | null): string | null => {
       if (!label) return null;
       const numbers = label.match(/\d+/g); // Extract all numeric sequences
       return numbers ? numbers.join("") : null; // Join them into a single string
     };
-  
+
     const zuckWithMachineLabels = await Promise.all(
       zuckOrderOnly.map(async (detail) => {
         try {
-          if(detail.machine_serial === null)
-            return { ...detail, machine_label: null }; 
-          const machine: IMachineInBranch = await getMachineDetailBySerial(detail.machine_serial);
-          return { ...detail, machine_label: extractNumbers(machine.machine_label) };
+          if (detail.machine_serial === null)
+            return { ...detail, machine_label: null };
+          const machine: IMachineInBranch = await getMachineDetailBySerial(
+            detail.machine_serial
+          );
+          return {
+            ...detail,
+            machine_label: extractNumbers(machine.machine_label),
+          };
         } catch (error) {
           console.error("Error fetching machine detail for washing: ", error);
           return { ...detail, machine_label: null };
         }
       })
     );
-  
+
     const dryWithMachineLabels = await Promise.all(
       dryOrderOnly.map(async (detail) => {
         try {
-          if(detail.machine_serial === null)
-            return { ...detail, machine_label: null };  
-          const machine: IMachineInBranch = await getMachineDetailBySerial(detail.machine_serial);
-          return { ...detail, machine_label: extractNumbers(machine.machine_label) };
+          if (detail.machine_serial === null)
+            return { ...detail, machine_label: null };
+          const machine: IMachineInBranch = await getMachineDetailBySerial(
+            detail.machine_serial
+          );
+          return {
+            ...detail,
+            machine_label: extractNumbers(machine.machine_label),
+          };
         } catch (error) {
           console.error("Error fetching machine detail for drying: ", error);
           return { ...detail, machine_label: null };
         }
       })
     );
-  
+
     setZuckOrderOnly(zuckWithMachineLabels);
     setDryOrderOnly(dryWithMachineLabels);
   };
-  
 
   useFocusEffect(
     useCallback(() => {
@@ -78,7 +89,10 @@ const OrderZuck: React.FC<OrderZuckProps> = ({ zuckData }) => {
     title: string
   ) => (
     <View className="bg-white rounded px-5">
-      <Text className="font-kanit text-primaryblue-200" style={{ fontSize: 20 }}>
+      <Text
+        className="font-kanit text-primaryblue-200"
+        style={{ fontSize: 20 }}
+      >
         {title}
       </Text>
       {details.map((detail, index) => (
@@ -88,8 +102,8 @@ const OrderZuck: React.FC<OrderZuckProps> = ({ zuckData }) => {
               ผ้าตะกร้า {index + 1}
             </Text>
             <Text className="font-kanitLight text-text-3 text-lg">
-              เครื่องหมายเลข{" "}
-              {detail.machine_label || "-"} ขนาด {detail.weight} กิโล.
+              เครื่องหมายเลข {detail.machine_label || "-"} ขนาด {detail.weight}{" "}
+              กิโล.
             </Text>
           </View>
           <View className="justify-center">
@@ -132,13 +146,14 @@ const OrderZuck: React.FC<OrderZuckProps> = ({ zuckData }) => {
 
   return (
     <View className="mt-4 gap-4">
-      {zuckOrderOnly.length > 0 && renderOrderDetails(zuckOrderOnly, "รายการซัก")}
+      {zuckOrderOnly.length > 0 &&
+        renderOrderDetails(zuckOrderOnly, "รายการซัก")}
       {dryOrderOnly.length > 0 && renderOrderDetails(dryOrderOnly, "รายการอบ")}
 
       <View className="py-5">
         <TouchableOpacity
           className="flex flex-row py-3 px-4 bg-yellowaccent-100 rounded-3xl justify-between border border-secondaryblue-300"
-          style = {{borderColor:"#71bfff"}}
+          style={{ borderColor: "#71bfff" }}
           onPress={() => {
             if (!buttonPressed) {
               setButtonPressed(true);

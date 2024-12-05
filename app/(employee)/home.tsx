@@ -65,7 +65,7 @@ export const HomeEmployeePage = () => {
 
   const fetchOrder = useCallback(async (branch_id: string) => {
     try {
-      const response = await getAllOrderInBranch(branch_id);
+      const response = await getAllOrderInBranch(branch_id, "paid");
       if (!response) throw new Error("Cannot fetch order");
       setOrderData(response.data);
     } catch (error) {
