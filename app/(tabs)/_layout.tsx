@@ -18,7 +18,7 @@ const TabsLayout = () => {
           options={{ headerShown: false, title: "" }}
         />
         <Tabs.Screen
-          name="message"
+          name="notification"
           options={{ headerShown: false, title: "แจ้งเตือน" }}
         />
         <Tabs.Screen
