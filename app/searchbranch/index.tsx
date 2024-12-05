@@ -1,9 +1,9 @@
 import { GetAllBranch, getClosestBranch } from "@/api/branch.api";
-import { getMachineByBranchID } from "@/api/machine.api";
+import { getAvailableMachineByBranchID } from "@/api/machine.api";
 import BranchBottomSheet from "@/components/searchbranch/BranchBottomSheet";
 import BranchDetailBottomSheet from "@/components/searchbranch/BranchDetailBottomSheet";
 import { IBranch } from "@/interface/branch.interface";
-import { IMachineInBranch } from "@/interface/machinebranch.interface";
+import { IAvailableMachine } from "@/interface/machinebranch.interface";
 import { IRegion } from "@/interface/region.interface";
 import { Feather } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -27,7 +27,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
@@ -43,7 +43,7 @@ export default function SearchBranchPage() {
   const [allBranchData, setAllBranchData] = useState<IBranch[]>([]);
   const [branchData, setBranchData] = useState<IBranch[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<IBranch>();
-  const [machineData, setMachineData] = useState<IMachineInBranch[]>([]);
+  const [machineData, setMachineData] = useState<IAvailableMachine[]>([]);
   const [loading, setLoading] = useState(true);
   const [region, setRegion] = useState<IRegion>();
   const [isSearchTabVisible, setIsSearchTabVisible] = useState(false);
@@ -76,7 +76,7 @@ export default function SearchBranchPage() {
 
   const fetchMachineByBranchID = async (branch_id: string) => {
     try {
-      const data = await getMachineByBranchID(branch_id);
+      const data = await getAvailableMachineByBranchID(branch_id);
       setMachineData(data);
     } catch (error) {
       console.error("Failed to fetch machines:", error);
@@ -113,7 +113,7 @@ export default function SearchBranchPage() {
 
     const loc = await Location.getCurrentPositionAsync({});
     setLocation(loc);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Set initial region based on location
@@ -244,7 +244,7 @@ export default function SearchBranchPage() {
                 }}
               />
               {isSearchTabVisible && (
-                <View className="h-fit max-h-[20rem]">
+                <View className=" flex-1 h-fit max-h-[20rem]">
                   <ScrollView
                     keyboardShouldPersistTaps="always"
                     className="bg-background-1 w-full px-4 rounded-lg border border-customgray-300 overflow-hidden"
@@ -255,15 +255,17 @@ export default function SearchBranchPage() {
                         onPress={() => {
                           handleBranchPress(branch);
                         }}
-                        className="flex flex-row items-center justify-between py-3 pr-5 border-b border-[#d9d9d9]"
+                        className="flex flex-1 flex-row items-center justify-between py-3 border-b border-[#d9d9d9]"
                       >
-                        <Text
-                          className="text-text-1 font-kanit text-lg"
-                          ellipsizeMode="tail"
-                          numberOfLines={1}
-                        >
-                          {branch.branch_name}
-                        </Text>
+                        <View className=" flex-1">
+                          <Text
+                            className="text-text-1 font-kanit text-lg"
+                            ellipsizeMode="tail"
+                            numberOfLines={1}
+                          >
+                            {branch.branch_name}
+                          </Text>
+                        </View>
                         <Feather
                           name="chevron-right"
                           size={24}
@@ -309,7 +311,6 @@ export default function SearchBranchPage() {
               {branchData.map((branch) => (
                 <Marker
                   key={branch.branch_id}
-                  icon={require("../../assets/images/mapPin.png")}
                   coordinate={{
                     latitude: branch.branch_lat,
                     longitude: branch.branch_long,
@@ -317,7 +318,13 @@ export default function SearchBranchPage() {
                   onPress={() => {
                     handleBranchPress(branch);
                   }}
-                />
+                >
+                  <Image
+                    source={require("../../assets/images/mapPin.png")}
+                    style={{ width: 55 }}
+                    resizeMode="contain"
+                  />
+                </Marker>
               ))}
             </MapView>
           )}

@@ -1,9 +1,11 @@
 import { getOwnAddress } from "@/api/address.api";
 import LoadingBubble from "@/components/auth/Loading";
 import { IAddress } from "@/interface/address.interface";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
-import { router } from "expo-router";
+import {
+  Ionicons,
+  MaterialCommunityIcons
+} from "@expo/vector-icons";
+import { router, useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
   ScrollView,
@@ -45,12 +47,12 @@ const AddressPage = () => {
     <SafeAreaView style={{ backgroundColor: "#0285DF" }}>
       <View style={styles.headerBg}>
         <TouchableOpacity
-          style={{ position: "absolute", left: 10, zIndex: 10 }}
+          style={{ position: "absolute", left: 15, zIndex: 10 }}
           onPress={() => {
             router.back();
           }}
         >
-          <AntDesign name="arrowleft" size={24} color="#71BFFF" />
+          <Ionicons name="arrow-back" size={36} color={"#71BFFF"} />
         </TouchableOpacity>
         <View style={styles.header}>
           <Text style={styles.textHeader}>ที่อยู่</Text>
@@ -134,8 +136,8 @@ const styles = StyleSheet.create({
   headerBg: {
     position: "relative",
     backgroundColor: "#0285DF",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",

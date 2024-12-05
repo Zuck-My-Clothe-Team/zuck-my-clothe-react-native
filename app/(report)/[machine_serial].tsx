@@ -7,7 +7,7 @@ import { IMachineInBranch } from "@/interface/machinebranch.interface";
 import { IMachineReport } from "@/interface/report.interface";
 import { Ionicons, Octicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -67,7 +67,7 @@ const ReportPage = () => {
     }
   }, [machineData]);
 
-  useCallback(() => {}, []);
+  // useCallback(() => {}, []);
 
   async function handleSubmit() {
     if (!machineData) return;
@@ -99,11 +99,12 @@ const ReportPage = () => {
         visible={isModalVisible}
         setVisible={setIsModalVisible}
         icon={<Octicons name="check-circle-fill" size={46} color="#45d66b" />}
-        text={["รายงานเครื่องสำเร็จ"]}
-        submit_text="ตกลง"
+        text={["ขอบคุณสำหรับการรายงาน"]}
+        secondary_text={["ทางเราจะรีบตรวจสอบและแก้ไขให้เร็วที่สุด"]}
+        // submit_text="ตกลง"
       />
 
-      <View className="w-full relative justify-start">
+      <View className="w-full relative justify-start mt-3">
         <View>
           <Text className="py-1 text-center font-kanitMedium text-3xl text-primaryblue-200">
             รายงานเครื่อง
@@ -114,7 +115,7 @@ const ReportPage = () => {
                 router.back();
               }}
             >
-              <Ionicons name="arrow-back" size={30} color={"#71BFFF"} />
+              <Ionicons name="arrow-back" size={36} color={"#71BFFF"} />
             </TouchableOpacity>
           </View>
         </View>
@@ -154,7 +155,7 @@ const ReportPage = () => {
             </View>
             <View className="mt-4">
               <TextInput
-                className="h-[40vh] rounded border border-customgray-200 p-3 font-kanit text-lg"
+                className="h-[35vh] rounded border border-customgray-200 p-3 font-kanit text-lg"
                 multiline
                 placeholder="พิมพ์ปัญหาที่พบบริเวณนี้"
                 onChangeText={(text) => {
@@ -167,6 +168,7 @@ const ReportPage = () => {
                 }}
                 keyboardType="default"
                 aria-disabled={isSubmitButtonDisabled}
+                shouldRasterizeIOS
               />
             </View>
             <View className="w-full items-center">

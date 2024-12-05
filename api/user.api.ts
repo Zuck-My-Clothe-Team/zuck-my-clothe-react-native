@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/hooks/axiosInstance";
-import { IUsers, IUserUpdate } from "@/interface/userdetail.interface";
+import { IUserUpdate } from "@/interface/userdetail.interface";
 
 export async function getUserDetailByUserId(userId: string) {
   const axios = await axiosInstance();

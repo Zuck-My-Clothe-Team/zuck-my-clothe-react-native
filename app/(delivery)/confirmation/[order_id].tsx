@@ -13,11 +13,9 @@ import {
   Image,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrderConfirmationPage = () => {
@@ -74,113 +72,111 @@ const OrderConfirmationPage = () => {
 
   return (
     <SafeAreaView className=" bg-background-1 flex-1" edges={["top"]}>
+      {/* <View></View> */}
+      <View className=" w-full relative mt-3">
+        <View className="">
+          <Text className=" text-center font-kanitMedium text-3xl text-primaryblue-200">
+            ยืนยันรายการ
+          </Text>
+        </View>
+        <View className=" px-6 absolute">
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Ionicons name="arrow-back" size={30} color={"#2594e1"} />
+          </TouchableOpacity>
+        </View>
+      </View>
 
-        <View className=" w-full relative mt-3">
+      <ScrollView className=" mt-4" showsVerticalScrollIndicator={false}>
+        <View className=" px-5 flex flex-col gap-y-4">
+          {/* Address Card */}
           <View className="">
-            <Text className=" text-center font-kanitMedium text-3xl text-primaryblue-200">
-              ยืนยันรายการ
-            </Text>
+            <View className=" px-5 py-8 rounded-xl bg-white border border-customgray-100">
+              <View className=" flex flex-row justify-between">
+                <Text className=" font-kanit text-2xl text-primaryblue-200">
+                  ที่อยู่รับส่ง
+                </Text>
+              </View>
+              <View className=" mt-2 flex flex-row gap-x-4">
+                <View className=" flex justify-center items-center">
+                  <MaterialIcons
+                    name="location-pin"
+                    size={24}
+                    color="#0285df"
+                  />
+                </View>
+                <View className=" w-full flex flex-row flex-1 pr-4">
+                  <Text className=" font-kanitLight text-base">
+                    {orderData?.delivery_address}
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
-          <View className=" px-6 absolute">
-            <TouchableOpacity
-              onPress={() => {
-                router.back();
-              }}
-            >
-              <Ionicons name="arrow-back" size={30} color={"#2594e1"} />
-            </TouchableOpacity>
+
+          {/* Branch Card */}
+          <View className="">
+            <View className=" gap-y-2 flex flex-col px-5 py-3 rounded-xl bg-white border border-customgray-100">
+              <View className="flex flex-col gap-y-2">
+                <Text className="font-kanitLight text-base text-primaryblue-200">
+                  ให้บริการโดย
+                </Text>
+                <View className=" flex flex-row gap-x-4 justify-start items-center">
+                  <Image
+                    source={require("@/assets/images/icon.png")}
+                    style={{ width: 24, aspectRatio: 1 }}
+                  />
+                  <Text className=" font-kanitLight flex-1">
+                    สาขา {branchData?.branch_name}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* Order Card */}
+          <View className="">
+            <OrderDetailCard orderDetail={orderData?.order_details} />
           </View>
         </View>
-        <ScrollView className=" mt-4" showsVerticalScrollIndicator={false}>
-          <View className=" px-5 flex flex-col gap-y-4">
-            {/* Address Card */}
-            <View className="">
-              <View className=" px-5 py-8 rounded-xl bg-white border border-customgray-100">
-                <View className=" flex flex-row justify-between">
-                  <Text className=" font-kanit text-2xl text-primaryblue-200">
-                    ที่อยู่รับส่ง
-                  </Text>
-                </View>
-                <View className=" mt-2 flex flex-row gap-x-4">
-                  <View className=" flex justify-center items-center">
-                    <MaterialIcons
-                      name="location-pin"
-                      size={24}
-                      color="#0285df"
-                    />
-                  </View>
-                  <View className=" w-full flex flex-row flex-1 pr-4">
-                    <Text className=" font-kanitLight text-base">
-                      {orderData?.delivery_address}
-                    </Text>
-                  </View>
-                </View>
-              </View>
+
+        {/* Summary Card */}
+        <View className=" mt-4 px-5 py-5 bg-white border border-customgray-100">
+          <Text className=" font-kanit text-xl text-text-1 mb-2">สรุปราคา</Text>
+          <View className=" flex flex-col gap-y-1">
+            <View className=" flex flex-row justify-between">
+              <Text className=" font-kanitLight text-base text-text-4">
+                ค่าบริการ
+              </Text>
+              <Text className=" font-kanitLight text-base text-text-4">
+                {subtotal}฿
+              </Text>
+            </View>
+            <View className=" flex flex-row justify-between">
+              <Text className=" font-kanitLight text-base text-text-4">
+                ค่าบริการรับ-ส่งผ้า
+              </Text>
+              <Text className=" font-kanitLight text-base text-text-4">
+                {deliveryFee}฿
+              </Text>
             </View>
 
-            {/* Branch Card */}
-            <View className="">
-              <View className=" gap-y-2 flex flex-col px-5 py-3 rounded-xl bg-white border border-customgray-100">
-                <View className="flex flex-col gap-y-2">
-                  <Text className="font-kanitLight text-base text-primaryblue-200">
-                    ให้บริการโดย
-                  </Text>
-                  <View className=" flex flex-row gap-x-4 justify-start items-center">
-                    <Image
-                      source={require("@/assets/images/icon.png")}
-                      style={{ width: 24, aspectRatio: 1 }}
-                    />
-                    <Text className=" font-kanitLight flex-1">
-                      สาขา {branchData?.branch_name}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            {/* Order Card */}
-            <View className="">
-              <OrderDetailCard orderDetail={orderData?.order_details} />
+            <View className=" flex flex-row justify-between">
+              <Text className=" font-kanitLight text-base text-text-4">
+                ราคารวม
+              </Text>
+              <Text className=" font-kanitLight text-base text-text-4">
+                {total}฿
+              </Text>
             </View>
           </View>
+        </View>
 
-          {/* Summary Card */}
-          <View className=" mt-4 px-5 py-5 bg-white border border-customgray-100">
-            <Text className=" font-kanit text-xl text-text-1 mb-2">
-              สรุปราคา
-            </Text>
-            <View className=" flex flex-col gap-y-1">
-              <View className=" flex flex-row justify-between">
-                <Text className=" font-kanitLight text-base text-text-4">
-                  ค่าบริการ
-                </Text>
-                <Text className=" font-kanitLight text-base text-text-4">
-                  {subtotal}฿
-                </Text>
-              </View>
-              <View className=" flex flex-row justify-between">
-                <Text className=" font-kanitLight text-base text-text-4">
-                  ค่าบริการรับ-ส่งผ้า
-                </Text>
-                <Text className=" font-kanitLight text-base text-text-4">
-                  {deliveryFee}฿
-                </Text>
-              </View>
-
-              <View className=" flex flex-row justify-between">
-                <Text className=" font-kanitLight text-base text-text-4">
-                  ราคารวม
-                </Text>
-                <Text className=" font-kanitLight text-base text-text-4">
-                  {total}฿
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Note */}
-        </ScrollView>
-      
+        {/* Note */}
+      </ScrollView>
 
       {/* Total Card */}
       <View className="">

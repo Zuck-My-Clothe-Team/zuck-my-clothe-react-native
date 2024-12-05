@@ -4,6 +4,7 @@ import {
   IOrderReview,
   INewOrder,
   IOrderUpdateDTO,
+  OrderStatus,
 } from "@/interface/order.interface";
 import axios from "axios";
 
@@ -17,10 +18,12 @@ export async function getAllOrderInBranch(branch_id: string) {
   }
 }
 
-export async function getFullOrderByUserID() {
+export async function getFullOrderByUserID(status?: OrderStatus) {
   try {
     const axios = await axiosInstance();
-    const result = await axios.get(`/order/me`);
+    const result = await axios.get(
+      `/order/me${status ? `?status=${status}` : ""}`
+    );
     const data: IOrder[] = result.data;
     return data;
   } catch (error) {
