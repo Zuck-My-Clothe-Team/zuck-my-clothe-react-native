@@ -109,7 +109,7 @@ export default function LoginEmployeePage() {
                 </TouchableOpacity>
               </View>
               <View className="mt-6">
-                <TouchableOpacity onPress={() => router.push("/loginpage")}>
+                <TouchableOpacity onPress={() => router.back()}>
                   <Text className="font-kanitLight text-[14px] text-center text-text-4">
                     เข้าสู่ระบบด้วย Social media
                   </Text>

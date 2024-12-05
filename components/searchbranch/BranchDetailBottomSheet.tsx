@@ -1,6 +1,6 @@
 import { getBranchByID } from "@/api/branch.api";
 import { IBranch, IUserReviews } from "@/interface/branch.interface";
-import { IMachineInBranch } from "@/interface/machinebranch.interface";
+import { IAvailableMachine } from "@/interface/machinebranch.interface";
 import { FontAwesome } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import Location from "expo-location";
@@ -12,7 +12,14 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 const BranchDetailBottomSheet = ({
   branchData,
@@ -24,7 +31,7 @@ const BranchDetailBottomSheet = ({
   setIsVisible,
 }: {
   branchData: IBranch;
-  machineData: IMachineInBranch[];
+  machineData: IAvailableMachine[];
   // userReviewData: any;
   userLocation: Location.LocationObject | null;
   className?: string;
@@ -33,12 +40,14 @@ const BranchDetailBottomSheet = ({
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [sortedMachineData, setSortedMachineData] = useState<
-    IMachineInBranch[]
+    IAvailableMachine[]
   >([]);
 
   const [userReviewData, setUserReviewData] = useState<IUserReviews[] | null>(
     []
   );
+
+  const dimension = Dimensions.get("window");
 
   const distance = useMemo(() => {
     if (userLocation) {
@@ -88,7 +97,12 @@ const BranchDetailBottomSheet = ({
   useMemo(() => {
     const fetchReviewData = async () => {
       const branch = await getBranchByID(branchData.branch_id);
-      const reviewData = branch.user_reviews;
+      const reviewData = branch.user_reviews.filter(
+        (review) =>
+          review.review_comment !== null &&
+          review.review_comment !== "" &&
+          review.star_rating !== 0
+      );
       setUserReviewData(reviewData);
       console.log(reviewData);
     };
@@ -99,6 +113,7 @@ const BranchDetailBottomSheet = ({
     setSortedMachineData(
       machineData
         .sort((a, b) => a.machine_label.localeCompare(b.machine_label))
+        .sort((a, b) => a.weight - b.weight)
         .map((machine) => {
           const newMachine = { ...machine };
           newMachine.machine_label = newMachine.machine_label.replace(
@@ -119,14 +134,16 @@ const BranchDetailBottomSheet = ({
   //   console.log(machineData);
   // }, [machineData]);
 
-  interface EncryptFunction {
-    (text: string): string;
-  }
+  // interface EncryptFunction {
+  //   (text: string): string;
+  // }
 
-  const encrypt: EncryptFunction = (text) => {
-    if (text.length <= 2) return text;
-    return text[0] + "*".repeat(text.length - 2) + text[text.length - 1];
-  };
+  // const encrypt: EncryptFunction = (text) => {
+  //   if (text.length <= 2) return text;
+  //   return text[0] + "*".repeat(text.length - 2) + text[text.length - 1];
+  // };
+
+  console.log(sortedMachineData);
 
   return (
     <>
@@ -224,7 +241,7 @@ const BranchDetailBottomSheet = ({
                     <Text style={[styles.branchDistance, { marginBottom: 20 }]}>
                       {"หมายเลข"} {machine.machine_label}
                     </Text>
-                    {machine.is_active === true ? (
+                    {!machine.finished_at ? (
                       <View
                         className=" rounded-full"
                         style={{
@@ -280,10 +297,14 @@ const BranchDetailBottomSheet = ({
           >
             {"รีวิว"} {`(${userReviewData?.length})`}
           </Text>
-          <ScrollView>
-            {userReviewData?.map((review) => (
+          <ScrollView
+            style={
+              dimension.height < 768 ? { height: "30%" } : { height: "48%" }
+            }
+          >
+            {userReviewData?.map((review, index) => (
               <View
-                key={review.review_comment}
+                key={"review_" + index}
                 style={{
                   marginTop: 10,
                   backgroundColor: "#F9FAFF",

@@ -2,9 +2,9 @@ import { createAddress } from "@/api/address.api";
 import { useLocationContext } from "@/context/location.context";
 import { IAddress } from "@/interface/address.interface";
 import { IRegion } from "@/interface/region.interface";
-import { AntDesign } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import { router } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ScrollView,
@@ -122,15 +122,15 @@ const CreateAddressPage: React.FC = () => {
   return (
     <SafeAreaView style={{ backgroundColor: "#0285DF" }}>
       <View style={styles.headerBg}>
-        <AntDesign
-          name="arrowleft"
-          size={24}
-          style={{ position: "absolute", left: 10, zIndex: 10 }}
-          color="#71BFFF"
+        <TouchableOpacity
+          style={{ position: "absolute", left: 15, zIndex: 10 }}
           onPress={() => {
             router.back();
           }}
-        />
+        >
+          <Ionicons name="arrow-back" size={36} color={"#71BFFF"} />
+        </TouchableOpacity>
+
         <View style={styles.header}>
           <Text style={styles.textHeader}>เพิ่มที่อยู่</Text>
         </View>

@@ -3,7 +3,6 @@ import { IUserAuthContext } from "@/interface/userdetail.interface";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { router, SplashScreen } from "expo-router";
 import React from "react";
 import {
@@ -68,12 +67,12 @@ const ProfilePage = () => {
       title: "ข้อกำหนดเงื่อนไขและนโยบายอื่น ๆ",
       icon: <AntDesign name="rightcircleo" size={22} color="#71BFFF" />,
     },
+    // {
+    //   title: "ตั้งค่า",
+    //   icon: <Ionicons name="settings-outline" size={22} color="#71BFFF" />,
+    // },
     {
-      title: "ตั้งค่า",
-      icon: <Ionicons name="settings-outline" size={22} color="#71BFFF" />,
-    },
-    {
-      title: "ติดต่อ Support",
+      title: "ติดต่อเรา",
       icon: <Feather name="phone" size={22} color="#71BFFF" />,
       onpress: () => {
         router.push("/(profile)/contact")
@@ -109,7 +108,7 @@ const ProfilePage = () => {
         </View>
         <View className=" flex flex-col mt-20 w-full gap-y-8 max-h-screen pb-16">
           <View className=" flex flex-col gap-y-4 justify-center items-center">
-            <Text className=" text-text-1 font-notoMedium text-3xl">
+            <Text className=" text-text-1 font-kanit text-3xl">
               {userData!.firstname}
             </Text>
             <Text className=" text-text-1 font-notoLight text-base">

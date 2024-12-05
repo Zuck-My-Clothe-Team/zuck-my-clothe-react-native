@@ -1,11 +1,15 @@
 import { axiosInstance } from "@/hooks/axiosInstance";
-import { IAvailableMachine, IMachineInBranch, IMachineUpdateStatus } from "./../interface/machinebranch.interface";
+import {
+  IAvailableMachine,
+  IMachineInBranch, IMachineUpdateStatus,
+} from "./../interface/machinebranch.interface";
 
 export async function getMachineByBranchID(branch_id: string) {
   try {
     const axios = await axiosInstance();
     const result = await axios.get(`/machine/branch/${branch_id}`);
     const data: IMachineInBranch[] = result.data;
+    console.log(data);
     return data;
   } catch (error) {
     console.error("Error during fetch machine by branch id:", error);
@@ -20,7 +24,7 @@ export async function getMachineDetailBySerial(serial_id: string) {
     const data: IMachineInBranch = result.data;
     return data;
   } catch (error) {
-    console.error("Error during fetch machine by branch id:", error);
+    console.error("Error during fetch machine by serial id:", error);
     throw error;
   }
 }
@@ -44,7 +48,8 @@ export async function updateMachineActiveStatus(serial_id: string,active_status:
     const data: IMachineUpdateStatus = result.data;
     return data;
   } catch (error) {
-    console.error("Error during updateMachineActiveStatus:", error.response?.data || error.message);
+    const err = error as any;
+    console.error("Error during updateMachineActiveStatus:", err.response?.data || err.message);
     throw error;
   }
 }

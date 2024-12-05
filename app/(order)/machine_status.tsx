@@ -1,18 +1,18 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import React, { useCallback, useState, useEffect } from "react";
-import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { getOrderByOrderHeaderId } from "@/api/order.api";
 import { getMachineDetailBySerial } from "@/api/machine.api";
+import { getOrderByOrderHeaderId } from "@/api/order.api";
+import { IMachineInBranch } from "@/interface/machinebranch.interface";
 import {
   IOrder,
   IOrderDetail,
   ServiceType,
   ServiceTypeTH,
 } from "@/interface/order.interface";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { DateFormatter } from "@/utils/datetime";
 import { AntDesign } from "@expo/vector-icons";
-import { IMachineInBranch } from "@/interface/machinebranch.interface";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface IOrderDetailWithLabel extends IOrderDetail {
   machine_label?: string | null; // Extend IOrderDetail to include machine_label

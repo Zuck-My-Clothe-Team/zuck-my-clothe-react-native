@@ -1,26 +1,32 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import React, { useCallback, useState } from "react";
-import { router, useFocusEffect } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { useLocalSearchParams } from "expo-router";
+import { getBranchByID } from "@/api/branch.api";
 import { getMachineDetailBySerial } from "@/api/machine.api";
+import { createNewOrder } from "@/api/order.api";
+import LoadingBubble from "@/components/auth/Loading";
+import CustomModal from "@/components/modal/CustomModal";
+import { useAuth } from "@/context/auth.context";
+import { IBranch } from "@/interface/branch.interface";
 import {
   IMachineInBranch,
   MachinePrice,
 } from "@/interface/machinebranch.interface";
-import { IBranch } from "@/interface/branch.interface";
-import { getBranchByID } from "@/api/branch.api";
-import { machine } from "os";
-import LoadingBubble from "@/components/auth/Loading";
+import { INewOrder, ServiceType } from "@/interface/order.interface";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrderSummary = () => {
+  const auth = useAuth();
+  const userData = auth?.authContext;
   const [machineData, setMachineData] = useState<IMachineInBranch>();
   const [branchData, setBranchData] = useState<IBranch>();
   const [loading, setLoading] = useState<boolean>(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalInUseVisible, setModalInUseVisible] = useState(false);
   const [pressedNextPage, setPressedNextPage] = useState(false);
+  const [newOrder, setNewOrder] = useState<INewOrder>();
 
   const handleScanner = useCallback(async (value: string) => {
     setLoading(true);
@@ -36,8 +42,15 @@ const OrderSummary = () => {
       if (!machine.is_active) {
         setLoading(false);
         setModalVisible(true);
+        return;
       }
-    } catch (error) {
+
+      if (!machine.is_available) {
+        setLoading(false);
+        setModalInUseVisible(true);
+        return;
+      }
+    } catch {
       setLoading(false);
       setModalVisible(true);
     }
@@ -46,8 +59,7 @@ const OrderSummary = () => {
   const { data } = useLocalSearchParams<{ data: string }>();
 
   useFocusEffect(
-    React.useCallback(() => {
-
+    useCallback(() => {
       setPressedNextPage(false);
 
       const runHandleScanner = async () => {
@@ -59,48 +71,66 @@ const OrderSummary = () => {
       return () => {
         // Cleanup code, if any
       };
-    }, [data]) // Ensure dependencies are up-to-date
+    }, [data, handleScanner])
   );
+
+  useEffect(() => {
+    if (branchData) {
+      setNewOrder({
+        branch_id: branchData.branch_id,
+        delivery_address: null,
+        delivery_lat: null,
+        delivery_long: null,
+        order_details: [
+          {
+            machine_serial: data,
+          },
+        ],
+        order_note: null,
+        user_id: userData!.user_id,
+        zuck_onsite: true,
+      });
+      // setIsSubmitting(false);
+    }
+  }, [branchData, data, machineData, userData]);
+
+  async function placeOrder() {
+    if (newOrder) {
+      try {
+        createNewOrder(newOrder);
+        router.push("/order_summary/pay_complete");
+      } catch {
+        console.log("Error creating new order");
+      }
+    }
+  }
 
   if (loading) return <LoadingBubble />;
 
   return (
     <View>
       <SafeAreaView className=" h-full px-9">
-        <Modal
-          animationIn={"fadeIn"}
-          animationOut={"fadeOut"}
-          isVisible={modalVisible}
-          useNativeDriver={true}
-        >
-          <View className="h-full items-center justify-center">
-            <View
-              className="bg-background-1 rounded-xl border border-secondaryblue-100"
-              style={{ paddingHorizontal: 16, paddingVertical: 16 }}
-            >
-              <View>
-                <Text className="text-text-3 text-xl font-kanit">
-                  รูปแบบ QR Code ไม่ถูกต้อง
-                </Text>
-                <Text className="text-text-4 text-xl font-kanit">
-                  โปรดตรวจสอบและสแกนใหม่อีกครั้ง
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={{ marginTop: 16 }}
-                className="items-center"
-                onPress={() => {
-                  setModalVisible(false);
-                  router.push("/(tabs)/payment");
-                }}
-              >
-                <Text className="px-8 font-kanit text-text-2 text-base bg-primaryblue-200">
-                  ตกลง
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        <CustomModal
+          visible={modalInUseVisible}
+          setVisible={setModalInUseVisible}
+          icon={<></>}
+          text={["เครื่องนี้กำลังถูกใช้งาน", "โปรดเลือกเครื่องใหม่"]}
+          onPress={() => {
+            setModalInUseVisible(false);
+            router.back();
+          }}
+        />
+
+        <CustomModal
+          visible={modalVisible}
+          setVisible={setModalVisible}
+          icon={<></>}
+          text={["ไม่พบข้อมูลเครื่องซักผ้า", "โปรดตรวจสอบ QR Code อีกครั้ง"]}
+          onPress={() => {
+            setModalVisible(false);
+            router.back();
+          }}
+        />
 
         <View className=" h-full">
           <View className="">
@@ -172,7 +202,7 @@ const OrderSummary = () => {
               onPress={() => {
                 if (!pressedNextPage) {
                   setPressedNextPage(true);
-                  router.push("/order_summary/pay_complete");
+                  placeOrder();
                 }
               }}
               className="w-full rounded-lg bg-primaryblue-200 items-center px-20 py-2 mt-5 mb-14"

@@ -4,20 +4,21 @@ export interface IMachineInBranch {
   sort(arg0: (a: any, b: any) => number): unknown;
   branch_id: string;
   machine_label: string;
-  created_at: string;
-  created_by: string;
-  deleted_at: string;
-  deleted_by: string;
   is_active: boolean;
-  is_available: boolean;
+  finished_at: string;
   machine_serial: string;
   machine_type: string;
-  updated_at: string;
-  updated_by: string;
   weight: TWeight;
+  created_at?: string;
+  created_by?: string;
+  deleted_at?: string;
+  deleted_by?: string;
+  updated_at?: string;
+  updated_by?: string;
 }
 
 export interface IAvailableMachine {
+  sort(arg0: (a: any, b: any) => number): unknown;
   amount: any;
   machine_serial: string;
   machine_label: string;
