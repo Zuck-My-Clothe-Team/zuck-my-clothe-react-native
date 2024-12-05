@@ -1,5 +1,10 @@
 import { axiosInstance } from "@/hooks/axiosInstance";
-import { IOrder, IOrderReview, INewOrder } from "@/interface/order.interface";
+import {
+  IOrder,
+  IOrderReview,
+  INewOrder,
+  IOrderUpdateDTO,
+} from "@/interface/order.interface";
 import axios from "axios";
 
 export async function getAllOrderInBranch(branch_id: string) {
@@ -62,5 +67,16 @@ export async function getOrderByOrderHeaderId(
     return data;
   } catch (error) {
     console.error("Error during fetch order by order header id:", error);
+  }
+}
+
+export async function updateStatusOrder(updateDTO: IOrderUpdateDTO) {
+  try {
+    const axios = await axiosInstance();
+    const result = await axios.put(`/order/update`, updateDTO);
+    return result;
+  } catch (error) {
+    console.error("Error during update status order:", error);
+    throw error;
   }
 }
