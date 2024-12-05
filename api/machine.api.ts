@@ -21,7 +21,7 @@ export async function getMachineByBranchID(branch_id: string) {
 export async function getMachineDetailBySerial(serial_id: string) {
   try {
     const axios = await axiosInstance();
-    const result = await axios.get(`/machine/detail/${serial_id}`);
+    const result = await axios.get(`/machine/detail/${serial_id}?withTime=true`);
     const data: IMachineInBranch = result.data;
     return data;
   } catch (error) {
