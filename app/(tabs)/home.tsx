@@ -1,11 +1,18 @@
+import { getMachineDetailBySerial } from "@/api/machine.api";
+import { getFullOrderByUserID } from "@/api/order.api";
 import { useAuth } from "@/context/auth.context";
+import { IMachineInBranch } from "@/interface/machinebranch.interface";
+import { IOrder, OrderStatus } from "@/interface/order.interface";
 import { IUserAuthContext } from "@/interface/userdetail.interface";
+import { DateFormatter } from "@/utils/datetime";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Href, router, SplashScreen, useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { router, SplashScreen } from "expo-router";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
+  Linking,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -17,44 +24,47 @@ import { SafeAreaView } from "react-native-safe-area-context";
 SplashScreen.preventAutoHideAsync();
 
 interface OptionCardProps {
-  zuckNumber: number;
-  zuckRemain: number;
+  zuckNumber: string;
+  zuckRemain: string;
 }
 
-const OptionCard: React.FC<OptionCardProps> = ({ zuckNumber, zuckRemain }) => {
-  return (
-    <View className="w-72 pl-2 rounded-xl px-5 py-3">
-      <View className=" flex flex-col">
-        <View className=" flex flex-row items-center">
-          <Text className="w-[40%] font-kanit text-2xl text-text-3">
-            เครื่องซัก
-          </Text>
-          <Text className="font-kanitLight  text-text-4">
-            หมายเลข {zuckNumber}
-          </Text>
-        </View>
-
-        <View className="flex flex-row items-center py-2">
-          <View className="justify-center w-[30%] flex flex-row">
-            <Image
-              source={require("../../assets/images/mainpage/report.png")}
-              style={{ width: 40, height: 42 }}
-            />
-          </View>
-          <View className="w-[10%] items-center">
-            <View className="w-[1px] h-7 rounded-sm bg-blue-400"></View>
-          </View>
-
-          <View className="">
-            <Text className="font-kanit text-xl text-text-4">
-              เสร็จในอีก {zuckRemain} นาที
+// eslint-disable-next-line react/display-name
+const OptionCard: React.FC<OptionCardProps> = memo(
+  ({ zuckNumber, zuckRemain }) => {
+    return (
+      <View className="w-72 pl-2 rounded-xl px-5 py-3">
+        <View className=" flex flex-col">
+          <View className=" flex flex-row items-center">
+            <Text className="w-[40%] font-kanit text-2xl text-text-3">
+              เครื่องซัก
             </Text>
+            <Text className="font-kanitLight  text-text-4">
+              หมายเลข {zuckNumber}
+            </Text>
+          </View>
+
+          <View className="flex flex-row items-center py-2">
+            <View className="justify-center w-[30%] flex flex-row">
+              <Image
+                source={require("../../assets/images/mainpage/report.png")}
+                style={{ width: 40, height: 42 }}
+              />
+            </View>
+            <View className="w-[10%] items-center">
+              <View className="w-[1px] h-7 rounded-sm bg-blue-400"></View>
+            </View>
+
+            <View className="">
+              <Text className="font-kanit text-xl text-text-4">
+                เสร็จในอีก {zuckRemain} นาที
+              </Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
-  );
-};
+    );
+  }
+);
 
 const Homepage = () => {
   const auth = useAuth();
@@ -64,12 +74,16 @@ const Homepage = () => {
   const itemstyle = "w-20 h-28 flex flex-col";
   const upperitemstyle = "h-[70%] items-center justify-center";
   const loweritemstyle = "justify-center items-center";
-  const textitemstyle = "font-kanitLight text-base text-text-1";
+  const textitemstyle = "font-kanitLight text-base text-text-1 text-center";
 
-  // const width = Dimensions.get("window").width;
-
-  const [isWashing, setIsWashing] = useState(true);
+  const [isWashing, setIsWashing] = useState(false);
   const [isSnap, setIsSnap] = useState(0);
+  const [machineData, setMachineData] = useState<{
+    [key: string]: {
+      machine_serial: string;
+      machine_label: string;
+    };
+  }>({});
 
   const promotionPic = [
     {
@@ -84,16 +98,10 @@ const Homepage = () => {
     { number: 3, image: require("@/assets/images/mainpage/heropic1.png") },
   ];
 
-  const mockUpZuckMachineData = [
-    { number: 1, minute: 24 },
-    { number: 1, minute: 24 },
-    { number: 1, minute: 24 },
-  ];
-
   interface actionButtonProps {
     name: string;
     img_url: any;
-    path: Href<string>;
+    onpress?: () => void;
     width: number;
   }
 
@@ -101,28 +109,103 @@ const Homepage = () => {
     {
       name: "ค้นหาร้าน",
       img_url: require("../../assets/images/mainpage/location.png"),
-      path: "/searchbranch",
+      onpress: () => {
+        router.push("/searchbranch");
+      },
       width: 37,
     },
     {
       name: "รับ-ส่งผ้า",
       img_url: require("../../assets/images/mainpage/wash-send.png"),
-      path: "/delivery",
+      onpress: () => {
+        router.push("/delivery");
+      },
       width: 44,
     },
     {
       name: "รายงาน",
       img_url: require("../../assets/images/mainpage/report.png"),
-      path: "/(report)/scanner",
+      onpress: () => {
+        router.push("/(report)/scanner");
+      },
       width: 44,
     },
     {
-      name: "รีวิว",
-      img_url: require("../../assets/images/mainpage/review.png"),
-      path: "/history",
-      width: 55,
+      name: "ช่วยเหลือ",
+      img_url: require("../../assets/images/mainpage/support.png"),
+      onpress: () => {
+        Linking.openURL("tel:0812345678");
+      },
+      width: 60,
     },
   ];
+
+  const [order, setOrder] = useState<IOrder[] | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchOrder() {
+        try {
+          const order = await getFullOrderByUserID(OrderStatus.Processing);
+          const filteredOrder = order.filter((data) =>
+            data.order_details.some(
+              (detail) =>
+                new Date(detail.finished_at).getTime() - Date.now() > 0 &&
+                detail.order_status === OrderStatus.Processing &&
+                detail.machine_serial !== null &&
+                detail.machine_serial !== ""
+            )
+          );
+          filteredOrder.sort((a, b) => {
+            return (
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+            );
+          });
+
+          const machineData: {
+            [key: string]: {
+              machine_serial: string;
+              machine_label: string;
+            };
+          } = {};
+
+          await Promise.all(
+            filteredOrder.map((data) =>
+              Promise.all(
+                data.order_details.map(async (detail) => {
+                  if (machineData[detail.machine_serial] === undefined) {
+                    const machine: IMachineInBranch =
+                      await getMachineDetailBySerial(detail.machine_serial);
+                    machineData[machine.machine_serial] = {
+                      machine_serial: machine.machine_serial,
+                      machine_label: machine.machine_label,
+                    };
+                  }
+                })
+              )
+            )
+          );
+
+          setMachineData(machineData);
+          setOrder(filteredOrder);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      fetchOrder();
+    }, [])
+  );
+
+  useEffect(() => {
+    if (order && order.length > 0) {
+      setIsWashing(true);
+      // console.log('Created order finished at :' + new Date(order[0].created_at));
+      // const finishedTime = new Date(order[0].order_details[0].finished_at);
+      // const currentTime = new Date();
+      // console.log('Finished time: ' + finishedTime);
+    }
+  }, [order]);
 
   return (
     <SafeAreaView className="h-full w-full flex flex-col bg-primaryblue-300">
@@ -187,9 +270,6 @@ const Homepage = () => {
                   style={{ width: "100%", height: "100%" }}
                   resizeMode="contain"
                 />
-                {/* <Text style={{ textAlign: "center", fontSize: 30 }}>
-                  {item.number}
-                </Text> */}
               </View>
             )}
           />
@@ -212,9 +292,7 @@ const Homepage = () => {
             <TouchableOpacity
               key={index}
               className={itemstyle}
-              onPress={() => {
-                router.push(item.path);
-              }}
+              onPress={item.onpress}
             >
               <View className={upperitemstyle}>
                 <Image
@@ -230,7 +308,7 @@ const Homepage = () => {
           ))}
         </View>
 
-        {isWashing && (
+        {isWashing && order && (
           <View className="mx-6 py-8">
             <Text className="font-kanitMedium text-text-3 text-4xl py-4">
               สถานะเครื่องซักผ้า
@@ -239,13 +317,26 @@ const Homepage = () => {
             <View className="w-full flex flex-row">
               <ScrollView horizontal={true}>
                 <View className="flex flex-row">
-                  {mockUpZuckMachineData.map((data, index) => (
-                    <OptionCard
-                      key={index}
-                      zuckNumber={data.number}
-                      zuckRemain={data.minute}
-                    />
-                  ))}
+                  {order.map((data) =>
+                    data.order_details.map((detail, index) => {
+                      const machine = machineData[detail.machine_serial];
+                      if (!machine) {
+                        return null;
+                      }
+
+                      return (
+                        <OptionCard
+                          key={index}
+                          zuckNumber={
+                            machineData[detail.machine_serial].machine_label
+                          }
+                          zuckRemain={DateFormatter.getTimeRemaining(
+                            new Date(detail.finished_at)
+                          )}
+                        />
+                      );
+                    })
+                  )}
                 </View>
               </ScrollView>
             </View>

@@ -5,7 +5,7 @@ import {
 } from "@/api/address.api";
 import LoadingBubble from "@/components/auth/Loading";
 import { IAddress } from "@/interface/address.interface";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import React, {
   useCallback,
@@ -137,15 +137,16 @@ const EditAddressPage: React.FC = () => {
   return (
     <SafeAreaView style={{ backgroundColor: "#0285DF" }}>
       <View style={styles.headerBg}>
-        <AntDesign
-          name="arrowleft"
-          size={24}
-          style={{ position: "absolute", left: 10, zIndex: 10 }}
-          color="#71BFFF"
-          onPress={() => {
-            router.back();
-          }}
-        />
+        <View style={{ position: "absolute", left: 10, zIndex: 10 }}>
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Ionicons name="arrow-back" size={36} color={"#71BFFF"} />
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.header}>
           <Text style={styles.textHeader}>แก้ไขที่อยู่</Text>
         </View>

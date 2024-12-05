@@ -1,41 +1,36 @@
-import React, { useCallback, useEffect, useState } from "react";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useFocusEffect } from "@react-navigation/native";
+import { router } from "expo-router";
+import React, { useCallback, useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
   Image,
+  ScrollView,
+  Text,
   TextInput,
-  Keyboard,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Feather from "@expo/vector-icons/Feather";
-import { router } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
 
-import { getFullOrderByUserID, updateOrderReview } from "@/api/order.api";
 import { getBranchByID } from "@/api/branch.api";
 import { getMachineDetailBySerial } from "@/api/machine.api";
+import { getFullOrderByUserID, updateOrderReview } from "@/api/order.api";
 
+import StarRating from "@/components/historycomponent/starrating";
+import { useAuth } from "@/context/auth.context";
+import {
+  IMachineInBranch,
+  MachinePrice,
+} from "@/interface/machinebranch.interface";
 import {
   IOrder,
   IOrderDetail,
   IOrderReview,
   ServiceTypeTH,
 } from "@/interface/order.interface";
-import { IBranch } from "@/interface/branch.interface";
-import {
-  IMachineInBranch,
-  MachinePrice,
-} from "@/interface/machinebranch.interface";
 import Modal from "react-native-modal";
-import StarRating from "@/components/historycomponent/starrating";
-import { Kanit_300Light } from "@expo-google-fonts/kanit";
-import { useAuth } from "@/context/auth.context";
-import axios from "axios";
-import { machine } from "os";
 
 const imagepath = {
   Washing: require("../../assets/images/historypage/Washing.png"),
@@ -105,16 +100,17 @@ const HistoryPage = () => {
           };
 
           // Determine card type and fetch machine details
-          if (order.zuck_onsite) { //assign cardtype
+          if (order.zuck_onsite) {
+            //assign cardtype
             retval.CardType = order.order_details[0].service_type;
             const machinedetail: IMachineInBranch =
               await getMachineDetailBySerial(
                 order.order_details[0].machine_serial
               );
-            const match = machinedetail.machine_label.match(/(\d+)/)
-            match === null ? 
-            retval.machinenumber = "" :
-            retval.machinenumber = match[0];
+            const match = machinedetail.machine_label.match(/(\d+)/);
+            match === null
+              ? (retval.machinenumber = "")
+              : (retval.machinenumber = match[0]);
           } else {
             retval.CardType = "Delivery";
           }
@@ -261,117 +257,135 @@ const HistoryPage = () => {
 
           {/* History List */}
           <ScrollView>
-            {history && history.length > 0 ? history.map((history, index) => (
-              <View
-                key={index}
-                className="border rounded-3xl px-5 py-4 bg-white"
-                style={{ borderColor: "#F1F1F1", marginBottom: 16 }}
-              >
-                <Text className="text-primaryblue-200 text-3xl font-kanit">
-                  สาขา {history.branch || "N/A"}
-                </Text>
-                <View className="flex flex-row justify-between px-5 py-4 border-t-secondaryblue-100 border-t-2">
-                  <Image
-                    source={
-                      imagepath[history.CardType as keyof typeof imagepath]
-                    }
-                    style={{ width: history.CardType === "Delivery" ? 75 : 90 , height: 90 }}
-                    resizeMode="contain"
-                  />
-                  <View className="justify-center">
-                    <Text className="font-kanit text-text-1 text-xl">
-                      {history.CardType.replace("Delivery", "บริการรับ-ส่งผ้า")
-                        .replace("Washing", "เครื่องซัก")
-                        .replace("Drying", "เครื่องอบ")}{" "}
-                      {history.CardType !== "Delivery"
-                        ? "หมายเลข " + history.machinenumber
-                        : ""}
-                    </Text>
-                    <View className="flex flex-row">
-                      <MaterialCommunityIcons
-                        name="clock"
-                        size={24}
-                        color="#D8D8D8"
-                      />
-                      <Text className="pl-2 font-kanitLight text-text-4 text-base">
-                        {new Date(history.Time).toLocaleDateString()} เวลา{" "}
-                        {new Date(history.Time)
-                          .toLocaleTimeString()
-                          .replace("AM", "")
-                          .replace("PM", "")}
+            {history && history.length > 0 ? (
+              history.map((history, index) => (
+                <View
+                  key={index}
+                  className="border rounded-3xl px-5 py-4 bg-white"
+                  style={{ borderColor: "#F1F1F1", marginBottom: 16 }}
+                >
+                  <Text className="text-primaryblue-200 text-3xl font-kanit">
+                    สาขา {history.branch || "N/A"}
+                  </Text>
+                  <View className="flex flex-row justify-between px-5 py-4 border-t-secondaryblue-100 border-t-2">
+                    <Image
+                      source={
+                        imagepath[history.CardType as keyof typeof imagepath]
+                      }
+                      style={{
+                        width: history.CardType === "Delivery" ? 75 : 90,
+                        height: 90,
+                      }}
+                      resizeMode="contain"
+                    />
+                    <View className="justify-center">
+                      <Text className="font-kanit text-text-1 text-xl">
+                        {history.CardType.replace(
+                          "Delivery",
+                          "บริการรับ-ส่งผ้า"
+                        )
+                          .replace("Washing", "เครื่องซัก")
+                          .replace("Drying", "เครื่องอบ")}{" "}
+                        {history.CardType !== "Delivery"
+                          ? "หมายเลข " + history.machinenumber
+                          : ""}
                       </Text>
-                    </View>
-                  </View>
-                  {history.CardType !== "Delivery" ? (
-                    <Text className="font-kanit text-text-4 text-3xl align-middle ml-3">
-                      {history.TotalCost}฿
-                    </Text>
-                  ) : 
-                  (
-                    <Text className="font-kanit text-white text-3xl align-middle ml-3">
-                      {history.TotalCost}฿
-                    </Text>
-                  )}
-                </View>
-                {history.CardType === "Delivery" && (
-                  <View className="pb-4">
-                    {history.CostDetail.map((detail, index) => (
-                      <View
-                        key={index}
-                        className="flex flex-row justify-between"
-                      >
-                        <Text className="font-kanitLight text-text-4 text-base">
-                          {ServiceTypeTH[detail.service_type]}
-                        </Text>
-                        <Text className="font-kanitLight text-text-4 text-base">
-                          {MachinePrice[detail.weight]}฿
+                      <View className="flex flex-row">
+                        <MaterialCommunityIcons
+                          name="clock"
+                          size={24}
+                          color="#D8D8D8"
+                        />
+                        <Text className="pl-2 font-kanitLight text-text-4 text-base">
+                          {new Date(history.Time).toLocaleDateString()} เวลา{" "}
+                          {new Date(history.Time)
+                            .toLocaleTimeString()
+                            .replace("AM", "")
+                            .replace("PM", "")}
                         </Text>
                       </View>
-                    ))}
-                    <View className="flex flex-row justify-between">
-                      <Text className="font-kanitLight text-text-1 text-base">
-                        ราคารวม
-                      </Text>
-                      <Text className="font-kanitLight text-text-1 text-base">
+                    </View>
+                    {history.CardType !== "Delivery" ? (
+                      <Text className="font-kanit text-text-4 text-3xl align-middle ml-3">
                         {history.TotalCost}฿
                       </Text>
-                    </View>
+                    ) : (
+                      <Text className="font-kanit text-white text-3xl align-middle ml-3">
+                        {history.TotalCost}฿
+                      </Text>
+                    )}
                   </View>
-                )}
-                <View className="w-full flex flex-row justify-end">
-                  {history.star === 0 ? (
-                    <TouchableOpacity
-                      className="px-12 py-2 rounded-md border"
-                      style={{ borderColor: "#2594E1", paddingHorizontal: 28 }}
-                      onPress={() => {
-                        setModal(true);
-                        setConfirmed(false);
-                        setStar(5);
-                        setReview(initialReviewState(history));
-                      }}
-                    >
-                      <Text className="font-kanit text-xl text-primaryblue-100 text-center">
-                        ให้คะแนน
-                      </Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      className="px-12 py-2 rounded-md border bg-customgray-100"
-                      style={{ borderColor: "#E3E3E3", paddingHorizontal: 28 }}
-                      disabled={true}
-                    >
-                      <Text className="font-kanit text-xl text-center" style={{color:"#C6C6C6"}}>
-                        ให้คะแนนแล้ว
-                      </Text>
-                    </TouchableOpacity>
+                  {history.CardType === "Delivery" && (
+                    <View className="pb-4">
+                      {history.CostDetail.map((detail, index) => (
+                        <View
+                          key={index}
+                          className="flex flex-row justify-between"
+                        >
+                          <Text className="font-kanitLight text-text-4 text-base">
+                            {ServiceTypeTH[detail.service_type]}
+                          </Text>
+                          <Text className="font-kanitLight text-text-4 text-base">
+                            {MachinePrice[detail.weight]}฿
+                          </Text>
+                        </View>
+                      ))}
+                      <View className="flex flex-row justify-between">
+                        <Text className="font-kanitLight text-text-1 text-base">
+                          ราคารวม
+                        </Text>
+                        <Text className="font-kanitLight text-text-1 text-base">
+                          {history.TotalCost}฿
+                        </Text>
+                      </View>
+                    </View>
                   )}
+                  <View className="w-full flex flex-row justify-end">
+                    {history.star === 0 ? (
+                      <TouchableOpacity
+                        className="px-12 py-2 rounded-md border"
+                        style={{
+                          borderColor: "#2594E1",
+                          paddingHorizontal: 28,
+                        }}
+                        onPress={() => {
+                          setModal(true);
+                          setConfirmed(false);
+                          setStar(5);
+                          setReview(initialReviewState(history));
+                        }}
+                      >
+                        <Text className="font-kanit text-xl text-primaryblue-100 text-center">
+                          ให้คะแนน
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        className="px-12 py-2 rounded-md border bg-customgray-100"
+                        style={{
+                          borderColor: "#E3E3E3",
+                          paddingHorizontal: 28,
+                        }}
+                        disabled={true}
+                      >
+                        <Text
+                          className="font-kanit text-xl text-center"
+                          style={{ color: "#C6C6C6" }}
+                        >
+                          ให้คะแนนแล้ว
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
                 </View>
+              ))
+            ) : (
+              <View className="h-full w-full items-center justify-center">
+                <Text className="text-text-4 font-kanit text-xl text-center align-middle">
+                  ไม่พบประวัติการซัก
+                </Text>
               </View>
-            )) :
-            <View className="h-full w-full items-center justify-center">
-              <Text className="text-text-4 font-kanit text-xl text-center align-middle">ไม่พบประวัติการซัก</Text>
-            </View>
-            }
+            )}
 
             {/* Load More Button */}
             <View

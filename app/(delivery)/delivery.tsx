@@ -7,10 +7,11 @@ import CustomModal from "@/components/modal/CustomModal";
 import { useAuth } from "@/context/auth.context";
 import { IBranch } from "@/interface/branch.interface";
 import { TWeight } from "@/interface/machinebranch.interface";
-import { IOrder, INewOrder, ServiceType } from "@/interface/order.interface";
+import { INewOrder, ServiceType } from "@/interface/order.interface";
 import { IUserAddress } from "@/interface/userdetail.interface";
 import {
   Feather,
+  FontAwesome6,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
@@ -35,8 +36,6 @@ import {
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Dropdown } from "react-native-element-dropdown";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import ModalLib from "react-native-modal";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const washmachineImage = require("../../assets/images/washmachine.png");
@@ -78,6 +77,8 @@ const DeliveryPage = () => {
   const [isDryerOnly, setIsDryerOnly] = useState(false);
 
   const [isWarningModalVisible, setIsWarningModalVisible] = useState(false);
+  const [isPhoneNumberModalVisible, setIsPhoneNumberModalVisible] =
+    useState(false);
 
   const [newOrder, setNewOrder] = useState<INewOrder>();
   const [note, setNote] = useState("");
@@ -131,16 +132,19 @@ const DeliveryPage = () => {
         order_details: [
           ...prevOrder.order_details,
           ...Array.from({ length: amount }, () => ({
+            machine_serial: null,
             service_type: isDryerOnly
               ? ServiceType.Drying
               : ServiceType.Washing,
             weight: Number(value) as TWeight,
           })),
           {
+            machine_serial: null,
             service_type: ServiceType.Pickup,
             weight: 0,
           },
           {
+            machine_serial: null,
             service_type: ServiceType.Delivery,
             weight: 0,
           },
@@ -157,6 +161,7 @@ const DeliveryPage = () => {
           order_details: [
             ...prevOrder.order_details,
             {
+              machine_serial: null,
               service_type: ServiceType.Drying, // Add the specific details for the new element
               weight: (Number(value) * amount) as TWeight, // Replace with dynamic weight
             },
@@ -170,6 +175,7 @@ const DeliveryPage = () => {
           order_details: [
             ...prevOrder.order_details,
             {
+              machine_serial: null,
               service_type: ServiceType.Agents, // Add the specific details for the new element
               weight: 0,
             },
@@ -401,6 +407,16 @@ const DeliveryPage = () => {
             setVisible={setIsWarningModalVisible}
             icon={<Feather name="info" size={52} color="#71bfff" />}
             text={["กรุณาเลือกน้ำหนักเครื่องซักผ้า"]}
+          />
+
+          <CustomModal
+            visible={isPhoneNumberModalVisible}
+            setVisible={setIsPhoneNumberModalVisible}
+            icon={<FontAwesome6 name="phone" size={34} color="#45d66b" />}
+            text={["กรุณาเพิ่มเบอร์โทรศัพท์"]}
+            onPress={() => {
+              router.push("/(profile)/edit_profile");
+            }}
           />
 
           {/* Address Modal */}
@@ -819,7 +835,13 @@ const DeliveryPage = () => {
                         return;
                       }
 
+                      if (userData?.phone === "" || userData?.phone === null) {
+                        setIsPhoneNumberModalVisible(true);
+                        return;
+                      }
+
                       const order = await addOrderDetails();
+                      console.log("Order:", order);
                       if (order) {
                         await createOrder(order);
                       }
