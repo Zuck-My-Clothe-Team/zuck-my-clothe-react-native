@@ -19,7 +19,12 @@ const ProfilePage = () => {
         </Text>
         <TouchableOpacity
           onPress={async () => {
-            await auth?.logout();
+            try{
+
+              await auth?.logout();
+            }catch(err){
+              console.log("logout error: ",err)
+            }
           }}
           style={{
             marginTop: 20,
