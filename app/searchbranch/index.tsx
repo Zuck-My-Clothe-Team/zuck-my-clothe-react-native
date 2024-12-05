@@ -255,7 +255,7 @@ export default function SearchBranchPage() {
                         onPress={() => {
                           handleBranchPress(branch);
                         }}
-                        className="flex flex-1 flex-row items-center justify-between py-3 border-b border-[#d9d9d9]"
+                        className="flex flex-row items-center justify-between py-3 border-b border-[#d9d9d9]"
                       >
                         <View className=" flex-1">
                           <Text

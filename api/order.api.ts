@@ -8,10 +8,12 @@ import {
 } from "@/interface/order.interface";
 import axios from "axios";
 
-export async function getAllOrderInBranch(branch_id: string) {
+export async function getAllOrderInBranch(branch_id: string, status?: string) {
   try {
     const axios = await axiosInstance();
-    const result = await axios.get(`/order/branch/${branch_id}`);
+    const result = await axios.get(
+      `/order/branch/${branch_id}${status ? `?status=${status}` : ""}`
+    );
     return result;
   } catch (error) {
     console.error("Error during fetch order by branch id:", error);

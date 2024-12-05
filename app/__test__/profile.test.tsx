@@ -1,9 +1,8 @@
-import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { useAuth } from "@/context/auth.context";
+import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { SplashScreen } from "expo-router";
+import React from "react";
 import ProfilePage from "../(tabs)/profile";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 jest.mock("@/context/auth.context");
 jest.mock("expo-router");
