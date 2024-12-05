@@ -7,12 +7,14 @@ type CustomModalProps = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   icon: React.ComponentProps<any>;
   text: string[];
+  secondary_text?: string[];
   submit_text?: string;
+  onPress?: () => void;
 };
 
 const CustomModal = (props: CustomModalProps) => {
   return (
-    <View>
+    <View className="">
       <Modal
         isVisible={props.visible}
         className=" flex justify-center items-center"
@@ -23,8 +25,11 @@ const CustomModal = (props: CustomModalProps) => {
         animationOutTiming={350}
         hasBackdrop
       >
-        <View className=" w-11/12 bg-white justify-center items-center rounded-xl py-6 flex flex-col gap-y-4">
-          {props.icon}
+        <View
+          className=" bg-white justify-center items-center rounded-xl flex flex-col gap-y-4"
+          style={{ width: "90%", height: "22%"}}
+        >
+          <View className="">{props.icon}</View>
 
           <View className=" flex flex-col justify-center items-center">
             {props.text.map((text, index) => (
@@ -32,14 +37,25 @@ const CustomModal = (props: CustomModalProps) => {
                 {text}
               </Text>
             ))}
+            {props.secondary_text?.map((text, index) => (
+              <Text key={index} className=" font-kanit text-text-4 text-base">
+                {text}
+              </Text>
+            ))}
           </View>
           <TouchableOpacity
-            onPress={() => props.setVisible(false)}
+            onPress={() => {
+              props.setVisible(false);
+              if (props.onPress) {
+                props.onPress();
+              }
+            }}
             className=" px-6 py-2 bg-primaryblue-200 rounded-lg"
           >
             <Text className=" text-white font-kanit">
               {props.submit_text ? props.submit_text : "ตกลง"}
             </Text>
+
           </TouchableOpacity>
         </View>
       </Modal>

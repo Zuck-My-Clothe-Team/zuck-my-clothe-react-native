@@ -30,7 +30,7 @@ import { IEmployeeContract } from "@/interface/employeeContract.interface";
 const OrderDetail = () => {
   const auth = useAuth();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [orderData, setOrderData] = useState<IOrder | null>(null);
+  const [orderData, setOrderData] = useState<IOrder>();
   const [loading, setLoading] = useState<boolean>(false);
   const [contracts, setContracts] = useState<IEmployeeContract[]>([]);
 

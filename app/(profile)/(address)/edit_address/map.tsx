@@ -1,6 +1,6 @@
 import { useLocationContext } from "@/context/location.context";
 import { IRegion } from "@/interface/region.interface";
-import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -46,17 +46,17 @@ const MapViewPage = () => {
   }, [errorMsg]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: "#0285DF", flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: "#0285DF", flex: 1 }} edges={["top"]}>
       <View style={styles.headerBg}>
-        <AntDesign
-          name="arrowleft"
-          size={24}
-          style={{ position: "absolute", left: 10, zIndex: 10 }}
-          color="#71BFFF"
-          onPress={() => {
-            router.back();
-          }}
-        />
+        <View style={{ position: "absolute", left: 10, zIndex: 10 }}>
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Ionicons name="arrow-back" size={36} color={"#71BFFF"} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.header}>
           <Text style={styles.textHeader}>ปักหมุดที่อยู่</Text>
         </View>

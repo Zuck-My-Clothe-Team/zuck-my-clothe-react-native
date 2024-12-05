@@ -98,17 +98,18 @@ export interface IOrderReview {
 }
 
 export interface INewOrder {
-  branch_id: string;
-  delivery_address: string;
-  delivery_lat: number;
-  delivery_long: number;
+  branch_id: string | null;
+  delivery_address: string | null;
+  delivery_lat: number | null;
+  delivery_long: number | null;
   order_details: INewOrderDetail[];
-  order_note: string;
-  user_id: string;
+  order_note: string | null;
+  user_id: string | null;
   zuck_onsite: boolean;
 }
 
 export interface INewOrderDetail {
-  service_type: ServiceType;
-  weight: TWeight;
+  service_type?: ServiceType;
+  weight?: TWeight;
+  machine_serial: string | null;
 }
