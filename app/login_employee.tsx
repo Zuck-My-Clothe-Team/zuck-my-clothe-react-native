@@ -1,22 +1,23 @@
+import { SignIn } from "@/api/auth.api";
+import { useAuth } from "@/context/auth.context";
+import { IAuth } from "@/interface/auth.interface";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-  SafeAreaView,
-  View,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
-  Keyboard,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
+  View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useAuth } from "@/context/auth.context";
-import { SignIn } from "@/api/auth.api";
-import { IAuth } from "@/interface/auth.interface";
-import { router } from "expo-router";
 
 const LoginPageImage = require("../assets/images/loginImage.png");
 
@@ -25,6 +26,13 @@ export default function LoginEmployeePage() {
   const [disabledLogin, setDisableLogin] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  // State variable to track password visibility
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Function to toggle the password visibility state
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleLogin = async () => {
     setDisableLogin(true);
@@ -85,15 +93,29 @@ export default function LoginEmployeePage() {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  style={{ height: 40, fontFamily: "Kanit" }}
                 />
-                <TextInput
-                  className="rounded-[4px] border border-secondaryblue-100 p-2 placeholder:text-customgray-200"
-                  placeholder="รหัสผ่าน"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  keyboardType="default"
-                />
+                <View className=" relative">
+                  <TextInput
+                    className="rounded-[4px] border border-secondaryblue-100 p-2 placeholder:text-customgray-200"
+                    placeholder="รหัสผ่าน"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                    keyboardType="default"
+                    style={{ height: 40, fontFamily: "Kanit" }}
+                  />
+                  <TouchableOpacity
+                    className="absolute right-2 top-2"
+                    onPress={toggleShowPassword}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye-off" : "eye"}
+                      size={24}
+                      color="#aaa"
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
               <View className="mt-14">
                 <TouchableOpacity
