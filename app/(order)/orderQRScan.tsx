@@ -1,28 +1,19 @@
-import {
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import { CameraView, useCameraPermissions } from "expo-camera";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { SafeAreaView } from "react-native-safe-area-context";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { getMachineDetailBySerial } from "@/api/machine.api";
 import { updateStatusOrder } from "@/api/order.api";
-import { IOrder, IOrderUpdateDTO, OrderStatus } from "@/interface/order.interface";
-import { getMachineDetailBySerial, updateMachineActiveStatus } from "@/api/machine.api";
 import { IMachineInBranch } from "@/interface/machinebranch.interface";
-import { useAuth } from "@/context/auth.context";
+import { IOrderUpdateDTO, OrderStatus } from "@/interface/order.interface";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrderQRScan = () => {
   // Extract parameters from route
-  const { basket_id,service_type } = useLocalSearchParams();
+  const { basket_id, service_type } = useLocalSearchParams();
 
-  const [machineDetail,setMachineDetail] = useState<IMachineInBranch>();
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -50,21 +41,26 @@ const OrderQRScan = () => {
   const handleScanner = useCallback(
     async (serial: string, basket_id: string, service_type: string) => {
       try {
-        const machine_detail: IMachineInBranch = await getMachineDetailBySerial(serial);
-        setMachineDetail(machine_detail);
+        const machine_detail: IMachineInBranch = await getMachineDetailBySerial(
+          serial
+        );
         if (!machine_detail) {
           console.log("machine detail is empty");
           return;
         }
-  
+
         if (!machine_detail.is_active) {
           Alert.alert(
             "ขออภัย ขณะนี้เครื่องยังไม่สามารถใช้งานได้",
             "เครื่องนี้ยังไม่สามารถใช้งานได้ ขออภัยในความไม่สะดวก",
-            [{ text: "OK",
-              onPress:()=>{
-                router.back();
-              } }]
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  router.back();
+                },
+              },
+            ]
           );
           return;
         }
@@ -80,47 +76,55 @@ const OrderQRScan = () => {
         //   return;
         // }
 
-        const machine_to_servicetype = machine_detail.machine_type.replace("er","ing");
-  
+        const machine_to_servicetype = machine_detail.machine_type.replace(
+          "er",
+          "ing"
+        );
+
         // console.log(machine_to_servicetype,service_type)
         if (machine_to_servicetype !== service_type) {
           Alert.alert(
             "ขออภัย เครื่องนี้ไม่ใช่ชนิดเดียวกับออเดอร์",
             "ขออภัย เครื่องนี้ไม่ใช่ชนิดเดียวกับออเดอร์",
-            [{ text: "OK" ,
-              onPress:()=>{
-                router.back();
-              }
-            }]
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  router.back();
+                },
+              },
+            ]
           );
           return;
         }
-  
+
         const date = new Date();
         date.setMinutes(date.getMinutes() + 25); // Add 25 minutes
         const finished_at = date.toISOString();
-  
+
         const order_update_dto: IOrderUpdateDTO = {
           finished_at: finished_at,
           machine_serial: serial,
           order_basket_id: basket_id,
           order_status: OrderStatus.Processing,
         };
-  
+
         try {
           console.log("Updating order status...", order_update_dto);
-          const order = await updateStatusOrder(order_update_dto);
+          await updateStatusOrder(order_update_dto);
           router.back(); // Navigate back on success
         } catch (error) {
-          console.error("Error updating order status or machine status:", error);
+          console.error(
+            "Error updating order status or machine status:",
+            error
+          );
         }
       } catch (error) {
         console.error("Error during handleScanner:", error);
       }
     },
-    [setMachineDetail]
+    []
   );
-  
 
   return (
     <View style={styles.container}>
@@ -134,7 +138,11 @@ const OrderQRScan = () => {
             if (!scanned) {
               setScanned(true); // Prevent further scans
               const serial = event.data; // Assume this contains the machine serial
-              await handleScanner(serial, basket_id as string,service_type as string);
+              await handleScanner(
+                serial,
+                basket_id as string,
+                service_type as string
+              );
             }
           }}
         >
@@ -151,7 +159,7 @@ const OrderQRScan = () => {
             </View>
 
             {/* Text Instructions */}
-            <View style={styles.textContainer}> 
+            <View style={styles.textContainer}>
               <Text style={styles.mainText}>สแกน Qr Code</Text>
               <Text style={styles.subText}>
                 สแกนหน้าเครื่องที่ท่านต้องการใช้งาน
@@ -191,13 +199,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   mainText: {
-    fontFamily:"Kanit_400Regular",
+    fontFamily: "Kanit_400Regular",
     fontSize: 32,
     fontWeight: "700",
     color: "white",
   },
   subText: {
-    fontFamily:"Kanit_400Regular",
+    fontFamily: "Kanit_400Regular",
     fontSize: 18,
     color: "#87CEFA", // Adjust color as needed
   },
