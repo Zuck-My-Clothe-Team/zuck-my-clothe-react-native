@@ -79,7 +79,7 @@ describe("ProfilePage", () => {
     expect(getByText("แก้ไขข้อมูลส่วนตัว")).toBeTruthy();
     expect(getByText("ที่อยู่")).toBeTruthy();
     expect(getByText("ข้อกำหนดเงื่อนไขและนโยบายอื่น ๆ")).toBeTruthy();
-    expect(getByText("ติดต่อ Support")).toBeTruthy();
+    expect(getByText("ติดต่อเรา")).toBeTruthy();
     expect(getByText("ออกจากระบบ")).toBeTruthy();
   });
 });
