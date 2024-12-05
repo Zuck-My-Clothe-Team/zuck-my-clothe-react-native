@@ -9,17 +9,18 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 const Contact = () => {
   const iconsize = 30;
 
- const goto = (url:string) => {
-    Linking.openURL(url)
-      .catch(err => console.error("Failed to open URL:", err));
- }
+  const goto = (url: string) => {
+    Linking.openURL(url).catch((err) =>
+      console.error("Failed to open URL:", err)
+    );
+  };
 
   const socialdata = [
     {
       img: <FontAwesome5 name="facebook" size={iconsize} color="#2594E1" />,
       displayname: "ZuckMyClothe Thailand",
       onpress: () => {
-        goto("https://www.facebook.com/")
+        goto("https://www.facebook.com/");
       },
     },
     {
@@ -75,7 +76,7 @@ const Contact = () => {
           </View>
 
           {socialdata.map((social, index) => (
-            <View className="p-3 my-1">
+            <View className="p-3 my-1" key={index}>
               <TouchableOpacity onPress={social.onpress}>
                 <View className="flex flex-row gap-4">
                   {social.img}

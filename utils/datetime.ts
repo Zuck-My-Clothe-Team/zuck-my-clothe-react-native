@@ -27,6 +27,34 @@ export const DateFormatter = {
       const diffInYears = Math.floor(diffInSeconds / secondsInYear);
       return `${diffInYears} ปีผ่านไป`;
     }
+  },getTimeDifferenceStatus(createdDate: Date): string {
+    const now = Date.now();
+    const diffInSeconds = Math.floor((createdDate.getTime() - now) / 1000);
+
+    const secondsInMinute = 60;
+    const secondsInHour = 3600;
+    const secondsInDay = 86400;
+    const secondsInMonth = 2592000;
+    const secondsInYear = 31536000;
+
+    if (diffInSeconds < secondsInMinute) {
+      return `${diffInSeconds} วินาที`;
+    } else if (diffInSeconds < secondsInHour) {
+      const diffInMinutes = Math.floor(diffInSeconds / secondsInMinute);
+      return `${diffInMinutes} นาที`;
+    } else if (diffInSeconds < secondsInDay) {
+      const diffInHours = Math.floor(diffInSeconds / secondsInHour);
+      return `${diffInHours} ชั่วโมง`;
+    } else if (diffInSeconds < secondsInMonth) {
+      const diffInDays = Math.floor(diffInSeconds / secondsInDay);
+      return `${diffInDays} วัน`;
+    } else if (diffInSeconds < secondsInYear) {
+      const diffInMonths = Math.floor(diffInSeconds / secondsInMonth);
+      return `${diffInMonths} เดือน`;
+    } else {
+      const diffInYears = Math.floor(diffInSeconds / secondsInYear);
+      return `${diffInYears} ปี`;
+    }
   },
   getTime(date: Date): string {
     const hours = date.getHours();
