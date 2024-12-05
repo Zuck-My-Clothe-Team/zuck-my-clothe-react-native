@@ -25,7 +25,6 @@ const BranchDetailBottomSheet = ({
   branchData,
   machineData,
   userLocation,
-  // userReviewData,
   className,
   isVisible,
   setIsVisible,
@@ -82,17 +81,9 @@ const BranchDetailBottomSheet = ({
     }
   }, [isVisible]);
 
-  // const SnapBottomSheetToIndex = useCallback((snapIndex: number) => {
-  //   bottomSheetRef.current?.snapToIndex(snapIndex);
-  // }, []);
-
   useEffect(() => {
     bottomSheetRef.current?.snapToIndex(0);
   }, [branchData, machineData]);
-
-  useEffect(() => {
-    console.log(branchData.user_reviews);
-  }, [branchData]);
 
   useMemo(() => {
     const fetchReviewData = async () => {
@@ -104,12 +95,11 @@ const BranchDetailBottomSheet = ({
           review.star_rating !== 0
       );
       setUserReviewData(reviewData);
-      console.log(reviewData);
     };
     fetchReviewData();
   }, [branchData.branch_id]);
 
-  useMemo(() => {
+  useEffect(() => {
     setSortedMachineData(
       machineData
         .sort((a, b) => a.machine_label.localeCompare(b.machine_label))
@@ -130,21 +120,6 @@ const BranchDetailBottomSheet = ({
     );
   }, [machineData]);
 
-  // useEffect(() => {
-  //   console.log(machineData);
-  // }, [machineData]);
-
-  // interface EncryptFunction {
-  //   (text: string): string;
-  // }
-
-  // const encrypt: EncryptFunction = (text) => {
-  //   if (text.length <= 2) return text;
-  //   return text[0] + "*".repeat(text.length - 2) + text[text.length - 1];
-  // };
-
-  console.log(sortedMachineData);
-
   return (
     <>
       {/* BottomSheet component */}
@@ -162,6 +137,7 @@ const BranchDetailBottomSheet = ({
           borderTopRightRadius: 20,
         }}
         handleIndicatorStyle={{ backgroundColor: "#E3E3E3", width: 76 }}
+        enableContentPanningGesture={false}
       >
         <View className=" flex flex-col py-2 px-8" style={{ rowGap: 12 }}>
           <View
@@ -192,16 +168,20 @@ const BranchDetailBottomSheet = ({
             </Text>
           </View>
         </View>
-        <View className=" w-full" style={{ paddingLeft: 28, marginTop: 10 }}>
+        <View
+          className=" w-full"
+          style={{ paddingLeft: 28, marginTop: 10, position: "relative" }}
+        >
           {sortedMachineData.length !== 0 ? (
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
+              nestedScrollEnabled={true}
+              keyboardShouldPersistTaps="handled"
               style={{
                 backgroundColor: "#fff",
                 borderTopLeftRadius: 10,
                 borderBottomLeftRadius: 10,
-                // paddingHorizontal: 10,
                 paddingRight: 30,
                 paddingVertical: 10,
                 shadowColor: "#bde2ff",

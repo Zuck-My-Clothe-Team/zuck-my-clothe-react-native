@@ -42,6 +42,7 @@ export default function LoginPage() {
       setDisableLogin(true);
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn();
+      await AsyncStorage.setItem("loginMethod", "google");
       const tokens = await GoogleSignin.getTokens();
       const accessToken = tokens.accessToken;
       if (!accessToken) {
@@ -53,6 +54,7 @@ export default function LoginPage() {
       auth?.setAuthContext({ ...data, isAuth: true });
       console.log("User info and token stored successfully.");
     } catch (error) {
+      await AsyncStorage.removeItem("loginMethod");
       if (isErrorWithCode(error)) {
         switch (error.code) {
           case statusCodes.SIGN_IN_CANCELLED:
