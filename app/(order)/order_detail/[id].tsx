@@ -1,8 +1,8 @@
-import React from "react";
 import { getOrderByOrderHeaderId, updateStatusOrder } from "@/api/order.api";
 import LoadingBubble from "@/components/auth/Loading";
 import OrderDetailCard from "@/components/order/orderDetailCard";
 import OrderSummaryCard from "@/components/order/orderSummaryCard";
+import OrderZuck from "@/components/order/orderZuck";
 import {
   IOrder,
   IOrderDetail,
@@ -10,9 +10,10 @@ import {
   OrderStatus,
   ServiceType,
 } from "@/interface/order.interface";
+import { GetStatusOrderFromOrderDetails } from "@/utils/utils";
 import { AntDesign } from "@expo/vector-icons";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -21,25 +22,25 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { GetStatusOrderFromOrderDetails } from "@/utils/utils";
 import { WorkingStatus } from "../../../interface/order.interface";
-import Modal from "react-native-modal";
-import OrderZuck from "@/components/order/orderZuck";
+import { useAuth } from "@/context/auth.context";
+import { getEmployeeContractByUserId } from "@/api/employeeContract.api";
+import { IEmployeeContract } from "@/interface/employeeContract.interface";
 
 const OrderDetail = () => {
+  const auth = useAuth();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [orderData, setOrderData] = useState<IOrder | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [contracts, setContracts] = useState<IEmployeeContract[]>([]);
 
   const fetchOrder = useCallback(async (orderHeaderId: string) => {
     try {
       setLoading(true);
       if (!orderHeaderId) throw new Error("No order id");
       const result = await getOrderByOrderHeaderId(orderHeaderId);
-      if (!result || result.status !== 200)
-        throw new Error("Cannot fetch order");
-      const data: IOrder = result.data;
-      setOrderData(data);
+      if (!result) throw new Error("Cannot fetch order");
+      setOrderData(result);
     } catch (error) {
       console.error(error);
     } finally {
@@ -57,13 +58,27 @@ const OrderDetail = () => {
     }
   }, []);
 
-  useFocusEffect(React.useCallback (()=>{
-    const trytofetch = async() => {
-      await fetchOrder(id);
-    }
-    trytofetch();
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        if (auth) {
+          const response = await getEmployeeContractByUserId(
+            auth.authContext.user_id
+          );
 
-  },[]))
+          if (response.status !== 200) {
+            throw new Error("Cannot fetch employee contract");
+          }
+          const contracts: IEmployeeContract[] = response.data;
+          setContracts(contracts);
+        }
+        await fetchOrder(id);
+        setLoading(false);
+      };
+      fetchData();
+    }, [auth, fetchOrder, id])
+  );
 
   useMemo(async () => {
     await fetchOrder(id);
@@ -74,22 +89,23 @@ const OrderDetail = () => {
   const status = GetStatusOrderFromOrderDetails(orderData.order_details);
 
   const allorderisdone = (zuckData: IOrder): boolean => {
-    const filtered: IOrderDetail[] = zuckData.order_details.filter((detail) =>
-      detail.service_type === "Washing" || detail.service_type === "Drying"
+    const filtered: IOrderDetail[] = zuckData.order_details.filter(
+      (detail) =>
+        detail.service_type === "Washing" || detail.service_type === "Drying"
     );
-  
+
     for (const detail of filtered) {
       // if (!detail.finished_at || new Date(detail.finished_at).getTime() > Date.now()) {
       //   return false; // Not all orders are done
       // }
-      if(detail.order_status !== OrderStatus.Completed)
-      {
+      if (detail.order_status !== OrderStatus.Completed) {
         return false;
       }
     }
     return true; // All orders are done
   };
 
+  const isRider = contracts.find((item) => item.position_id === "Deliver");
 
   return (
     <SafeAreaView style={styles.background}>
@@ -139,6 +155,7 @@ const OrderDetail = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.saveButton}
+              disabled={!isRider}
               onPress={async () => {
                 if (!orderData) return;
                 const basketId = orderData.order_details.find(
@@ -165,6 +182,7 @@ const OrderDetail = () => {
         {WorkingStatus[status] === WorkingStatus.Pickup && (
           <TouchableOpacity
             style={styles.saveButton}
+            disabled={!isRider}
             onPress={async () => {
               if (!orderData) return;
               const basketId = orderData.order_details.find(
@@ -187,89 +205,96 @@ const OrderDetail = () => {
         )}
         {(WorkingStatus[status] === WorkingStatus.BackToStore ||
           WorkingStatus[status] === WorkingStatus.Processing) && (
-            <View>
-              <OrderZuck zuckData={orderData}></OrderZuck>
-              <View className="py-5 items-center">
-        {allorderisdone(orderData) ? 
-        <TouchableOpacity
-          style={{ width: 300 }}
-          className="bg-primaryblue-200 border border-customgray-300 px-4 py-3 rounded-lg"
-          onPress={async () => {
-            console.log(orderData.order_details)
-            if (!orderData) return;
-            const basketId = orderData.order_details.find(
-              (orderDetail) => orderDetail.service_type === ServiceType.Delivery
-            )?.order_basket_id;
+          <View>
+            <OrderZuck zuckData={orderData}></OrderZuck>
+            <View className="py-5 items-center">
+              {allorderisdone(orderData) ? (
+                <TouchableOpacity
+                  style={{ width: 300 }}
+                  className="bg-primaryblue-200 border border-customgray-300 px-4 py-3 rounded-lg"
+                  onPress={async () => {
+                    console.log(orderData.order_details);
+                    if (!orderData) return;
+                    const basketId = orderData.order_details.find(
+                      (orderDetail) =>
+                        orderDetail.service_type === ServiceType.Delivery
+                    )?.order_basket_id;
 
-            if (!basketId) return;
-            const updateDTO: IOrderUpdateDTO = {
-              finished_at: new Date().toISOString(),
-              machine_serial: null,
-              order_basket_id: basketId,
-              order_status: OrderStatus.Processing,
-            };
-            await handleUpdateOrder(updateDTO);
+                    if (!basketId) return;
+                    const updateDTO: IOrderUpdateDTO = {
+                      finished_at: new Date().toISOString(),
+                      machine_serial: null,
+                      order_basket_id: basketId,
+                      order_status: OrderStatus.Processing,
+                    };
+                    await handleUpdateOrder(updateDTO);
 
-            const basketIdAgent = orderData.order_details.find(
-              (orderDetail) => orderDetail.service_type === ServiceType.Agents
-            )?.order_basket_id;
+                    const basketIdAgent = orderData.order_details.find(
+                      (orderDetail) =>
+                        orderDetail.service_type === ServiceType.Agents
+                    )?.order_basket_id;
 
-            if (!basketIdAgent) return;
-            const updateDTOAgent: IOrderUpdateDTO = {
-              finished_at: new Date().toISOString(),
-              machine_serial: null,
-              order_basket_id: basketIdAgent,
-              order_status: OrderStatus.Completed,
-            };
-            await handleUpdateOrder(updateDTOAgent);
+                    if (!basketIdAgent) return;
+                    const updateDTOAgent: IOrderUpdateDTO = {
+                      finished_at: new Date().toISOString(),
+                      machine_serial: null,
+                      order_basket_id: basketIdAgent,
+                      order_status: OrderStatus.Completed,
+                    };
+                    await handleUpdateOrder(updateDTOAgent);
 
-            await fetchOrder(id);
-          }}
-        >
-          <Text className="font-kanit text-text-2 text-xl text-center">
-            เริ่มการจัดส่ง
-          </Text>
-        </TouchableOpacity>
-         : 
-         <TouchableOpacity
-          style={{ width: 300 }}
-          className="bg-customgray-100 border border-customgray-300 px-4 py-3 rounded-lg"
-          disabled={true}
-          
-        >
-          <Text className="font-kanit text-customgray-400 text-xl text-center">
-            เริ่มการจัดส่ง
-          </Text>
-        </TouchableOpacity>}
-      </View>
+                    await fetchOrder(id);
+                  }}
+                >
+                  <Text className="font-kanit text-text-2 text-xl text-center">
+                    เริ่มการจัดส่ง
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={{ width: 300 }}
+                  className="bg-customgray-100 border border-customgray-300 px-4 py-3 rounded-lg"
+                  disabled={true}
+                >
+                  <Text className="font-kanit text-customgray-400 text-xl text-center">
+                    เริ่มการจัดส่ง
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         )}
         {WorkingStatus[status] === WorkingStatus.OutOfDelivery && (
           <TouchableOpacity
-          style={styles.saveButton}
-          onPress={async () => {
-            if (!orderData) return;
-            const basketId = orderData.order_details.find(
-              (orderDetail) => orderDetail.service_type === ServiceType.Delivery
-            )?.order_basket_id;
+            style={styles.saveButton}
+            disabled={!isRider}
+            onPress={async () => {
+              if (!orderData) return;
+              const basketId = orderData.order_details.find(
+                (orderDetail) =>
+                  orderDetail.service_type === ServiceType.Delivery
+              )?.order_basket_id;
 
-            if (!basketId) return;
-            const updateDTO: IOrderUpdateDTO = {
-              finished_at: new Date().toISOString(),
-              machine_serial: null,
-              order_basket_id: basketId,
-              order_status: OrderStatus.Completed,
-            };
-            await handleUpdateOrder(updateDTO);
-            console.log(orderData.order_details);
-            await fetchOrder(id);
-          }}
-        >
-          <Text style={styles.saveButtonText}>ส่งผ้าสำเร็จ</Text>
-        </TouchableOpacity>
+              if (!basketId) return;
+              const updateDTO: IOrderUpdateDTO = {
+                finished_at: new Date().toISOString(),
+                machine_serial: null,
+                order_basket_id: basketId,
+                order_status: OrderStatus.Completed,
+              };
+              await handleUpdateOrder(updateDTO);
+              console.log(orderData.order_details);
+              await fetchOrder(id);
+            }}
+          >
+            <Text style={styles.saveButtonText}>ส่งผ้าสำเร็จ</Text>
+          </TouchableOpacity>
         )}
         {WorkingStatus[status] === WorkingStatus.Completed && (
-          <Text className="font-kanit text-text-3 text-2xl text-center align-middle"> ส่งถึงที่ละจ้า </Text>
+          <Text className="font-kanit text-text-3 text-2xl text-center align-middle">
+            {" "}
+            ส่งถึงที่ละจ้า{" "}
+          </Text>
         )}
       </ScrollView>
     </SafeAreaView>
