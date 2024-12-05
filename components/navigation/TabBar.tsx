@@ -38,7 +38,7 @@ const TabBar = ({ state, descriptors, navigation }: TabbarProps) => {
         </TouchableOpacity>
       </View>
     ),
-    message: <Ionicons name="chatbox-ellipses-outline" size={28} />,
+    notification: <Ionicons name="chatbox-ellipses-outline" size={28} />,
     profile: <FontAwesome6 name="circle-user" size={28} />,
   };
 
