@@ -15,6 +15,7 @@ import React, {
 import {
   Dimensions,
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -88,13 +89,13 @@ const BranchDetailBottomSheet = ({
   useMemo(() => {
     const fetchReviewData = async () => {
       const branch = await getBranchByID(branchData.branch_id);
-      const reviewData = branch.user_reviews.filter(
-        (review) =>
-          review.review_comment !== null &&
-          review.review_comment !== "" &&
-          review.star_rating !== 0
-      );
-      setUserReviewData(reviewData);
+      // const reviewData = branch.user_reviews.filter(
+      //   (review) =>
+      //     review.review_comment !== null &&
+      //     review.review_comment !== "" &&
+      //     review.star_rating !== 0
+      // );
+      setUserReviewData(branch.user_reviews);
     };
     fetchReviewData();
   }, [branchData.branch_id]);
@@ -137,7 +138,7 @@ const BranchDetailBottomSheet = ({
           borderTopRightRadius: 20,
         }}
         handleIndicatorStyle={{ backgroundColor: "#E3E3E3", width: 76 }}
-        enableContentPanningGesture={false}
+        enableContentPanningGesture={Platform.OS === "ios" ? true : false}
       >
         <View className=" flex flex-col py-2 px-8" style={{ rowGap: 12 }}>
           <View
@@ -361,21 +362,25 @@ const BranchDetailBottomSheet = ({
                   </View>
 
                   {/* Review Comment */}
-                  <View
-                    className="bg-white"
-                    style={{ paddingHorizontal: 20, paddingVertical: 10 }}
-                  >
-                    <Text
-                      style={{
-                        fontFamily: "Kanit_300Light",
-                        fontSize: 14,
-                        fontWeight: "300",
-                        color: "#696969",
-                      }}
+                  {!review.review_comment ? (
+                    <></>
+                  ) : (
+                    <View
+                      className="bg-white"
+                      style={{ paddingHorizontal: 20, paddingVertical: 10 }}
                     >
-                      {review.review_comment}
-                    </Text>
-                  </View>
+                      <Text
+                        style={{
+                          fontFamily: "Kanit_300Light",
+                          fontSize: 14,
+                          fontWeight: "300",
+                          color: "#696969",
+                        }}
+                      >
+                        {review.review_comment}
+                      </Text>
+                    </View>
+                  )}
                 </View>
               </View>
             ))}

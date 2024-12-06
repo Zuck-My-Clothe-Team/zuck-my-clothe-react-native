@@ -6,6 +6,7 @@ import { IMachineInBranch } from "@/interface/machinebranch.interface";
 import { IOrder, OrderStatus } from "@/interface/order.interface";
 import { IUserAuthContext } from "@/interface/userdetail.interface";
 import { DateFormatter } from "@/utils/datetime";
+import { GetStatusOrderFromOrderDetails } from "@/utils/utils";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFocusEffect } from "@react-navigation/native";
 import { router, SplashScreen } from "expo-router";
@@ -147,8 +148,9 @@ const Homepage = () => {
 
   const fetchOrder = useCallback(async () => {
     try {
-      const order = await getFullOrderByUserID(OrderStatus.Processing);
+      const order = await getFullOrderByUserID();
       console.log("fetch complete");
+
       const filteredOrder = order.filter((data) =>
         data.order_details.some(
           (detail) =>
@@ -316,7 +318,7 @@ const Homepage = () => {
           ))}
         </View>
 
-        {isWashing && order && (
+        {order && order?.length !== 0 && (
           <View className="mx-6 pb-12 pt-4">
             <Text className="font-kanitMedium text-text-3 text-4xl py-4">
               สถานะเครื่องซักผ้า
@@ -339,6 +341,14 @@ const Homepage = () => {
                         new Date(detail.finished_at).getTime() - Date.now() <=
                         0
                       ) {
+                        order.filter((data) => {
+                          // filter out the order that has finished
+                          data.order_details = data.order_details.filter(
+                            (detail) => {
+                              return detail.finished_at !== "";
+                            }
+                          );
+                        });
                         return null;
                       }
 
