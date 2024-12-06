@@ -144,7 +144,7 @@ const HistoryPage = () => {
     setReview(undefined);
     setComment("");
     loadHistory();
-  }, [loadHistory]);
+  }, []);
 
   useFocusEffect(resetparam);
 
