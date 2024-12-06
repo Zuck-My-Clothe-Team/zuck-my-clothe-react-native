@@ -11,6 +11,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -27,15 +28,28 @@ import {
 import {
   IOrderDetail,
   IOrderReview,
+  ServiceType,
   ServiceTypeTH,
 } from "@/interface/order.interface";
 import Modal from "react-native-modal";
 
-const imagepath = {
-  Washing: require("../../assets/images/historypage/Washing.png"),
-  Drying: require("../../assets/images/historypage/Drying.png"),
-  Delivery: require("../../assets/images/historypage/Delivery.png"),
-};
+const imagepath = [
+  {
+    name: "Washing",
+    path: require("../../assets/images/historypage/Washing.png"),
+    size: 70,
+  },
+  {
+    name: "Drying",
+    path: require("../../assets/images/historypage/Drying.png"),
+    size: 70,
+  },
+  {
+    name: "Delivery",
+    path: require("../../assets/images/historypage/Delivery.png"),
+    size: 60,
+  },
+];
 
 interface HistoryCard {
   orderheader: string;
@@ -73,6 +87,10 @@ const HistoryPage = () => {
       setLoading(true);
 
       const completedOrders = await fetchCompletedOrders();
+      completedOrders.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
       const newOrders = completedOrders.slice(offset, offset + 5);
 
       // Check if we've reached the end of the orders
@@ -112,7 +130,7 @@ const HistoryPage = () => {
               retval.machinenumber = match[0];
             }
           } else {
-            retval.CardType = "Delivery";
+            retval.CardType = ServiceType.Delivery;
           }
 
           // Calculate total cost
@@ -187,7 +205,7 @@ const HistoryPage = () => {
               <AntDesign name="arrowleft" size={48} color="#71BFFF" />
             </TouchableOpacity>
             <View className="absolute w-full h-full flex items-center justify-center">
-              <Text className="text-4xl p-1 font-kanitMedium text-primaryblue-200 align-middle">
+              <Text className="text-3xl p-1 font-kanitMedium text-primaryblue-200 align-middle">
                 ประวัติการซัก
               </Text>
             </View>
@@ -263,58 +281,74 @@ const HistoryPage = () => {
                   className="border rounded-3xl px-5 py-4 bg-white"
                   style={{ borderColor: "#F1F1F1", marginBottom: 16 }}
                 >
-                  <Text className="text-primaryblue-200 text-3xl font-kanit">
+                  <Text className="text-primaryblue-200 text-xl font-kanit">
                     สาขา {history.branch || "N/A"}
                   </Text>
-                  <View className="flex flex-row justify-between px-5 py-4 border-t-secondaryblue-100 border-t-2">
+                  <View className="flex flex-row justify-between py-4 border-t-secondaryblue-100 border-t-2">
                     <Image
                       source={
-                        imagepath[history.CardType as keyof typeof imagepath]
+                        imagepath.find((item) => item.name === history.CardType)
+                          ?.path
                       }
                       style={{
-                        width: history.CardType === "Delivery" ? 75 : 90,
-                        height: 90,
+                        width: imagepath.find(
+                          (item) => item.name === history.CardType
+                        )?.size,
+                        height: 60,
                       }}
                       resizeMode="contain"
                     />
                     <View className="justify-center">
-                      <Text className="font-kanit text-text-1 text-xl">
+                      <Text className="font-kanit text-text-1 text-lg ">
                         {history.CardType.replace(
-                          "Delivery",
+                          ServiceType.Delivery,
                           "บริการรับ-ส่งผ้า"
                         )
                           .replace("Washing", "เครื่องซัก")
                           .replace("Drying", "เครื่องอบ")}{" "}
-                        {history.CardType !== "Delivery"
+                        {history.CardType !== ServiceType.Delivery
                           ? "หมายเลข " + history.machinenumber
                           : ""}
                       </Text>
-                      <View className="flex flex-row">
+                      <View className="flex flex-row items-center">
                         <MaterialCommunityIcons
                           name="clock"
                           size={24}
                           color="#D8D8D8"
                         />
-                        <Text className="pl-2 font-kanitLight text-text-4 text-base">
-                          {new Date(history.Time).toLocaleDateString()} เวลา{" "}
-                          {new Date(history.Time)
-                            .toLocaleTimeString()
-                            .replace("AM", "")
-                            .replace("PM", "")}
-                        </Text>
+                        <View className=" flex flex-col">
+                          <Text className="pl-2 font-kanitLight text-text-4 text-base">
+                            {new Date(history.Time).toLocaleDateString()}
+                          </Text>
+                          <Text className="pl-2 font-kanitLight text-text-4 text-base">
+                            เวลา{" "}
+                            {new Date(history.Time)
+                              .toLocaleTimeString()
+                              .replace("AM", "")
+                              .replace("PM", "")}
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                    {history.CardType !== "Delivery" ? (
-                      <Text className="font-kanit text-text-4 text-3xl align-middle ml-3">
-                        {history.TotalCost}฿
-                      </Text>
+                    {history.CardType !== ServiceType.Delivery ? (
+                      <View className="justify-center items-center">
+                        {Platform.OS === "ios" ? (
+                          <Text className="font-kanit text-text-4 text-3xl align-middle ml-3">
+                            {history.TotalCost}฿
+                          </Text>
+                        ) : (
+                          <Text className="font-kanit text-text-4 text-3xl align-middle ml-3">
+                            {history.TotalCost}฿
+                          </Text>
+                        )}
+                      </View>
                     ) : (
                       <Text className="font-kanit text-white text-3xl align-middle ml-3">
                         {history.TotalCost}฿
                       </Text>
                     )}
                   </View>
-                  {history.CardType === "Delivery" && (
+                  {history.CardType === ServiceType.Delivery && (
                     <View className="pb-4">
                       {history.CostDetail.map((detail, index) => (
                         <View
@@ -339,8 +373,8 @@ const HistoryPage = () => {
                       </View>
                     </View>
                   )}
-                  <View className="w-full flex flex-row justify-end">
-                    {history.star === 0 ? (
+                  <View className="w-full flex flex-row justify-end py-3">
+                    {!history.star ? (
                       <TouchableOpacity
                         className="px-12 py-2 rounded-md border"
                         style={{
@@ -354,7 +388,7 @@ const HistoryPage = () => {
                           setReview(initialReviewState(history));
                         }}
                       >
-                        <Text className="font-kanit text-xl text-primaryblue-100 text-center">
+                        <Text className="font-kanit text-lg text-primaryblue-100 text-center">
                           ให้คะแนน
                         </Text>
                       </TouchableOpacity>
@@ -368,7 +402,7 @@ const HistoryPage = () => {
                         disabled={true}
                       >
                         <Text
-                          className="font-kanit text-xl text-center"
+                          className="font-kanit text-lg text-center"
                           style={{ color: "#C6C6C6" }}
                         >
                           ให้คะแนนแล้ว
@@ -393,7 +427,7 @@ const HistoryPage = () => {
             >
               {!finish && (
                 <TouchableOpacity
-                  className="px-8 py-4 rounded-md bg-primaryblue-200"
+                  className="px-8 py-3 rounded-lg bg-primaryblue-200"
                   onPress={loadHistory}
                   disabled={loading || finish}
                 >

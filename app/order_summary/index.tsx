@@ -10,6 +10,7 @@ import {
   MachinePrice,
 } from "@/interface/machinebranch.interface";
 import { INewOrder } from "@/interface/order.interface";
+import { Feather } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -112,7 +113,7 @@ const OrderSummary = () => {
         <CustomModal
           visible={modalInUseVisible}
           setVisible={setModalInUseVisible}
-          icon={<></>}
+          icon={<Feather name="info" size={52} color="#71bfff" />}
           text={["เครื่องนี้กำลังถูกใช้งาน", "โปรดเลือกเครื่องใหม่"]}
           onPress={() => {
             setModalInUseVisible(false);
@@ -123,7 +124,7 @@ const OrderSummary = () => {
         <CustomModal
           visible={modalVisible}
           setVisible={setModalVisible}
-          icon={<></>}
+          icon={<Feather name="info" size={52} color="#71bfff" />}
           text={["ไม่พบข้อมูลเครื่องซักผ้า", "โปรดตรวจสอบ QR Code อีกครั้ง"]}
           onPress={() => {
             setModalVisible(false);

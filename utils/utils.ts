@@ -40,6 +40,7 @@ export const GetStatusOrderFromOrderDetails = (
       d.order_status === OrderStatus.Completed
   );
   const isWaiting = detail.every((d) => d.order_status === OrderStatus.Waiting);
+  const isExpired = detail.every((d) => d.order_status === OrderStatus.Expired);
 
   let status: WorkingStatus = WorkingStatus.Waiting;
 
@@ -50,6 +51,7 @@ export const GetStatusOrderFromOrderDetails = (
   else if (isPickup) status = WorkingStatus.Pickup;
   else if (isBackToStore) status = WorkingStatus.BackToStore;
   else if (isWaiting) status = WorkingStatus.Waiting;
+  else if (isExpired) status = WorkingStatus.Expired;
 
   return status;
 };

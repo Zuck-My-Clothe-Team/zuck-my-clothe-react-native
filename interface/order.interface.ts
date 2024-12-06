@@ -9,6 +9,7 @@ export enum WorkingStatus {
   OutOfDelivery = "OutOfDelivery",
   Completed = "Completed",
   Canceled = "Canceled",
+  Expired = "Expired",
 }
 
 export enum WorkingStatusTH {
@@ -26,6 +27,7 @@ export enum OrderStatus {
   Processing = "Processing",
   Completed = "Completed",
   Canceled = "Canceled",
+  Expired = "Expired",
 }
 
 export enum ServiceType {
