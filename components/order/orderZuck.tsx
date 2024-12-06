@@ -169,6 +169,13 @@ const OrderZuck: React.FC<OrderZuckProps> = ({ zuckData }) => {
           </Text>
           <Text className="text-text-3 font-kanit text-lg">{">"}</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+        onPress={()=>{
+          console.log(dryOrderOnly)
+        }}
+        >
+          <Text>hello</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
