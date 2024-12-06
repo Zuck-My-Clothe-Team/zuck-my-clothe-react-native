@@ -101,6 +101,7 @@ const ReportPage = () => {
         icon={<Octicons name="check-circle-fill" size={46} color="#45d66b" />}
         text={["ขอบคุณสำหรับการรายงาน"]}
         secondary_text={["ทางเราจะรีบตรวจสอบและแก้ไขให้เร็วที่สุด"]}
+        onPress={() => {router.back()}}
       />
 
       <View className="w-full relative justify-start mt-3">

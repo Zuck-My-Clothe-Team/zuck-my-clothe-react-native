@@ -1,5 +1,6 @@
 import { getMachineDetailBySerial } from "@/api/machine.api";
 import { getFullOrderByUserID } from "@/api/order.api";
+import { ONESECOND_INMILLISECONDS } from "@/constants/constants";
 import { useAuth } from "@/context/auth.context";
 import { IMachineInBranch } from "@/interface/machinebranch.interface";
 import { IOrder, OrderStatus } from "@/interface/order.interface";
@@ -26,17 +27,18 @@ SplashScreen.preventAutoHideAsync();
 interface OptionCardProps {
   zuckNumber: string;
   zuckRemain: string;
+  zuckType: string;
 }
 
 // eslint-disable-next-line react/display-name
 const OptionCard: React.FC<OptionCardProps> = memo(
-  ({ zuckNumber, zuckRemain }) => {
+  ({ zuckNumber, zuckRemain, zuckType }) => {
     return (
-      <View className="w-72 pl-2 rounded-xl px-5 py-3">
+      <View className="w-72 pl-2 rounded-xl px-5 py-3 bg-white border border-secondaryblue-300">
         <View className=" flex flex-col">
           <View className=" flex flex-row items-center">
             <Text className="w-[40%] font-kanit text-2xl text-text-3">
-              เครื่องซัก
+              {zuckType}
             </Text>
             <Text className="font-kanitLight  text-text-4">
               หมายเลข {zuckNumber}
@@ -56,7 +58,7 @@ const OptionCard: React.FC<OptionCardProps> = memo(
 
             <View className="">
               <Text className="font-kanit text-xl text-text-4">
-                เสร็จในอีก {zuckRemain} นาที
+                เสร็จในอีก {zuckRemain}
               </Text>
             </View>
           </View>
@@ -82,6 +84,7 @@ const Homepage = () => {
     [key: string]: {
       machine_serial: string;
       machine_label: string;
+      machine_type: string;
     };
   }>({});
 
@@ -142,59 +145,64 @@ const Homepage = () => {
 
   const [order, setOrder] = useState<IOrder[] | null>(null);
 
+  const fetchOrder = useCallback(async () => {
+    try {
+      const order = await getFullOrderByUserID(OrderStatus.Processing);
+      console.log("fetch complete");
+      const filteredOrder = order.filter((data) =>
+        data.order_details.some(
+          (detail) =>
+            new Date(detail.finished_at).getTime() - Date.now() > 0 &&
+            detail.order_status === OrderStatus.Processing &&
+            detail.machine_serial !== null &&
+            detail.machine_serial !== ""
+        )
+      );
+      filteredOrder.sort((a, b) => {
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      });
+
+      const machineData: {
+        [key: string]: {
+          machine_serial: string;
+          machine_label: string;
+          machine_type: string;
+        };
+      } = {};
+
+      await Promise.all(
+        filteredOrder.map((data) =>
+          Promise.all(
+            data.order_details.map(async (detail) => {
+              if (machineData[detail.machine_serial] === undefined) {
+                const machine: IMachineInBranch =
+                  await getMachineDetailBySerial(detail.machine_serial);
+                machineData[machine.machine_serial] = {
+                  machine_serial: machine.machine_serial,
+                  machine_label: machine.machine_label,
+                  machine_type: machine.machine_type,
+                };
+              }
+            })
+          )
+        )
+      );
+
+      setMachineData(machineData);
+      setOrder(filteredOrder);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
-      async function fetchOrder() {
-        try {
-          const order = await getFullOrderByUserID(OrderStatus.Processing);
-          const filteredOrder = order.filter((data) =>
-            data.order_details.some(
-              (detail) =>
-                new Date(detail.finished_at).getTime() - Date.now() > 0 &&
-                detail.order_status === OrderStatus.Processing &&
-                detail.machine_serial !== null &&
-                detail.machine_serial !== ""
-            )
-          );
-          filteredOrder.sort((a, b) => {
-            return (
-              new Date(b.created_at).getTime() -
-              new Date(a.created_at).getTime()
-            );
-          });
-
-          const machineData: {
-            [key: string]: {
-              machine_serial: string;
-              machine_label: string;
-            };
-          } = {};
-
-          await Promise.all(
-            filteredOrder.map((data) =>
-              Promise.all(
-                data.order_details.map(async (detail) => {
-                  if (machineData[detail.machine_serial] === undefined) {
-                    const machine: IMachineInBranch =
-                      await getMachineDetailBySerial(detail.machine_serial);
-                    machineData[machine.machine_serial] = {
-                      machine_serial: machine.machine_serial,
-                      machine_label: machine.machine_label,
-                    };
-                  }
-                })
-              )
-            )
-          );
-
-          setMachineData(machineData);
-          setOrder(filteredOrder);
-        } catch (error) {
-          console.log(error);
-        }
-      }
       fetchOrder();
-    }, [])
+      const intervalId = setInterval(fetchOrder, 30 * ONESECOND_INMILLISECONDS); // Fetch every 30 seconds
+      return () => clearInterval(intervalId);
+    }, [fetchOrder])
   );
 
   useEffect(() => {
@@ -309,14 +317,17 @@ const Homepage = () => {
         </View>
 
         {isWashing && order && (
-          <View className="mx-6 py-8">
+          <View className="mx-6 pb-12 pt-4">
             <Text className="font-kanitMedium text-text-3 text-4xl py-4">
               สถานะเครื่องซักผ้า
             </Text>
 
             <View className="w-full flex flex-row">
-              <ScrollView horizontal={true}>
-                <View className="flex flex-row">
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+                <View className="flex flex-row gap-x-4">
                   {order.map((data) =>
                     data.order_details.map((detail, index) => {
                       const machine = machineData[detail.machine_serial];
@@ -324,12 +335,26 @@ const Homepage = () => {
                         return null;
                       }
 
+                      if (
+                        new Date(detail.finished_at).getTime() - Date.now() <=
+                        0
+                      ) {
+                        return null;
+                      }
+
                       return (
                         <OptionCard
                           key={index}
-                          zuckNumber={
-                            machineData[detail.machine_serial].machine_label
+                          zuckType={
+                            machine.machine_type === "Washer"
+                              ? "เครื่องซัก"
+                              : "เครื่องอบ"
                           }
+                          zuckNumber={machineData[
+                            detail.machine_serial
+                          ].machine_label
+                            .replace("เครื่องซักที่", "")
+                            .replace("เครื่องอบที่", "")}
                           zuckRemain={DateFormatter.getTimeRemaining(
                             new Date(detail.finished_at)
                           )}
