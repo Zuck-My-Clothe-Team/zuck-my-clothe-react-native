@@ -64,17 +64,21 @@ const OrderQRScan = () => {
           );
           return;
         }
-        // if (!machine_detail.is_available) {
-        //   Alert.alert(
-        //     "ขออภัย ขณะนี้เครื่องยังไม่ว่าง",
-        //     "เครื่องนี้ยังไม่ว่างครับ โปรดลองใหม่เมื่อเครื่องทำงานเสร็จ",
-        //     [{ text: "OK",
-        //       onPress:()=>{
-        //         router.back();
-        //       } }]
-        //   );
-        //   return;
-        // }
+        if (machine_detail.finished_at) {
+          Alert.alert(
+            "ขออภัย ขณะนี้เครื่องยังไม่ว่าง",
+            "เครื่องนี้ยังไม่ว่างครับ โปรดลองใหม่เมื่อเครื่องทำงานเสร็จ",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  router.back();
+                },
+              },
+            ]
+          );
+          return;
+        }
 
         const machine_to_servicetype = machine_detail.machine_type.replace(
           "er",
@@ -111,16 +115,55 @@ const OrderQRScan = () => {
 
         try {
           console.log("Updating order status...", order_update_dto);
-          await updateStatusOrder(order_update_dto);
+          const result = await updateStatusOrder(order_update_dto);
+          if (!result) throw new Error("No response");
+          if (result.status === 204) {
+            Alert.alert(
+              "ขออภัย ไม่พบเครื่องซัก",
+              "โปรดลองใหม่อีกครั้ง",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    router.back();
+                  },
+                },
+              ]
+            );
+          };
           router.back(); // Navigate back on success
         } catch (error) {
           console.error(
             "Error updating order status or machine status:",
             error
           );
+          Alert.alert(
+            "ขออภัย การซักผ้าผิดหลาด",
+            "โปรดลองใหม่อีกครั้ง",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  router.back();
+                },
+              },
+            ]
+          );
         }
       } catch (error) {
         console.error("Error during handleScanner:", error);
+        Alert.alert(
+          "ขออภัย การซักผ้าผิดหลาด",
+          "โปรดลองใหม่อีกครั้ง",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                router.back();
+              },
+            },
+          ]
+        );
       }
     },
     []
