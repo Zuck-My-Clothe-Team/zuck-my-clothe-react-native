@@ -30,7 +30,7 @@ const pay_complete = () => {
           </Text>
         </View>
 
-        <View className="justify-evenly absolute inset-x-0 bottom-0 h-48">
+        <View className="justify-evenly absolute inset-x-0 bottom-4 h-48">
           <TouchableOpacity
             onPress={() => {
               router.back();

@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
   Platform,
+  Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -32,6 +33,7 @@ import {
   ServiceTypeTH,
 } from "@/interface/order.interface";
 import Modal from "react-native-modal";
+import { Ionicons } from "@expo/vector-icons";
 
 const imagepath = [
   {
@@ -199,10 +201,10 @@ const HistoryPage = () => {
           {/* Header */}
           <View className="h-28 relative">
             <TouchableOpacity
-              className="absolute pt-5 z-10"
+              className="absolute pt-5 z-10 top-4"
               onPress={() => router.back()}
             >
-              <AntDesign name="arrowleft" size={48} color="#71BFFF" />
+              <Ionicons name="arrow-back" size={30} color={"#71BFFF"} />
             </TouchableOpacity>
             <View className="absolute w-full h-full flex items-center justify-center">
               <Text className="text-3xl p-1 font-kanitMedium text-primaryblue-200 align-middle">
@@ -229,7 +231,10 @@ const HistoryPage = () => {
                 <View className="" style={{ padding: 20 }}>
                   <StarRating
                     initialRating={star}
-                    onRatingChange={(assignstar) => setStar(assignstar)}
+                    onRatingChange={(assignstar) => {
+                      setStar(assignstar);
+                      Keyboard.dismiss();
+                    }}
                   ></StarRating>
                 </View>
                 <TextInput
@@ -240,6 +245,7 @@ const HistoryPage = () => {
                     fontFamily: "Kanit_300Light",
                     fontSize: 14,
                     textDecorationColor: "#C6C6C6",
+                    borderColor: "#C6C6C6",
                   }}
                   multiline
                   numberOfLines={16}
