@@ -6,6 +6,7 @@ const TabsLayout = () => {
       <Stack.Screen name="(address)" options={{ headerShown: false }} />
       <Stack.Screen name="contact" options={{ headerShown: false }} />
       <Stack.Screen name="edit_profile" options={{ headerShown: false }} />
+      <Stack.Screen name="term_of_service" options={{ headerShown: false }} />
     </Stack>
   );
 };

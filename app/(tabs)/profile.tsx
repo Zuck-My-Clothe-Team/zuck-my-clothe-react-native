@@ -52,9 +52,9 @@ const ProfilePage = () => {
     {
       title: "แก้ไขข้อมูลส่วนตัว",
       icon: <AntDesign name="rightcircleo" size={22} color="#71BFFF" />,
-      onpress:() => {
-        router.push("/(profile)/edit_profile")
-      }
+      onpress: () => {
+        router.push("/(profile)/edit_profile");
+      },
     },
     {
       title: "ที่อยู่",
@@ -66,6 +66,9 @@ const ProfilePage = () => {
     {
       title: "ข้อกำหนดเงื่อนไขและนโยบายอื่น ๆ",
       icon: <AntDesign name="rightcircleo" size={22} color="#71BFFF" />,
+      onpress: () => {
+        router.push("/(profile)/term_of_service");
+      },
     },
     // {
     //   title: "ตั้งค่า",
@@ -75,8 +78,8 @@ const ProfilePage = () => {
       title: "ติดต่อเรา",
       icon: <Feather name="phone" size={22} color="#71BFFF" />,
       onpress: () => {
-        router.push("/(profile)/contact")
-      }
+        router.push("/(profile)/contact");
+      },
     },
     {
       title: "ออกจากระบบ",

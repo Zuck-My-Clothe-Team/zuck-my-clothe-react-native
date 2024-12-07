@@ -149,15 +149,15 @@ const OrderSummary = () => {
               <Text className="font-kanitMedium text-4xl text-text-3 mb-2">
                 สรุปรายการ
               </Text>
-              <Text className="font-kanit text-2xl text-text-4">
+              <Text className="font-kanit text-xl text-text-4">
                 โปรดตรวจสอบรายการก่อนทำการชำระเงิน
               </Text>
             </View>
           </View>
 
-          <View className=" items-center bg-white rounded-xl border-2 border-customgray-200 mt-[20%] p-8">
+          <View className=" bg-white rounded-xl border-2 border-customgray-200 mt-[20%] p-8">
             <View className="mb-3">
-              <Text className="text-primaryblue-200 font-kanitMedium text-3xl">
+              <Text className="text-primaryblue-200 font-kanitMedium text-2xl">
                 ZMC {branchData?.branch_name}
               </Text>
             </View>
@@ -182,7 +182,7 @@ const OrderSummary = () => {
               </View>
             </View>
 
-            <View className="">
+            <View className=" flex justify-center items-center">
               <Image
                 style={{ height: 128 }}
                 resizeMode="contain"
@@ -203,12 +203,13 @@ const OrderSummary = () => {
                 if (!pressedNextPage) {
                   setPressedNextPage(true);
                   placeOrder();
+                  // router.push("/order_summary/pay_complete");
                 }
               }}
-              className="w-full rounded-lg bg-primaryblue-200 items-center px-20 py-2 mt-5 mb-14"
+              className="w-full rounded-lg bg-primaryblue-200 items-center py-3 mt-5 mb-14"
             >
               <Text className="font-kanit text-lg text-text-2">
-                ชำระเงินผ่าน mobile banking
+                ชำระเงินผ่าน Mobile Banking
               </Text>
             </TouchableOpacity>
           </View>
